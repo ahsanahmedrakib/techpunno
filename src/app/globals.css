@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0c9b5d;
+  --color-primary-dark: #087a49;
+  --color-primary-darker: #065f39;
+  --color-primary-light: #12b26d;
+  --color-primary-lighter: #e6f7ef;
+  --color-primary-tint: #f2fbf6;
+
+  --color-secondary: #f3353b;
+  --color-secondary-dark: #d81f25;
+  --color-secondary-light: #ffe9ea;
+  --color-secondary-tint: #fff5f5;
+
+  --color-ink: #0b2b1d;
+  --color-ink-soft: #43564c;
+  --color-mist: #eef2ef;
+  --color-cream: #fafcfb;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(
+      90deg,
+      var(--color-primary) 0%,
+      var(--color-secondary) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .section-anchor {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
+.swiper-pagination-bullet {
+  background: var(--color-primary) !important;
+  opacity: 0.35;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  width: 28px;
+  border-radius: 9999px;
+  background: var(--color-primary) !important;
+  transition: width 0.3s ease;
+}
