@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
 import { events, type EventItem } from "@/data/events";
 import { fadeUp, scaleIn, stagger } from "@/lib/motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 const categoryEmoji: Record<string, string> = {
   Workshop: "🛠️",
@@ -80,7 +80,7 @@ export default function Events() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="group relative flex flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
               >
-                <div className="relative flex items-center justify-between overflow-hidden bg-gradient-to-br from-primary to-primary-dark px-6 py-5">
+                <div className="relative flex items-center justify-between overflow-hidden bg-linear-to-br from-primary to-primary-dark px-6 py-5">
                   <span className="text-4xl transition-transform duration-300 group-hover:scale-110">
                     {categoryEmoji[event.category] ?? "📅"}
                   </span>
@@ -118,7 +118,16 @@ export default function Events() {
                   </p>
                   <div className="mt-5 flex items-center justify-between border-t border-ink/5 pt-4">
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
@@ -131,7 +140,9 @@ export default function Events() {
                           : "bg-mist text-ink-soft"
                       }`}
                     >
-                      {event.status === "upcoming" ? "Register Open" : "Completed"}
+                      {event.status === "upcoming"
+                        ? "Register Open"
+                        : "Completed"}
                     </span>
                   </div>
                 </div>
@@ -143,3 +154,4 @@ export default function Events() {
     </section>
   );
 }
+

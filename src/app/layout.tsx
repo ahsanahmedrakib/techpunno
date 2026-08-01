@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     "digital literacy",
     "NGO",
   ],
-  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({

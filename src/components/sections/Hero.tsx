@@ -1,12 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Autoplay, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
 import { heroSlides } from "@/data/hero";
 import { site } from "@/data/site";
+import { motion } from "framer-motion";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const statCards = [
   { value: "500+", label: "Volunteers" },
@@ -16,7 +16,7 @@ const statCards = [
 
 export default function Hero() {
   return (
-    <section id="home" className="relative overflow-hidden pt-[4.5rem]">
+    <section id="home" className="relative overflow-hidden pt-18">
       <Swiper
         modules={[Autoplay, Pagination]}
         autoplay={{ delay: 6000, disableOnInteraction: false }}
@@ -32,8 +32,8 @@ export default function Hero() {
               <div
                 className={`relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden ${
                   isPrimary
-                    ? "bg-gradient-to-br from-primary-tint via-cream to-primary-lighter"
-                    : "bg-gradient-to-br from-secondary-tint via-cream to-secondary-light"
+                    ? "bg-linear-to-br from-primary-tint via-cream to-primary-lighter"
+                    : "bg-linear-to-br from-secondary-tint via-cream to-secondary-light"
                 }`}
               >
                 <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -87,13 +87,13 @@ export default function Hero() {
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                    className="relative mx-auto hidden h-[340px] w-[340px] sm:h-[420px] sm:w-[420px] lg:block"
+                    className="relative mx-auto hidden h-85 w-85 sm:h-105 sm:w-105 lg:block"
                   >
                     <div
                       className={`absolute inset-0 rounded-full ${
                         isPrimary
-                          ? "bg-gradient-to-br from-primary to-primary-dark"
-                          : "bg-gradient-to-br from-secondary to-secondary-dark"
+                          ? "bg-linear-to-br from-primary to-primary-dark"
+                          : "bg-linear-to-br from-secondary to-secondary-dark"
                       } opacity-95 shadow-2xl`}
                     />
                     <div className="absolute inset-6 rounded-full border-2 border-white/25" />
@@ -126,8 +126,12 @@ export default function Hero() {
               transition={{ duration: 0.5 }}
               className="flex items-center justify-center gap-3 px-4 py-6"
             >
-              <span className="text-3xl font-extrabold text-gradient">{stat.value}</span>
-              <span className="text-sm font-medium text-ink-soft">{stat.label}</span>
+              <span className="text-3xl font-extrabold text-gradient">
+                {stat.value}
+              </span>
+              <span className="text-sm font-medium text-ink-soft">
+                {stat.label}
+              </span>
             </motion.div>
           ))}
         </div>
@@ -135,3 +139,4 @@ export default function Hero() {
     </section>
   );
 }
+

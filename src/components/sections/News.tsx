@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
 import { newsItems, type NewsItem } from "@/data/news";
 import { site } from "@/data/site";
 import { fadeUp, stagger } from "@/lib/motion";
+import { motion } from "framer-motion";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
   Hot: "bg-secondary text-white",
@@ -34,7 +34,7 @@ export default function News() {
         >
           <motion.article
             variants={fadeUp}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 sm:p-10"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 sm:p-10"
           >
             <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/30 blur-3xl" />
             <div>
@@ -97,3 +97,4 @@ export default function News() {
     </section>
   );
 }
+

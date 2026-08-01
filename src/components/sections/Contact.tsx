@@ -1,12 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import SectionHeading from "@/components/SectionHeading";
-import { contactSchema, contactSubjects, type ContactFormValues } from "@/lib/validation";
 import { site } from "@/data/site";
 import { fadeUp, stagger } from "@/lib/motion";
+import {
+  contactSchema,
+  contactSubjects,
+  type ContactFormValues,
+} from "@/lib/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
 
 const contactInfo = [
   {
@@ -14,7 +18,16 @@ const contactInfo = [
     value: site.email,
     href: `mailto:${site.email}`,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <rect width="20" height="16" x="2" y="4" rx="2" />
         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
       </svg>
@@ -25,7 +38,16 @@ const contactInfo = [
     value: site.phone,
     href: `tel:${site.phone.replace(/[^+\d]/g, "")}`,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
       </svg>
     ),
@@ -35,7 +57,16 @@ const contactInfo = [
     value: site.address,
     href: undefined,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
         <circle cx="12" cy="10" r="3" />
       </svg>
@@ -88,11 +119,11 @@ export default function Contact() {
           className="grid grid-cols-1 gap-8 lg:grid-cols-5"
         >
           <motion.div variants={fadeUp} className="space-y-4 lg:col-span-2">
-            <div className="rounded-3xl bg-gradient-to-br from-primary to-primary-dark p-8 text-white shadow-2xl shadow-primary/25 sm:p-10">
+            <div className="rounded-3xl bg-linear-to-br from-primary to-primary-dark p-8 text-white shadow-2xl shadow-primary/25 sm:p-10">
               <h3 className="text-2xl font-bold">Get in touch</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/85">
-                Our team usually replies within 24–48 hours. Prefer social? DM us
-                on Facebook anytime.
+                Our team usually replies within 24–48 hours. Prefer social? DM
+                us on Facebook anytime.
               </p>
               <a
                 href={site.facebook}
@@ -100,7 +131,12 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
                 </svg>
                 Message on Facebook
@@ -167,9 +203,16 @@ export default function Contact() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+                className="grid grid-cols-1 gap-5 sm:grid-cols-2"
+              >
                 <div>
-                  <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-ink">
+                  <label
+                    htmlFor="name"
+                    className="mb-1.5 block text-sm font-semibold text-ink"
+                  >
                     Full Name
                   </label>
                   <input
@@ -191,7 +234,10 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-ink">
+                  <label
+                    htmlFor="email"
+                    className="mb-1.5 block text-sm font-semibold text-ink"
+                  >
                     Email Address
                   </label>
                   <input
@@ -213,8 +259,14 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="mb-1.5 block text-sm font-semibold text-ink">
-                    Phone <span className="font-normal text-ink-soft">(optional)</span>
+                  <label
+                    htmlFor="phone"
+                    className="mb-1.5 block text-sm font-semibold text-ink"
+                  >
+                    Phone{" "}
+                    <span className="font-normal text-ink-soft">
+                      (optional)
+                    </span>
                   </label>
                   <input
                     id="phone"
@@ -226,7 +278,10 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="mb-1.5 block text-sm font-semibold text-ink">
+                  <label
+                    htmlFor="subject"
+                    className="mb-1.5 block text-sm font-semibold text-ink"
+                  >
                     Subject
                   </label>
                   <select
@@ -256,7 +311,10 @@ export default function Contact() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label htmlFor="message" className="mb-1.5 block text-sm font-semibold text-ink">
+                  <label
+                    htmlFor="message"
+                    className="mb-1.5 block text-sm font-semibold text-ink"
+                  >
                     Message
                   </label>
                   <textarea
@@ -279,7 +337,8 @@ export default function Contact() {
 
                 <div className="flex flex-col items-start gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-ink-soft">
-                    Your information stays private — we only use it to reply to you.
+                    Your information stays private — we only use it to reply to
+                    you.
                   </p>
                   <button
                     type="submit"
@@ -298,3 +357,4 @@ export default function Contact() {
     </section>
   );
 }
+

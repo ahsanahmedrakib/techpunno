@@ -1,5 +1,9 @@
-import Image from "next/image";
+"use client";
+
 import { navItems, site } from "@/data/site";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
 
 export default function Footer() {
   return (
@@ -58,27 +62,44 @@ export default function Footer() {
           </h4>
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
             <li>
-              <a href="#contact" className="transition-colors hover:text-primary-light">
+              <a
+                href="#contact"
+                className="transition-colors hover:text-primary-light"
+              >
                 Become a Volunteer
               </a>
             </li>
             <li>
-              <a href="#events" className="transition-colors hover:text-primary-light">
+              <a
+                href="#events"
+                className="transition-colors hover:text-primary-light"
+              >
                 Attend an Event
               </a>
             </li>
             <li>
-              <a href="#video" className="transition-colors hover:text-primary-light">
+              <a
+                href="#video"
+                className="transition-colors hover:text-primary-light"
+              >
                 Watch & Learn
               </a>
             </li>
             <li>
-              <a href="#blogs" className="transition-colors hover:text-primary-light">
+              <a
+                href="#blogs"
+                className="transition-colors hover:text-primary-light"
+              >
                 Read Our Blogs
               </a>
             </li>
             <li>
-              <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-primary-light">
+              <a
+                href={site.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-primary-light"
+              >
                 Partnership
               </a>
             </li>
@@ -91,12 +112,18 @@ export default function Footer() {
           </h4>
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
             <li>
-              <a href={`mailto:${site.email}`} className="transition-colors hover:text-primary-light">
+              <a
+                href={`mailto:${site.email}`}
+                className="transition-colors hover:text-primary-light"
+              >
                 {site.email}
               </a>
             </li>
             <li>
-              <a href={`tel:${site.phone.replace(/[^+\d]/g, "")}`} className="transition-colors hover:text-primary-light">
+              <a
+                href={`tel:${site.phone.replace(/[^+\d]/g, "")}`}
+                className="transition-colors hover:text-primary-light"
+              >
                 {site.phone}
               </a>
             </li>
@@ -114,13 +141,89 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-white/60 sm:flex-row sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <p>
-            Built with 💚 for a safe digital society.
-          </p>
+          <p>Built with 💚 for a safe digital society.</p>
+        </div>
+      </div>
+
+      {/* Developer info  */}
+      <div className="relative border-t border-white/10">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="relative my-8 overflow-hidden rounded-xl bg-white/4 p-2 ring-1 ring-white/10"
+          >
+            <div className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-primary/20 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-12 -right-10 h-36 w-36 rounded-full bg-secondary/20 blur-3xl" />
+
+            <div className="relative flex flex-col items-center justify-between gap-6 sm:flex-row sm:text-left">
+              <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+                <div className="w-20 h-20 overflow-hidden rounded-xl border border-white">
+                  <Image
+                    src={"/images/rakib.png"}
+                    alt={"Rakib"}
+                    height={100}
+                    width={200}
+                  />
+                </div>
+
+                <div className="text-center sm:text-left">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-primary-light">
+                    Build & Maintenance by
+                  </span>
+                  <h3 className="mt-1 text-xl font-bold text-white sm:text-2xl">
+                    Ahsan Ahmed Rakib
+                  </h3>
+                  <p className="mt-1 text-sm text-white/60">
+                    Full-stack Web Developer · Next.js & Tailwind CSS
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <motion.a
+                  whileHover={{ y: -3 }}
+                  href="https://m.me/rakibahsanahmed"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat on Messenger with Rakib"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#0084FF] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#0084FF]/40"
+                >
+                  <MessengerIcon size={16} />
+                  Messenger
+                </motion.a>
+                <motion.a
+                  whileHover={{ y: -3 }}
+                  href="https://wa.me/8801631112475"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat on WhatsApp with Rakib"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#25D366]/40"
+                >
+                  <WhatsappIcon size={16} />
+                  WhatsApp
+                </motion.a>
+              </div>
+            </div>
+
+            <div className="relative mt-2 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-2 text-xs text-white/50 sm:flex-row">
+              <p className="inline-flex items-center gap-1.5">
+                <span className="text-secondary">❤</span> Built with Next.js,
+                Tailwind CSS & Framer Motion
+              </p>
+              <p className="inline-flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-light" />
+                Available for freelance & open-source work
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </footer>
