@@ -63,7 +63,7 @@ export default function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
             <li>
               <a
-                href="#contact"
+                href="/#contact"
                 className="transition-colors hover:text-primary-light"
               >
                 Become a Volunteer
@@ -71,7 +71,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#events"
+                href="/#events"
                 className="transition-colors hover:text-primary-light"
               >
                 Attend an Event

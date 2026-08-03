@@ -18,13 +18,14 @@ export const site = {
 export type NavItem = { label: string; href: string };
 
 export const navItems: NavItem[] = [
-  { label: "Home", href: "#home" },
-  { label: "Videos", href: "#video" },
-  { label: "Events", href: "#events" },
-  { label: "Blogs", href: "#blogs" },
-  { label: "News", href: "#news" },
-  { label: "Advisors", href: "#advisors" },
-  { label: "Core Team", href: "#team" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/#home" },
+  { label: "Videos", href: "/#video" },
+  { label: "Events", href: "/#events" },
+  { label: "Blogs", href: "/#blogs" },
+  { label: "News", href: "/#news" },
+  { label: "Advisors", href: "/#advisors" },
+  { label: "Core Team", href: "/#team" },
+  { label: "Quiz", href: "/quiz" },
+  { label: "Contact", href: "/#contact" },
 ];
 
