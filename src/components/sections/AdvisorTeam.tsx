@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
-import TeamCard from "@/components/TeamCard";
+import TeamCard from "@/components/common/TeamCard";
 import { advisors } from "@/data/team";
 import { stagger } from "@/lib/motion";
+import { motion } from "framer-motion";
 
 export default function AdvisorTeam() {
   return (
@@ -32,3 +32,4 @@ export default function AdvisorTeam() {
     </section>
   );
 }
+

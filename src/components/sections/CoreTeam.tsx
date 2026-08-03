@@ -1,14 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
-import TeamCard from "@/components/TeamCard";
+import TeamCard from "@/components/common/TeamCard";
 import { coreTeam } from "@/data/team";
 import { stagger } from "@/lib/motion";
+import { motion } from "framer-motion";
 
 export default function CoreTeam() {
   return (
-    <section id="team" className="section-anchor bg-primary-lighter py-20 lg:py-28">
+    <section
+      id="team"
+      className="section-anchor bg-primary-lighter py-20 lg:py-28"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Core Team"
@@ -32,3 +35,4 @@ export default function CoreTeam() {
     </section>
   );
 }
+
