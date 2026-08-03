@@ -22,7 +22,7 @@ export default function AdvisorTeam() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           {advisors.map((member) => (
             <TeamCard key={member.id} member={member} />

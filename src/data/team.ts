@@ -4,80 +4,52 @@ export type TeamMember = {
   role: string;
   bio: string;
   initials: string;
+  image?: string;
 };
 
 export const advisors: TeamMember[] = [
   {
     id: "a1",
-    name: "Advisor One",
-    role: "Cybersecurity Expert",
-    bio: "Guidance on security best practices and industry insight for our campaigns.",
-    initials: "AO",
+    name: "Ismail Sarder Niam",
+    role: "24 Engineer Construction Brigade",
+    bio: "Bangladesh Army · Further development of the Cumilla University Project.",
+    initials: "IS",
+    image: "/images/advisors/ismail-sarder-niam.jpeg",
   },
   {
     id: "a2",
-    name: "Advisor Two",
-    role: "Academic Mentor",
-    bio: "Supports our digital literacy curriculum and university partnerships.",
-    initials: "AT",
+    name: "Tasbirul Imam",
+    role: "QCI / Sr. Manager",
+    bio: "Quality Control Inspector (QCI) / Sr. Manager at Peshwarain Restaurant.",
+    initials: "TI",
+    image: "/images/advisors/tasbirul-imam.jpeg",
   },
   {
     id: "a3",
-    name: "Advisor Three",
-    role: "Social Impact Leader",
-    bio: "Advises on community outreach and volunteer development programs.",
-    initials: "A3",
+    name: "Md Ruhul Islam",
+    role: "Officer General",
+    bio: "Officer General (Recommended) at Bangladesh Krishi Bank.",
+    initials: "RI",
+    image: "/images/advisors/md-ruhul-islam.jpeg",
   },
   {
     id: "a4",
-    name: "Advisor Four",
-    role: "Policy & Legal",
-    bio: "Helps keep our awareness content accurate, ethical and policy-ready.",
-    initials: "A4",
+    name: "Ahsan Ahmed Rakib",
+    role: "Software Engineer",
+    bio: "Software Engineer at US Bangla Group.",
+    initials: "AR",
+    image: "/images/advisors/ahsan-ahmed-rakib.jpg",
   },
 ];
 
 export const coreTeam: TeamMember[] = [
   {
     id: "t1",
-    name: "Founder & President",
-    role: "President",
+    name: "Mehedi Hasan",
+    role: "Founder & Online Safety Consultant",
     bio: "Leads the vision, partnerships and overall direction of TechPunno.",
-    initials: "FP",
-  },
-  {
-    id: "t2",
-    name: "Vice President",
-    role: "Vice President",
-    bio: "Coordinates programs and supports the volunteer community.",
-    initials: "VP",
-  },
-  {
-    id: "t3",
-    name: "General Secretary",
-    role: "General Secretary",
-    bio: "Handles operations, communication and event coordination.",
-    initials: "GS",
-  },
-  {
-    id: "t4",
-    name: "Tech Lead",
-    role: "Technology Lead",
-    bio: "Builds and maintains TechPunno's digital platforms and tools.",
-    initials: "TL",
-  },
-  {
-    id: "t5",
-    name: "Content Lead",
-    role: "Content & Media",
-    bio: "Creates awareness content, blogs and campaign material.",
-    initials: "CL",
-  },
-  {
-    id: "t6",
-    name: "Volunteer Lead",
-    role: "Volunteer Management",
-    bio: "Onboards, trains and supports our growing volunteer family.",
-    initials: "VL",
+    initials: "MH",
+    image: "/images/core-team/mehedi-hasan.jpeg",
   },
 ];
+

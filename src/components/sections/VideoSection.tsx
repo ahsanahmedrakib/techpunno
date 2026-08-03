@@ -1,15 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import SectionHeading from "@/components/common/SectionHeading";
-import { featuredVideoId, videos } from "@/data/videos";
+import {
+  featuredVideo,
+  videos,
+  youtubeEmbed,
+  youtubeThumb,
+} from "@/data/videos";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
 
 export default function VideoSection() {
+  const [current, setCurrent] = useState(featuredVideo);
+
   return (
     <section
       id="video"
-      className="section-anchor py-20 lg:py-28 bg-primary-lighter"
+      className="section-anchor bg-primary-lighter py-20 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
@@ -31,10 +39,10 @@ export default function VideoSection() {
               <div className="aspect-video w-full">
                 <iframe
                   className="h-full w-full"
-                  src={`https://www.youtube.com/embed/${featuredVideoId}?rel=0`}
-                  title="Featured TechPunno video"
+                  src={youtubeEmbed(current.url)}
+                  title={current.title}
                   loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
               </div>
@@ -44,48 +52,50 @@ export default function VideoSection() {
                 ▶
               </span>
               <div>
-                <h3 className="text-lg font-bold text-ink">
-                  Featured: Cyber Awareness Essentials
-                </h3>
-                <p className="text-sm text-ink-soft">
-                  A complete beginner&apos;s guide to staying safe online in
-                  Bangladesh.
-                </p>
+                <h3 className="text-lg font-bold text-ink">{current.title}</h3>
               </div>
             </div>
           </motion.div>
 
           <motion.div variants={fadeUp} className="space-y-4 lg:col-span-2">
-            {videos.map((video) => (
-              <a
-                key={video.id}
-                href={video.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex gap-4 rounded-2xl border border-ink/5 bg-white p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10"
-              >
-                <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={video.thumb}
-                    alt={video.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <span className="absolute bottom-1.5 right-1.5 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                    {video.duration}
-                  </span>
-                </div>
-                <div className="min-w-0 py-1">
-                  <h4 className="line-clamp-2 text-sm font-semibold text-ink transition-colors group-hover:text-primary">
-                    {video.title}
-                  </h4>
-                  <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-ink-soft">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    TechPunno Channel
-                  </span>
-                </div>
-              </a>
-            ))}
+            {videos.map((video) => {
+              const active = video.id === current.id;
+              return (
+                <button
+                  key={video.id}
+                  type="button"
+                  onClick={() => setCurrent(video)}
+                  className={`group flex w-full gap-4 rounded-2xl border p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 ${
+                    active
+                      ? "border-primary/40 bg-primary-tint shadow-lg shadow-primary/10"
+                      : "border-ink/5 bg-white hover:border-primary/30"
+                  }`}
+                >
+                  <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-ink/10">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={youtubeThumb(video.url)}
+                      alt={video.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    {!active && (
+                      <span className="absolute inset-0 grid place-items-center bg-black/30 text-lg text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        ▶
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 py-1">
+                    <h4 className="line-clamp-2 text-sm font-semibold text-ink transition-colors group-hover:text-primary">
+                      {video.title}
+                    </h4>
+                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-ink-soft">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      TechPunno Channel
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
 
             <a
               href="https://www.youtube.com/@techpunno"
@@ -101,4 +111,3 @@ export default function VideoSection() {
     </section>
   );
 }
-

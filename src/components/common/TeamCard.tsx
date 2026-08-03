@@ -3,27 +3,40 @@
 import type { TeamMember } from "@/data/team";
 import { fadeUp } from "@/lib/motion";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function TeamCard({ member }: { member: TeamMember }) {
   return (
     <motion.div
       variants={fadeUp}
-      className="group relative flex flex-col items-center rounded-3xl border border-ink/5 bg-white px-6 py-8 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15"
+      className="group rounded-3xl bg-linear-to-br from-primary via-secondary to-primary p-0.5 shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15"
     >
-      <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-3xl bg-linear-to-r from-primary to-secondary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="relative">
-        <div className="grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-primary to-primary-dark text-2xl font-extrabold text-white shadow-lg shadow-primary/25 transition-transform duration-300 group-hover:scale-105">
-          {member.initials}
+      <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white">
+        <div className="relative aspect-4/3 w-full overflow-hidden bg-linear-to-br from-primary to-primary-dark">
+          {member.image ? (
+            <Image
+              src={member.image}
+              alt={member.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="grid h-full w-full place-items-center text-4xl font-extrabold text-white">
+              {member.initials}
+            </div>
+          )}
         </div>
-        <span className="absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-secondary text-[10px] font-bold text-white">
-          ★
-        </span>
+        <div className="flex flex-1 flex-col items-center px-6 py-6 text-center">
+          <h3 className="text-lg font-bold text-ink">{member.name}</h3>
+          <span className="mt-2 rounded-full bg-primary-lighter px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
+            {member.role}
+          </span>
+          <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+            {member.bio}
+          </p>
+        </div>
       </div>
-      <h3 className="mt-5 text-lg font-bold text-ink">{member.name}</h3>
-      <span className="mt-1 rounded-full bg-primary-lighter px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-        {member.role}
-      </span>
-      <p className="mt-3 text-sm leading-relaxed text-ink-soft">{member.bio}</p>
     </motion.div>
   );
 }
