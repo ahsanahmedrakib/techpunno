@@ -11,7 +11,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
-            <span className="relative h-11 w-11 overflow-hidden rounded-xl ring-2 ring-white/20">
+            <span className="relative h-13 w-13 overflow-hidden rounded-lg ring">
               <Image
                 src={site.logo}
                 alt={`${site.name} logo`}
@@ -166,12 +166,13 @@ export default function Footer() {
 
             <div className="relative flex flex-col items-center justify-between gap-6 sm:flex-row sm:text-left">
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-                <div className="w-20 h-20 overflow-hidden rounded-xl border border-white">
+                <div className="w-20 h-20 overflow-hidden rounded-xl">
                   <Image
-                    src={"/images/rakib.png"}
+                    src={"/images/rakib.jpg"}
                     alt={"Rakib"}
-                    height={100}
-                    width={200}
+                    height={80}
+                    width={300}
+                    className="object-cover w-full h-full"
                   />
                 </div>
 

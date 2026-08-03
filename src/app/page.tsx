@@ -1,14 +1,14 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import FloatingActions from "@/components/FloatingActions";
-import Hero from "@/components/sections/Hero";
-import VideoSection from "@/components/sections/VideoSection";
-import Events from "@/components/sections/Events";
-import Blogs from "@/components/sections/Blogs";
-import News from "@/components/sections/News";
+import FloatingActions from "@/components/common/FloatingActions";
+import Footer from "@/components/common/Footer";
+import Navbar from "@/components/common/Navbar";
 import AdvisorTeam from "@/components/sections/AdvisorTeam";
-import CoreTeam from "@/components/sections/CoreTeam";
+import Blogs from "@/components/sections/Blogs";
 import Contact from "@/components/sections/Contact";
+import CoreTeam from "@/components/sections/CoreTeam";
+import Events from "@/components/sections/Events";
+import Hero from "@/components/sections/Hero";
+import News from "@/components/sections/News";
+import VideoSection from "@/components/sections/VideoSection";
 
 export default function Home() {
   return (
@@ -29,3 +29,4 @@ export default function Home() {
     </>
   );
 }
+

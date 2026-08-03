@@ -1,6 +1,6 @@
 "use client";
 
-import SectionHeading from "@/components/SectionHeading";
+import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import { coreTeam } from "@/data/team";
 import { stagger } from "@/lib/motion";

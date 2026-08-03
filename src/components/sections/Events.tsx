@@ -1,6 +1,6 @@
 "use client";
 
-import SectionHeading from "@/components/SectionHeading";
+import SectionHeading from "@/components/common/SectionHeading";
 import { events, type EventItem } from "@/data/events";
 import { fadeUp, scaleIn, stagger } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";

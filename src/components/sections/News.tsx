@@ -1,6 +1,6 @@
 "use client";
 
-import SectionHeading from "@/components/SectionHeading";
+import SectionHeading from "@/components/common/SectionHeading";
 import { newsItems, type NewsItem } from "@/data/news";
 import { site } from "@/data/site";
 import { fadeUp, stagger } from "@/lib/motion";

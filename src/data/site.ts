@@ -12,7 +12,7 @@ export const site = {
   email: "hello@techpunno.org",
   phone: "+880 1XXX-XXXXXX",
   address: "Dhaka, Bangladesh",
-  logo: "/logo.jpg",
+  logo: "/logo.png",
 };
 
 export type NavItem = { label: string; href: string };
@@ -27,3 +27,4 @@ export const navItems: NavItem[] = [
   { label: "Core Team", href: "#team" },
   { label: "Contact", href: "#contact" },
 ];
+

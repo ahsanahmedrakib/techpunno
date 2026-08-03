@@ -1,6 +1,6 @@
 "use client";
 
-import SectionHeading from "@/components/SectionHeading";
+import SectionHeading from "@/components/common/SectionHeading";
 import { featuredVideoId, videos } from "@/data/videos";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
