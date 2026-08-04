@@ -9,6 +9,8 @@ export type EventItem = {
   mode: "Offline" | "Online";
   category: string;
   status: "upcoming" | "done";
+  slug?: string;
+  image?: string;
 };
 
 export const events: EventItem[] = [
@@ -24,6 +26,7 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Workshop",
     status: "upcoming",
+    slug: "cyber-security-awareness-workshop",
   },
   {
     id: "e2",
@@ -37,6 +40,7 @@ export const events: EventItem[] = [
     mode: "Online",
     category: "Webinar",
     status: "done",
+    slug: "safe-digital-society-webinar",
   },
   {
     id: "e3",
@@ -50,6 +54,7 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Community",
     status: "done",
+    slug: "volunteer-onboarding-2026",
   },
   {
     id: "e4",
@@ -63,6 +68,7 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Bootcamp",
     status: "done",
+    slug: "digital-literacy-bootcamp",
   },
   {
     id: "e5",
@@ -76,6 +82,7 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Campaign",
     status: "upcoming",
+    slug: "national-cyber-safety-campaign",
   },
   {
     id: "e6",
@@ -89,5 +96,6 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Meetup",
     status: "upcoming",
+    slug: "techpunno-annual-meetup",
   },
 ];

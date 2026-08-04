@@ -6,7 +6,8 @@ export type BlogPost = {
   author: string;
   readTime: string;
   date: string;
-  emoji: string;
+  slug?: string;
+  image?: string;
 };
 
 export const blogPosts: BlogPost[] = [
@@ -19,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "5 min read",
     date: "Jul 18, 2026",
-    emoji: "🔑",
+    slug: "10-password-rules",
   },
   {
     id: "b2",
@@ -30,7 +31,7 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "4 min read",
     date: "Jul 10, 2026",
-    emoji: "🎣",
+    slug: "spotting-phishing-message",
   },
   {
     id: "b3",
@@ -41,7 +42,7 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "6 min read",
     date: "Jun 28, 2026",
-    emoji: "🔒",
+    slug: "social-media-privacy-guide",
   },
   {
     id: "b4",
@@ -52,7 +53,7 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "7 min read",
     date: "Jun 15, 2026",
-    emoji: "👨‍👩‍👧",
+    slug: "parents-online-safety",
   },
   {
     id: "b5",
@@ -63,7 +64,7 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "4 min read",
     date: "Jun 02, 2026",
-    emoji: "📱",
+    slug: "two-factor-authentication",
   },
   {
     id: "b6",
@@ -74,6 +75,6 @@ export const blogPosts: BlogPost[] = [
     author: "TechPunno Team",
     readTime: "8 min read",
     date: "May 21, 2026",
-    emoji: "🤝",
+    slug: "techpunno-volunteer-journey",
   },
 ];

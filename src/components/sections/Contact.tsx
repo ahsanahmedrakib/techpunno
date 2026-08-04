@@ -3,6 +3,8 @@
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import { site } from "@/data/site";
+import { api } from "@/lib/api";
+import { toast } from "react-toastify";
 import { fadeUp, stagger } from "@/lib/motion";
 import {
   contactSchema,
@@ -97,8 +99,13 @@ export default function Contact() {
   });
 
   const onSubmit = async (values: ContactFormValues) => {
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    console.log("Contact form submitted:", values);
+    try {
+      await api.create("contacts", values);
+      toast.success("Message sent successfully!");
+    } catch (error) {
+      console.error("Failed to save contact message:", error);
+      toast.error("Failed to send message. Please try again.");
+    }
     reset();
   };
 

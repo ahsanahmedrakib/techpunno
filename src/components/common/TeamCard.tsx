@@ -2,13 +2,24 @@
 
 import Hoverable from "@/components/common/Hoverable";
 import type { TeamMember } from "@/data/team";
-import { fadeUp } from "@/lib/motion";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export default function TeamCard({ member }: { member: TeamMember }) {
+export default function TeamCard({
+  member,
+  index = 0,
+}: {
+  member: TeamMember;
+  index?: number;
+}) {
   return (
-    <motion.div variants={fadeUp} className="h-full">
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, delay: (index % 4) * 0.12 }}
+      className="h-full"
+    >
       <Hoverable className="group h-full rounded-3xl bg-linear-to-br from-primary via-secondary to-primary p-0.5 shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15">
       <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white">
         <div className="relative aspect-4/3 w-full overflow-hidden bg-linear-to-br from-primary to-primary-dark">

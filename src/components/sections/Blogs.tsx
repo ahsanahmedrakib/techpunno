@@ -1,12 +1,15 @@
 "use client";
 
-import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
-import { blogPosts } from "@/data/blogs";
-import { fadeUp, stagger } from "@/lib/motion";
+import SectionHeading from "@/components/common/SectionHeading";
+import SkeletonBlogCard from "@/components/common/Skeleton";
+import { blogPosts, type BlogPost } from "@/data/blogs";
+import { useCollection } from "@/lib/api";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Blogs() {
+  const [posts, loading] = useCollection<BlogPost>("blogs", blogPosts);
   return (
     <section
       id="blogs"
@@ -20,61 +23,66 @@ export default function Blogs() {
           description="Practical, easy-to-read articles that help everyone build safer digital habits."
         />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {blogPosts.map((post, index) => {
-            const featured = index % 3 === 0;
-            return (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {loading && posts.length === 0 ? (
+            <>
+              <SkeletonBlogCard />
+              <SkeletonBlogCard />
+              <SkeletonBlogCard />
+            </>
+          ) : (
+            posts.map((post, index) => (
               <motion.article
                 key={post.id}
-                variants={fadeUp}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: (index % 3) * 0.12 }}
                 className="h-full"
               >
-                <Hoverable
-                  className={`group flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15 ${
-                    featured ? "lg:col-span-1" : ""
-                  }`}
+                <Link
+                  href={`/blogs/${post.slug || post.id}`}
+                  className="block h-full"
                 >
-                <div className="relative flex h-44 items-center justify-center overflow-hidden bg-linear-to-br from-primary via-primary-light to-secondary">
-                  <span className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
-                  <span className="absolute -bottom-8 -right-6 h-28 w-28 rounded-full bg-white/10" />
-                  <span className="text-6xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">
-                    {post.emoji}
-                  </span>
-                  <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-                    {post.category}
-                  </span>
-                </div>
-
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="text-lg font-bold leading-snug text-ink transition-colors group-hover:text-primary">
-                    {post.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
-                    {post.excerpt}
-                  </p>
-                  <div className="mt-5 flex items-center justify-between border-t border-ink/5 pt-4 text-xs text-ink-soft">
-                    <span className="inline-flex items-center gap-2 font-medium">
-                      <span className="grid h-7 w-7 place-items-center rounded-full bg-primary-lighter text-[10px] font-bold text-primary">
-                        {post.author.charAt(0)}
+                  <Hoverable className="group flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15">
+                    <div className="relative h-44 shrink-0 overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={post.image || "/images/dummy.jpeg"}
+                        alt={post.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
+                      <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+                        {post.category}
                       </span>
-                      {post.author}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      {post.readTime} · {post.date}
-                    </span>
-                  </div>
-                </div>
-                </Hoverable>
+                    </div>
+
+                    <div className="flex flex-1 flex-col p-6">
+                      <h3 className="text-lg font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                        {post.title}
+                      </h3>
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
+                        {post.excerpt}
+                      </p>
+                      <div className="mt-5 flex items-center justify-between border-t border-ink/5 pt-4 text-xs text-ink-soft">
+                        <span className="inline-flex items-center gap-2 font-medium">
+                          <span className="grid h-7 w-7 place-items-center rounded-full bg-primary-lighter text-[10px] font-bold text-primary">
+                            {post.author.charAt(0)}
+                          </span>
+                          {post.author}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5">
+                          {post.readTime} · {post.date}
+                        </span>
+                      </div>
+                    </div>
+                  </Hoverable>
+                </Link>
               </motion.article>
-            );
-          })}
-        </motion.div>
+            ))
+          )}
+        </div>
       </div>
     </section>
   );

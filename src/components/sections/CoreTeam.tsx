@@ -2,11 +2,12 @@
 
 import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
-import { coreTeam } from "@/data/team";
-import { stagger } from "@/lib/motion";
-import { motion } from "framer-motion";
+import SkeletonTeamCard from "@/components/common/Skeleton";
+import { coreTeam, type TeamMember } from "@/data/team";
+import { useCollection } from "@/lib/api";
 
 export default function CoreTeam() {
+  const [members, loading] = useCollection<TeamMember>("coreteam", coreTeam);
   return (
     <section
       id="team"
@@ -20,17 +21,20 @@ export default function CoreTeam() {
           description="A passionate group of volunteers leading programs, content and community across Bangladesh."
         />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        >
-          {coreTeam.map((member) => (
-            <TeamCard key={member.id} member={member} />
-          ))}
-        </motion.div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {loading && members.length === 0 ? (
+            <>
+              <SkeletonTeamCard />
+              <SkeletonTeamCard />
+              <SkeletonTeamCard />
+              <SkeletonTeamCard />
+            </>
+          ) : (
+            members.map((member, index) => (
+              <TeamCard key={member.id} member={member} index={index} />
+            ))
+          )}
+        </div>
       </div>
     </section>
   );

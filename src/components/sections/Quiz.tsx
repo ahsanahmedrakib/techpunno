@@ -1,14 +1,17 @@
 "use client";
 
-import { quizDurationSeconds, quizQuestions } from "@/data/quiz";
-import { site } from "@/data/site";
 import Hoverable from "@/components/common/Hoverable";
+import { quizSets, type QuizSet } from "@/data/quiz";
+import { site } from "@/data/site";
+import { api } from "@/lib/api";
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 
-type Step = "form" | "quiz" | "result";
+type Step = "select" | "form" | "quiz" | "result";
+
+const PASSING_SCORE = 70;
 
 const formatTime = (s: number) => {
   const m = Math.floor(s / 60)
@@ -40,13 +43,31 @@ const loadImageAsDataUrl = (src: string): Promise<string> =>
   });
 
 export default function Quiz() {
-  const [step, setStep] = useState<Step>("form");
+  const [quizSetsList, setQuizSetsList] = useState<QuizSet[]>([]);
+  const [selectedSet, setSelectedSet] = useState<QuizSet | null>(null);
+  const questions = selectedSet?.questions ?? [];
+  const [step, setStep] = useState<Step>("select");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [timeLeft, setTimeLeft] = useState(quizDurationSeconds);
+  const [timeLeft, setTimeLeft] = useState(10 * 60);
   const [downloading, setDownloading] = useState(false);
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .list<QuizSet>("quizsets")
+      .then((list) => {
+        if (!cancelled) {
+          setQuizSetsList(list.length > 0 ? list : quizSets);
+        }
+      })
+      .catch(() => {
+        setQuizSetsList(quizSets);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -154,25 +175,31 @@ export default function Quiz() {
     return () => clearTimeout(timer);
   }, [step, timeLeft]);
 
+  const selectQuizSet = (set: QuizSet) => {
+    setSelectedSet(set);
+    transitionTo("form");
+  };
+
   const startQuiz = (e: FormEvent) => {
     e.preventDefault();
     setAnswers({});
-    setTimeLeft(quizDurationSeconds);
+    setTimeLeft(selectedSet?.durationSeconds ?? 10 * 60);
     transitionTo("quiz");
   };
 
   const restart = () => {
     setAnswers({});
-    setTimeLeft(quizDurationSeconds);
+    setTimeLeft(selectedSet?.durationSeconds ?? 10 * 60);
     setName("");
     setPhone("");
-    transitionTo("form");
+    setSelectedSet(null);
+    transitionTo("select");
   };
 
-  const total = quizQuestions.length;
+  const total = questions.length;
   const answeredCount = Object.keys(answers).length;
-  const score = quizQuestions.filter(
-    (q) => answers[q.id] === q.correctIndex,
+  const score = questions.filter(
+    (q, idx) => answers[idx] === q.correctIndex,
   ).length;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
 
@@ -185,18 +212,65 @@ export default function Quiz() {
 
   return (
     <section className="section-anchor mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-24">
-      {step === "form" && (
+      {step === "select" && (
         <div className="mx-auto max-w-lg">
           <span className="inline-flex rounded-full bg-primary-lighter px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary">
             Cyber Awareness Quiz
+          </span>
+          <h1 className="mt-4 text-3xl font-bold leading-tight text-ink sm:text-4xl">
+            Choose a Quiz
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
+            Select a quiz set to test your knowledge on cybersecurity and
+            digital literacy.
+          </p>
+
+          <div className="mt-8 space-y-4">
+            {quizSetsList.map((set, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => selectQuizSet(set)}
+                className="w-full rounded-3xl border-2 border-ink/5 bg-white p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg"
+              >
+                <h3 className="text-lg font-bold text-ink">{set.title}</h3>
+                <p className="mt-1 text-sm text-ink-soft">{set.description}</p>
+                <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-soft">
+                  <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                    ⏱ {set.durationSeconds / 60} min
+                  </span>
+                  <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                    📊 Pass: {PASSING_SCORE}%
+                  </span>
+                  <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                    📝 {set.questions?.length} questions
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {step === "form" && (
+        <div className="mx-auto max-w-lg">
+          <span className="inline-flex rounded-full bg-primary-lighter px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary">
+            {selectedSet?.title || "Cyber Awareness Quiz"}
           </span>
           <h1 className="mt-4 text-3xl font-bold leading-tight text-ink sm:text-4xl">
             Start the Quiz
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
             আপনার নাম ও ফোন নম্বর দিয়ে কুইজ শুরু করুন। মোট {total}টি প্রশ্ন এবং
-            সময় {quizDurationSeconds / 60} মিনিট।
+            সময় {(selectedSet?.durationSeconds ?? 10 * 60) / 60} মিনিট।
           </p>
+          <button
+            type="button"
+            onClick={() => transitionTo("select")}
+            className="mt-4 text-sm font-semibold text-primary hover:underline"
+          >
+            ← Choose a different quiz
+          </button>
 
           <form
             onSubmit={startQuiz}
@@ -237,12 +311,12 @@ export default function Quiz() {
               />
             </div>
             <Hoverable>
-            <button
-              type="submit"
-              className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-            >
-              কুইজ শুরু করুন →
-            </button>
+              <button
+                type="submit"
+                className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+              >
+                কুইজ শুরু করুন →
+              </button>
             </Hoverable>
           </form>
         </div>
@@ -278,11 +352,11 @@ export default function Quiz() {
           </div>
 
           <div className="mt-6 space-y-5">
-            {quizQuestions.map((q, qIndex) => {
-              const selected = answers[q.id];
+            {questions.map((q, qIndex) => {
+              const selected = answers[qIndex];
               return (
                 <div
-                  key={q.id}
+                  key={qIndex}
                   className="rounded-3xl border border-ink/5 bg-white p-6 shadow-sm sm:p-8"
                 >
                   <p className="text-base font-bold leading-snug text-ink sm:text-lg">
@@ -299,7 +373,7 @@ export default function Quiz() {
                           onClick={() =>
                             setAnswers((prev) => ({
                               ...prev,
-                              [q.id]: oIndex,
+                              [qIndex]: oIndex,
                             }))
                           }
                           className={`flex items-start gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm transition-all ${
@@ -329,14 +403,14 @@ export default function Quiz() {
 
           <div className="mt-8 flex flex-col items-center gap-4">
             <Hoverable>
-            <button
-              type="button"
-              onClick={() => transitionTo("result")}
-              disabled={timeLeft <= 0}
-              className="w-full rounded-full bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-ink/30 disabled:shadow-none sm:w-auto sm:px-12"
-            >
-              Submit Answers
-            </button>
+              <button
+                type="button"
+                onClick={() => transitionTo("result")}
+                disabled={timeLeft <= 0}
+                className="w-full rounded-full bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-ink/30 disabled:shadow-none sm:w-auto sm:px-12"
+              >
+                Submit Answers
+              </button>
             </Hoverable>
             <p className="text-xs text-ink-soft">
               সময় শেষ হলে উত্তর জমা হয়ে যাবে এবং আপনার প্রাপ্ত নম্বর দেখানো
@@ -374,13 +448,13 @@ export default function Quiz() {
             </p>
 
             <Hoverable>
-            <button
-              type="button"
-              onClick={restart}
-              className="mt-7 rounded-full bg-primary px-8 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-            >
-              আবার চেষ্টা করুন
-            </button>
+              <button
+                type="button"
+                onClick={restart}
+                className="mt-7 rounded-full bg-primary px-8 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+              >
+                আবার চেষ্টা করুন
+              </button>
             </Hoverable>
           </div>
 
@@ -398,25 +472,25 @@ export default function Quiz() {
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-3 sm:flex-row">
                   <Hoverable>
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-bold text-ink transition-colors hover:border-primary hover:text-primary"
-                  >
-                    🖨 Print Preview
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-bold text-ink transition-colors hover:border-primary hover:text-primary"
+                    >
+                      🖨 Print Preview
+                    </button>
                   </Hoverable>
                   <Hoverable>
-                  <button
-                    type="button"
-                    onClick={downloadCertificate}
-                    disabled={downloading}
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {downloading
-                      ? "Preparing PDF..."
-                      : "⬇ Download Certificate (PDF)"}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={downloadCertificate}
+                      disabled={downloading}
+                      className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {downloading
+                        ? "Preparing PDF..."
+                        : "⬇ Download Certificate (PDF)"}
+                    </button>
                   </Hoverable>
                 </div>
               </div>
@@ -512,12 +586,12 @@ export default function Quiz() {
           )}
 
           <div className="mt-8 space-y-3">
-            {quizQuestions.map((q, qIndex) => {
-              const selected = answers[q.id];
+            {questions.map((q, qIndex) => {
+              const selected = answers[qIndex];
               const correct = selected === q.correctIndex;
               return (
                 <div
-                  key={q.id}
+                  key={qIndex}
                   className={`flex items-start gap-3 rounded-2xl border p-4 ${
                     correct
                       ? "border-primary/30 bg-primary-tint"
@@ -552,4 +626,3 @@ export default function Quiz() {
     </section>
   );
 }
-

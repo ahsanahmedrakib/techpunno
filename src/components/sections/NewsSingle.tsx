@@ -12,7 +12,7 @@ const badgeStyles: Record<NewsItem["badge"], string> = {
 
 export default function NewsSingle({ item }: { item: NewsItem }) {
   const { title, content, date, badge, image } = item;
-  const related = newsItems.filter((n) => n.id !== item.id).slice(0, 2);
+  const related = newsItems.filter((n) => n.slug !== item.slug).slice(0, 2);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-24">
@@ -49,13 +49,10 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
         </div>
       )}
 
-      <div className="mt-8 space-y-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-        {content.map((paragraph, i) => (
-          <p key={i} className="whitespace-pre-line">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      <div
+        className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
 
       <div className="mt-10 rounded-2xl bg-primary-lighter p-6 text-center sm:p-8">
         <p className="text-lg font-bold text-ink">
@@ -91,7 +88,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
           <h2 className="text-xl font-bold text-ink">Related news</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {related.map((n) => (
-              <Link key={n.id} href={`/news/${n.id}`} className="block h-full">
+              <Link key={n.id} href={`/news/${n.slug || n.id}`} className="block h-full">
                 <Hoverable className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
                 <div className="flex items-center gap-2">
                   <span

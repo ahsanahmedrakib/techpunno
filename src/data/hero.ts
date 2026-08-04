@@ -7,7 +7,6 @@ export type HeroSlide = {
   ctaLabel: string;
   ctaHref: string;
   accent: "primary" | "secondary";
-  icon: string;
 };
 
 export const heroSlides: HeroSlide[] = [
@@ -21,7 +20,6 @@ export const heroSlides: HeroSlide[] = [
     ctaLabel: "Explore Events",
     ctaHref: "#events",
     accent: "primary",
-    icon: "🛡️",
   },
   {
     id: "learn",
@@ -33,7 +31,6 @@ export const heroSlides: HeroSlide[] = [
     ctaLabel: "Watch Videos",
     ctaHref: "#video",
     accent: "secondary",
-    icon: "💡",
   },
   {
     id: "volunteer",
@@ -45,6 +42,5 @@ export const heroSlides: HeroSlide[] = [
     ctaLabel: "Become a Volunteer",
     ctaHref: "#contact",
     accent: "primary",
-    icon: "🤝",
   },
 ];

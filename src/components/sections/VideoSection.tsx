@@ -3,17 +3,45 @@
 import { useState } from "react";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
-import {
-  featuredVideo,
-  videos,
-  youtubeEmbed,
-  youtubeThumb,
-} from "@/data/videos";
+import SkeletonVideoCard from "@/components/common/Skeleton";
+import { videos, youtubeEmbed, youtubeThumb, type Video } from "@/data/videos";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
+import { useCollection } from "@/lib/api";
 
 export default function VideoSection() {
-  const [current, setCurrent] = useState(featuredVideo);
+  const [videosData, loading] = useCollection<Video>("videos", videos);
+  const items = videosData.length ? videosData : videos;
+  const [current, setCurrent] = useState<Video>(items[0]);
+  const activeVideo = items.find((v) => v.id === current.id) ?? items[0];
+
+  if (loading && videosData.length === 0) {
+    return (
+      <section
+        id="video"
+        className="section-anchor bg-primary-lighter py-20 lg:py-28"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="YouTube"
+            title="Watch &"
+            accent="Learn"
+            description="Free tutorials, workshop recordings and awareness content — produced by volunteers for everyone."
+          />
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+            <div className="lg:col-span-3">
+              <SkeletonVideoCard />
+            </div>
+            <div className="space-y-4 lg:col-span-2">
+              <SkeletonVideoCard />
+              <SkeletonVideoCard />
+              <SkeletonVideoCard />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -40,8 +68,8 @@ export default function VideoSection() {
               <div className="aspect-video w-full">
                 <iframe
                   className="h-full w-full"
-                  src={youtubeEmbed(current.url)}
-                  title={current.title}
+                  src={youtubeEmbed(activeVideo.url)}
+                  title={activeVideo.title}
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
@@ -53,14 +81,14 @@ export default function VideoSection() {
                 ▶
               </span>
               <div>
-                <h3 className="text-lg font-bold text-ink">{current.title}</h3>
+                <h3 className="text-lg font-bold text-ink">{activeVideo.title}</h3>
               </div>
             </div>
           </motion.div>
 
           <motion.div variants={fadeUp} className="space-y-4 lg:col-span-2">
-            {videos.map((video) => {
-              const active = video.id === current.id;
+            {items.map((video) => {
+              const active = video.id === activeVideo.id;
               return (
                 <Hoverable key={video.id}>
                 <button

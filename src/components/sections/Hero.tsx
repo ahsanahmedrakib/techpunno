@@ -1,9 +1,11 @@
 "use client";
 
-import { heroSlides } from "@/data/hero";
+import { heroSlides, type HeroSlide } from "@/data/hero";
 import { site } from "@/data/site";
 import Hoverable from "@/components/common/Hoverable";
+import SkeletonHero from "@/components/common/Skeleton";
 import { motion } from "framer-motion";
+import { useCollection } from "@/lib/api";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -16,6 +18,12 @@ const statCards = [
 ];
 
 export default function Hero() {
+  const [slides, loading] = useCollection<HeroSlide>("hero", heroSlides);
+
+  if (loading && slides.length === 0) {
+    return <SkeletonHero />;
+  }
+
   return (
     <section id="home" className="relative overflow-hidden pt-18">
       <Swiper
@@ -26,7 +34,7 @@ export default function Hero() {
         speed={900}
         className="h-full w-full"
       >
-        {heroSlides.map((slide) => {
+        {slides.map((slide) => {
           const isPrimary = slide.accent === "primary";
           return (
             <SwiperSlide key={slide.id}>
@@ -104,7 +112,7 @@ export default function Hero() {
                     <div className="absolute inset-6 rounded-full border-2 border-white/25" />
                     <div className="absolute inset-12 rounded-full border border-white/20" />
                     <div className="absolute inset-0 grid place-items-center text-[120px] drop-shadow-lg">
-                      {slide.icon}
+                      🛡️
                     </div>
                     <div className="absolute -left-4 top-8 animate-bounce rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-ink shadow-xl [animation-duration:3s]">
                       🛡️ Stay Safe
