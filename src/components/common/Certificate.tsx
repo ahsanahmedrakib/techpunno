@@ -29,25 +29,42 @@ export default function Certificate({
 
   const certId = `TP-${new Date().getFullYear()}-${String(phone).slice(-4) || "0000"}`;
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const handleDownloadPDF = async () => {
     const element = certificateRef.current;
     if (!element) return;
 
-    const html2pdf = (await import("html2pdf.js")).default;
+    const html2canvas = (await import("html2canvas-pro")).default;
+    const { jsPDF } = await import("jspdf");
 
-    const opt = {
-      margin: 0,
-      filename: `Certificate_${name.trim().replace(/\s+/g, "_") || "Quiz"}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 3, useCORS: true, logging: false },
-      jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
-    } as const;
+    const canvas = await html2canvas(element, {
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#f8f9f2",
+    });
 
-    html2pdf().set(opt).from(element).save();
+    const pdf = new jsPDF({
+      unit: "mm",
+      format: "a4",
+      orientation: "landscape",
+      compress: true,
+    });
+
+    const pageWidth = 297;
+    const pageHeight = 210;
+    const imgWidth = 297;
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+    pdf.addImage(
+      canvas.toDataURL("image/jpeg", 0.98),
+      "JPEG",
+      0,
+      (pageHeight - imgHeight) / 2,
+      imgWidth,
+      imgHeight,
+    );
+
+    pdf.save(`Certificate_${name.trim().replace(/\s+/g, "_") || "Quiz"}.pdf`);
   };
 
   return (
@@ -61,12 +78,6 @@ export default function Certificate({
       {/* Action Buttons */}
       <div className="mb-6 flex gap-4 print:hidden">
         <button
-          onClick={handlePrint}
-          className="cursor-pointer rounded-lg bg-blue-700 px-5 py-2.5 font-sans font-medium text-white shadow-md transition hover:bg-blue-800"
-        >
-          🖨️ Print Certificate
-        </button>
-        <button
           onClick={handleDownloadPDF}
           className="cursor-pointer rounded-lg bg-emerald-700 px-5 py-2.5 font-sans font-medium text-white shadow-md transition hover:bg-emerald-800"
         >
@@ -78,7 +89,7 @@ export default function Certificate({
       <div className="w-full max-w-262.5 overflow-x-auto rounded-sm shadow-2xl print:shadow-none print:m-0 print:p-0">
         <div
           ref={certificateRef}
-          id="certificate-content"
+          id="certificate-print"
           className="relative box-border flex h-185.5 w-262.5 flex-col justify-between border-3 border-white bg-[#f8f9f2] p-8 text-gray-800 select-none print:h-[210mm] print:w-[297mm] print:border-none"
         >
           {/* Top Decorative Shapes */}
@@ -205,3 +216,4 @@ export default function Certificate({
     </div>
   );
 }
+
