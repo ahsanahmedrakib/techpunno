@@ -1,6 +1,7 @@
 "use client";
 
 import SectionHeading from "@/components/common/SectionHeading";
+import Hoverable from "@/components/common/Hoverable";
 import { events, type EventItem } from "@/data/events";
 import { fadeUp, scaleIn, stagger } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
@@ -78,8 +79,9 @@ export default function Events() {
                 whileInView="show"
                 viewport={{ once: true }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+                className="h-full"
               >
+                <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10">
                 <div className="relative flex items-center justify-between overflow-hidden bg-linear-to-br from-primary to-primary-dark px-6 py-5">
                   <span className="text-4xl transition-transform duration-300 group-hover:scale-110">
                     {categoryEmoji[event.category] ?? "📅"}
@@ -146,6 +148,7 @@ export default function Events() {
                     </span>
                   </div>
                 </div>
+                </Hoverable>
               </motion.article>
             ))}
           </AnimatePresence>

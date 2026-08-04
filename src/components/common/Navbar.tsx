@@ -2,6 +2,7 @@
 
 import { navItems, site } from "@/data/site";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
+import Hoverable from "@/components/common/Hoverable";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,13 +46,14 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
-            >
-              {item.label}
-            </Link>
+            <Hoverable key={item.href}>
+              <Link
+                href={item.href}
+                className="block rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
+              >
+                {item.label}
+              </Link>
+            </Hoverable>
           ))}
         </div>
 
@@ -92,14 +94,15 @@ export default function Navbar() {
           >
             <div className="space-y-1 px-4 py-4">
               {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-xl px-4 py-3 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
-                >
-                  {item.label}
-                </Link>
+                <Hoverable key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-xl px-4 py-3 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </Hoverable>
               ))}
             </div>
           </motion.div>

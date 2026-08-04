@@ -9,7 +9,7 @@ export const site = {
   messenger: "https://m.me/techpunnobd2",
   whatsapp: "https://wa.me/8801XXXXXXXXXX",
   youtube: "https://www.youtube.com/@techpunno",
-  email: "hello@techpunno.org",
+  email: "techpunno@gmail.com",
   phone: "+880 1XXX-XXXXXX",
   address: "Dhaka, Bangladesh",
   logo: "/logo.png",

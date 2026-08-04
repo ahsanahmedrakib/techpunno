@@ -2,6 +2,10 @@
 
 import { quizDurationSeconds, quizQuestions } from "@/data/quiz";
 import { site } from "@/data/site";
+import Hoverable from "@/components/common/Hoverable";
+import html2canvas from "html2canvas-pro";
+import { jsPDF } from "jspdf";
+import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 
 type Step = "form" | "quiz" | "result";
@@ -16,12 +20,122 @@ const formatTime = (s: number) => {
 
 const optionLabels = ["A", "B", "C", "D"];
 
+const loadImageAsDataUrl = (src: string): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Canvas 2D context unavailable"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+
 export default function Quiz() {
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [timeLeft, setTimeLeft] = useState(quizDurationSeconds);
+  const [downloading, setDownloading] = useState(false);
+  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadImageAsDataUrl(site.logo)
+      .then((url) => {
+        if (!cancelled) setLogoDataUrl(url);
+      })
+      .catch(() => console.error("Failed to load logo for certificate"));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const downloadCertificate = async () => {
+    const el = document.getElementById("certificate-print");
+    if (!el) return;
+    setDownloading(true);
+    const originalShadow = el.style.boxShadow;
+    el.style.boxShadow = "none";
+    const logoImg = el.querySelector("img");
+    const elRect = logoImg ? el.getBoundingClientRect() : null;
+    const logoRect = logoImg?.getBoundingClientRect() ?? null;
+    const originalDisplay = logoImg?.style.display;
+    if (logoImg) logoImg.style.display = "none";
+    try {
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+      });
+      if (logoImg && logoRect && elRect) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const src = logoDataUrl ?? (await loadImageAsDataUrl(site.logo));
+          const logo = new window.Image();
+          await new Promise<void>((resolve, reject) => {
+            logo.onload = () => resolve();
+            logo.onerror = () => reject(new Error("Failed to load logo"));
+            logo.src = src;
+          });
+          const scale = canvas.width / elRect.width;
+          const boxX = (logoRect.left - elRect.left) * scale;
+          const boxY = (logoRect.top - elRect.top) * scale;
+          const boxW = logoRect.width * scale;
+          const boxH = logoRect.height * scale;
+          const imgAspect = logo.naturalWidth / logo.naturalHeight;
+          const boxAspect = boxW / boxH;
+          let drawW = boxW;
+          let drawH = boxH;
+          if (imgAspect > boxAspect) {
+            drawH = boxW / imgAspect;
+          } else {
+            drawW = boxH * imgAspect;
+          }
+          const drawX = boxX + (boxW - drawW) / 2;
+          const drawY = boxY + (boxH - drawH) / 2;
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(boxX, boxY, boxW, boxH, 32);
+          ctx.clip();
+          ctx.drawImage(logo, drawX, drawY, drawW, drawH);
+          ctx.restore();
+        }
+      }
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4",
+      });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const aspect = canvas.width / canvas.height;
+      let w = pageW;
+      let h = pageW / aspect;
+      if (h > pageH) {
+        h = pageH;
+        w = pageH * aspect;
+      }
+      pdf.addImage(imgData, "PNG", (pageW - w) / 2, (pageH - h) / 2, w, h);
+      const safeName = name.trim().replace(/\s+/g, "-") || "Quiz";
+      pdf.save(`TechPunno-Certificate-${safeName}.pdf`);
+    } catch (error) {
+      console.error("Certificate download failed:", error);
+    } finally {
+      if (logoImg) logoImg.style.display = originalDisplay ?? "";
+      el.style.boxShadow = originalShadow;
+      setDownloading(false);
+    }
+  };
 
   const transitionTo = (next: Step) => {
     setStep(next);
@@ -122,12 +236,14 @@ export default function Quiz() {
                 className="mt-2 w-full rounded-xl border border-ink/10 bg-cream px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink-soft/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
+            <Hoverable>
             <button
               type="submit"
               className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
             >
               কুইজ শুরু করুন →
             </button>
+            </Hoverable>
           </form>
         </div>
       )}
@@ -212,6 +328,7 @@ export default function Quiz() {
           </div>
 
           <div className="mt-8 flex flex-col items-center gap-4">
+            <Hoverable>
             <button
               type="button"
               onClick={() => transitionTo("result")}
@@ -220,6 +337,7 @@ export default function Quiz() {
             >
               Submit Answers
             </button>
+            </Hoverable>
             <p className="text-xs text-ink-soft">
               সময় শেষ হলে উত্তর জমা হয়ে যাবে এবং আপনার প্রাপ্ত নম্বর দেখানো
               হবে।
@@ -255,6 +373,7 @@ export default function Quiz() {
               আপনি {total}টির মধ্যে {score}টি সঠিক উত্তর দিয়েছেন।
             </p>
 
+            <Hoverable>
             <button
               type="button"
               onClick={restart}
@@ -262,6 +381,7 @@ export default function Quiz() {
             >
               আবার চেষ্টা করুন
             </button>
+            </Hoverable>
           </div>
 
           {percentage >= 80 && (
@@ -276,13 +396,29 @@ export default function Quiz() {
                     সার্টিফিকেট তৈরি হয়েছে।
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-                >
-                  ⬇ Download Certificate (PDF)
-                </button>
+                <div className="flex shrink-0 flex-col items-center gap-3 sm:flex-row">
+                  <Hoverable>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-bold text-ink transition-colors hover:border-primary hover:text-primary"
+                  >
+                    🖨 Print Preview
+                  </button>
+                  </Hoverable>
+                  <Hoverable>
+                  <button
+                    type="button"
+                    onClick={downloadCertificate}
+                    disabled={downloading}
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {downloading
+                      ? "Preparing PDF..."
+                      : "⬇ Download Certificate (PDF)"}
+                  </button>
+                  </Hoverable>
+                </div>
               </div>
 
               <div
@@ -292,14 +428,24 @@ export default function Quiz() {
                 <div className="aspect-297/210 w-full print:h-[168mm] print:w-[237.6mm]">
                   <div className="flex h-full w-full flex-col items-center justify-center border-10 border-double border-primary p-6 text-center print:scale-125 sm:p-10">
                     <span className="inline-block h-20 w-20 overflow-hidden rounded-2xl bg-primary-lighter ring-2 ring-primary/20">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={site.logo}
-                        alt={`${site.name} logo`}
-                        width={80}
-                        height={80}
-                        className="h-full w-full object-contain"
-                      />
+                      {logoDataUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={logoDataUrl}
+                          alt={`${site.name} logo`}
+                          width={80}
+                          height={80}
+                          className="h-full w-full object-contain"
+                        />
+                      ) : (
+                        <Image
+                          src={site.logo}
+                          alt={`${site.name} logo`}
+                          width={80}
+                          height={80}
+                          className="h-full w-full object-contain"
+                        />
+                      )}
                     </span>
                     <p className="mt-3 text-xs font-bold uppercase tracking-[0.35em] text-primary sm:text-sm">
                       TechPunno

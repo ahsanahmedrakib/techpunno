@@ -2,6 +2,7 @@
 
 import { heroSlides } from "@/data/hero";
 import { site } from "@/data/site";
+import Hoverable from "@/components/common/Hoverable";
 import { motion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -66,20 +67,24 @@ export default function Hero() {
                     </p>
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
-                      <a
-                        href={slide.ctaHref}
-                        className="rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-primary/40"
-                      >
-                        {slide.ctaLabel}
-                      </a>
-                      <a
-                        href={site.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full border-2 border-ink/10 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
-                      >
-                        Follow on Facebook
-                      </a>
+                      <Hoverable>
+                        <a
+                          href={slide.ctaHref}
+                          className="inline-flex rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-primary/40"
+                        >
+                          {slide.ctaLabel}
+                        </a>
+                      </Hoverable>
+                      <Hoverable>
+                        <a
+                          href={site.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex rounded-full border-2 border-ink/10 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+                        >
+                          Follow on Facebook
+                        </a>
+                      </Hoverable>
                     </div>
                   </motion.div>
 

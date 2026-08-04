@@ -54,6 +54,17 @@ body {
   }
 }
 
+@media (hover: none) {
+  [data-hoverable] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-hoverable][data-tapped="true"] {
+    transform: translateY(-2px);
+    transition: transform 150ms ease;
+  }
+}
+
 .swiper-pagination-bullet {
   background: var(--color-primary) !important;
   opacity: 0.35;

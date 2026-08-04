@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Hoverable from "@/components/common/Hoverable";
 import { newsItems, type NewsItem } from "@/data/news";
 import { site } from "@/data/site";
 
@@ -64,20 +65,24 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
           Follow us for the latest cyber awareness tips and updates.
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href={site.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-          >
-            Follow {site.name}
-          </a>
-          <Link
-            href="/#news"
-            className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
-          >
-            More News
-          </Link>
+          <Hoverable>
+            <a
+              href={site.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+            >
+              Follow {site.name}
+            </a>
+          </Hoverable>
+          <Hoverable>
+            <Link
+              href="/#news"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+            >
+              More News
+            </Link>
+          </Hoverable>
         </div>
       </div>
 
@@ -86,11 +91,8 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
           <h2 className="text-xl font-bold text-ink">Related news</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {related.map((n) => (
-              <Link
-                key={n.id}
-                href={`/news/${n.id}`}
-                className="group rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
-              >
+              <Link key={n.id} href={`/news/${n.id}`} className="block h-full">
+                <Hoverable className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
                 <div className="flex items-center gap-2">
                   <span
                     className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[n.badge]}`}
@@ -104,6 +106,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
                 <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
                   {n.title}
                 </h3>
+                </Hoverable>
               </Link>
             ))}
           </div>

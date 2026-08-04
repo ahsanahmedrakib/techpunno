@@ -1,6 +1,7 @@
 "use client";
 
 import { site } from "@/data/site";
+import Hoverable from "@/components/common/Hoverable";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
@@ -46,33 +47,37 @@ export default function FloatingActions() {
         )}
       </AnimatePresence>
 
-      <motion.a
-        initial={{ opacity: 0, scale: 0.6, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.25, delay: 0.05 }}
-        href={site.messenger}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on Messenger with Techpunno"
-        title="Chat on Messenger with Techpunno"
-        className="grid h-12 w-12 place-items-center rounded-full bg-[#0084FF] text-white transition-transform hover:-translate-y-1"
-      >
-        <MessengerIcon size={22} />
-      </motion.a>
+      <Hoverable>
+        <motion.a
+          initial={{ opacity: 0, scale: 0.6, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.05 }}
+          href={site.messenger}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on Messenger with Techpunno"
+          title="Chat on Messenger with Techpunno"
+          className="grid h-12 w-12 place-items-center rounded-full bg-[#0084FF] text-white transition-transform hover:-translate-y-1"
+        >
+          <MessengerIcon size={22} />
+        </motion.a>
+      </Hoverable>
 
-      <motion.a
-        initial={{ opacity: 0, scale: 0.6, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.25, delay: 0.1 }}
-        href={site.whatsapp}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp with Techpunno"
-        title="Chat on WhatsApp with Techpunno"
-        className="grid h-12 w-12 place-items-center rounded-full bg-[#25D366] text-white transition-transform hover:-translate-y-1"
-      >
-        <WhatsappIcon size={22} />
-      </motion.a>
+      <Hoverable>
+        <motion.a
+          initial={{ opacity: 0, scale: 0.6, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.1 }}
+          href={site.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp with Techpunno"
+          title="Chat on WhatsApp with Techpunno"
+          className="grid h-12 w-12 place-items-center rounded-full bg-[#25D366] text-white transition-transform hover:-translate-y-1"
+        >
+          <WhatsappIcon size={22} />
+        </motion.a>
+      </Hoverable>
     </div>
   );
 }

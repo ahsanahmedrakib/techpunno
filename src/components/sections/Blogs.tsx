@@ -1,6 +1,7 @@
 "use client";
 
 import SectionHeading from "@/components/common/SectionHeading";
+import Hoverable from "@/components/common/Hoverable";
 import { blogPosts } from "@/data/blogs";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
@@ -32,10 +33,13 @@ export default function Blogs() {
               <motion.article
                 key={post.id}
                 variants={fadeUp}
-                className={`group flex flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15 ${
-                  featured ? "lg:col-span-1" : ""
-                }`}
+                className="h-full"
               >
+                <Hoverable
+                  className={`group flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15 ${
+                    featured ? "lg:col-span-1" : ""
+                  }`}
+                >
                 <div className="relative flex h-44 items-center justify-center overflow-hidden bg-linear-to-br from-primary via-primary-light to-secondary">
                   <span className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
                   <span className="absolute -bottom-8 -right-6 h-28 w-28 rounded-full bg-white/10" />
@@ -66,6 +70,7 @@ export default function Blogs() {
                     </span>
                   </div>
                 </div>
+                </Hoverable>
               </motion.article>
             );
           })}

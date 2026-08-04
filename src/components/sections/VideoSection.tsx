@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import SectionHeading from "@/components/common/SectionHeading";
+import Hoverable from "@/components/common/Hoverable";
 import {
   featuredVideo,
   videos,
@@ -61,8 +62,8 @@ export default function VideoSection() {
             {videos.map((video) => {
               const active = video.id === current.id;
               return (
+                <Hoverable key={video.id}>
                 <button
-                  key={video.id}
                   type="button"
                   onClick={() => setCurrent(video)}
                   className={`group flex w-full gap-4 rounded-2xl border p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 ${
@@ -94,9 +95,11 @@ export default function VideoSection() {
                     </span>
                   </div>
                 </button>
+                </Hoverable>
               );
             })}
 
+            <Hoverable>
             <a
               href="https://www.youtube.com/@techpunno"
               target="_blank"
@@ -105,6 +108,7 @@ export default function VideoSection() {
             >
               Visit our YouTube channel →
             </a>
+            </Hoverable>
           </motion.div>
         </motion.div>
       </div>

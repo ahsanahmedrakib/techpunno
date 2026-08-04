@@ -1,6 +1,7 @@
 "use client";
 
 import { navItems, site } from "@/data/site";
+import Hoverable from "@/components/common/Hoverable";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
@@ -25,17 +26,19 @@ export default function Footer() {
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
             {site.description}
           </p>
-          <a
-            href={site.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
-            </svg>
-            Follow us on Facebook
-          </a>
+          <Hoverable className="mt-5">
+            <a
+              href={site.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
+              </svg>
+              Follow us on Facebook
+            </a>
+          </Hoverable>
         </div>
 
         <div>
@@ -189,28 +192,32 @@ export default function Footer() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <motion.a
-                  whileHover={{ y: -3 }}
-                  href="https://m.me/rakibahsanahmed"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Chat on Messenger with Rakib"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#0084FF] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#0084FF]/40"
-                >
-                  <MessengerIcon size={16} />
-                  Messenger
-                </motion.a>
-                <motion.a
-                  whileHover={{ y: -3 }}
-                  href="https://wa.me/8801631112475"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Chat on WhatsApp with Rakib"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#25D366]/40"
-                >
-                  <WhatsappIcon size={16} />
-                  WhatsApp
-                </motion.a>
+                <Hoverable>
+                  <motion.a
+                    whileHover={{ y: -3 }}
+                    href="https://m.me/rakibahsanahmed"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Chat on Messenger with Rakib"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#0084FF] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#0084FF]/40"
+                  >
+                    <MessengerIcon size={16} />
+                    Messenger
+                  </motion.a>
+                </Hoverable>
+                <Hoverable>
+                  <motion.a
+                    whileHover={{ y: -3 }}
+                    href="https://wa.me/8801631112475"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Chat on WhatsApp with Rakib"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#25D366]/40"
+                  >
+                    <WhatsappIcon size={16} />
+                    WhatsApp
+                  </motion.a>
+                </Hoverable>
               </div>
             </div>
 

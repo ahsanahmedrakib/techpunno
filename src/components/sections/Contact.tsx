@@ -1,6 +1,7 @@
 "use client";
 
 import SectionHeading from "@/components/common/SectionHeading";
+import Hoverable from "@/components/common/Hoverable";
 import { site } from "@/data/site";
 import { fadeUp, stagger } from "@/lib/motion";
 import {
@@ -125,22 +126,24 @@ export default function Contact() {
                 Our team usually replies within 24–48 hours. Prefer social? DM
                 us on Facebook anytime.
               </p>
-              <a
-                href={site.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
+              <Hoverable className="mt-6">
+                <a
+                  href={site.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5"
                 >
-                  <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
-                </svg>
-                Message on Facebook
-              </a>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
+                  </svg>
+                  Message on Facebook
+                </a>
+              </Hoverable>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -161,21 +164,24 @@ export default function Contact() {
                   </>
                 );
                 const className =
-                  "flex items-center gap-3 rounded-2xl border border-ink/5 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg";
+                  "flex h-full items-center gap-3 rounded-2xl border border-ink/5 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg";
                 return info.href ? (
-                  <a
-                    key={info.label}
-                    href={info.href}
-                    target={info.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className={className}
-                  >
-                    {inner}
-                  </a>
+                  <Hoverable key={info.label} className="h-full">
+                    <a
+                      href={info.href}
+                      target={
+                        info.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel="noopener noreferrer"
+                      className={className}
+                    >
+                      {inner}
+                    </a>
+                  </Hoverable>
                 ) : (
-                  <div key={info.label} className={className}>
-                    {inner}
-                  </div>
+                  <Hoverable key={info.label} className="h-full">
+                    <div className={className}>{inner}</div>
+                  </Hoverable>
                 );
               })}
             </div>
@@ -183,7 +189,7 @@ export default function Contact() {
 
           <motion.div
             variants={fadeUp}
-            className="rounded-3xl border border-ink/5 bg-white p-6 shadow-xl shadow-ink/5 sm:p-8 lg:col-span-3"
+            className="rounded-3xl border-2 border-primary/60 bg-white p-6 shadow-xl shadow-ink/5 sm:p-8 lg:col-span-3"
           >
             {isSubmitSuccessful ? (
               <div className="flex h-full flex-col items-center justify-center gap-4 py-16 text-center">
@@ -340,14 +346,16 @@ export default function Contact() {
                     Your information stays private — we only use it to reply to
                     you.
                   </p>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                    {!isSubmitting && <span aria-hidden>→</span>}
-                  </button>
+                  <Hoverable className="w-full sm:w-auto">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                      {!isSubmitting && <span aria-hidden>→</span>}
+                    </button>
+                  </Hoverable>
                 </div>
               </form>
             )}

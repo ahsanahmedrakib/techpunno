@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import SectionHeading from "@/components/common/SectionHeading";
+import Hoverable from "@/components/common/Hoverable";
 import { newsItems, type NewsItem } from "@/data/news";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
@@ -36,8 +37,9 @@ export default function News() {
             <motion.article
               key={item!.id}
               variants={fadeUp}
-              className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 sm:p-10"
+              className="h-full"
             >
+              <Hoverable className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 sm:p-10">
               {item!.image && (
                 <div className="relative -mx-8 -mt-8 mb-6 aspect-video w-[calc(100%+4rem)] shrink-0 overflow-hidden sm:-mx-10 sm:-mt-10 sm:w-[calc(100%+5rem)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -72,6 +74,7 @@ export default function News() {
                   Read More →
                 </Link>
               </div>
+              </Hoverable>
             </motion.article>
           ))}
         </motion.div>
@@ -88,8 +91,9 @@ export default function News() {
               <Link
                 key={item.id}
                 href={`/news/${item.id}`}
-                className="flex flex-col rounded-2xl border border-ink/5 bg-cream p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-white hover:shadow-lg"
+                className="block h-full"
               >
+                <Hoverable className="flex h-full flex-col rounded-2xl border border-ink/5 bg-cream p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-white hover:shadow-lg">
                 <div className="flex items-center gap-2">
                   <span
                     className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[item.badge]}`}
@@ -109,6 +113,7 @@ export default function News() {
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
                   Learn more →
                 </span>
+                </Hoverable>
               </Link>
             ))}
           </motion.div>
