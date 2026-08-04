@@ -1,5 +1,6 @@
 "use client";
 
+import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import { site } from "@/data/site";
@@ -111,7 +112,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section-anchor bg-white py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="Contact"
           title="Let's build a safer"
@@ -368,7 +369,7 @@ export default function Contact() {
             )}
           </motion.div>
         </motion.div>
-      </div>
+      </Container>
     </section>
   );
 }

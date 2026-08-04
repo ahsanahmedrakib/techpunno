@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import Skeleton from "@/components/common/Skeleton";
 import { newsItems, type NewsItem } from "@/data/news";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useCollection } from "@/lib/api";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
@@ -22,7 +24,7 @@ export default function News() {
   if (loading && items.length === 0) {
     return (
       <section id="news" className="section-anchor bg-mist py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Container>
           <SectionHeading
             eyebrow="News & Updates"
             title="Latest from"
@@ -33,14 +35,14 @@ export default function News() {
             <Skeleton className="h-80 rounded-3xl" />
             <Skeleton className="h-80 rounded-3xl" />
           </div>
-        </div>
+        </Container>
       </section>
     );
   }
 
   return (
     <section id="news" className="section-anchor bg-mist py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="News & Updates"
           title="Latest from"
@@ -65,14 +67,15 @@ export default function News() {
                 href={`/news/${item!.slug || item!.id}`}
                 className="block h-full"
               >
-                <Hoverable className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 sm:p-10">
+                <Hoverable className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border-2 border-primary/40 bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 transition-all hover:border-primary sm:p-10">
                   {item!.image && (
                     <div className="relative -mx-8 -mt-8 mb-6 aspect-video w-[calc(100%+4rem)] shrink-0 overflow-hidden sm:-mx-10 sm:-mt-10 sm:w-[calc(100%+5rem)]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={item!.image}
                         alt={item!.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-[#0f3a28] to-transparent" />
                     </div>
@@ -117,13 +120,14 @@ export default function News() {
                 href={`/news/${item.slug || item.id}`}
                 className="block h-full"
               >
-                <Hoverable className="flex h-full flex-col rounded-2xl border border-ink/5 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-white hover:shadow-lg">
+                <Hoverable className="flex h-full flex-col rounded-2xl border-2 border-primary/40 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-white hover:shadow-lg">
                   <div className="relative h-36 shrink-0 overflow-hidden rounded-t-2xl">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={item.image || "/images/dummy.jpeg"}
                       alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
                   </div>
@@ -153,7 +157,7 @@ export default function News() {
             ))}
           </motion.div>
         )}
-      </div>
+      </Container>
     </section>
   );
 }

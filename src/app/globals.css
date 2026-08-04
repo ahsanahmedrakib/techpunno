@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @import "react-toastify/dist/ReactToastify.css";
 
+@layer base {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
 @theme {
   --color-primary: #0c9b5d;
   --color-primary-dark: #087a49;

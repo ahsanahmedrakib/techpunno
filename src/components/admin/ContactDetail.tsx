@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import type { CollectionConfig } from "@/lib/collections";
 
@@ -52,15 +53,15 @@ export default function ContactDetail({
                   </div>
                 ) : field.type === "image" && typeof value === "string" ? (
                   <div className="flex items-start gap-4">
-                    <img
-                      src={value}
-                      alt={field.label}
-                      className="h-24 w-24 rounded-xl border border-ink/10 object-cover shadow-sm"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display =
-                          "none";
-                      }}
-                    />
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-ink/10 shadow-sm">
+                      <Image
+                        src={value}
+                        alt={field.label}
+                        fill
+                        sizes="96px"
+                        className="object-cover"
+                      />
+                    </div>
                     <div>
                       <p className="text-sm text-ink">{value}</p>
                       <a

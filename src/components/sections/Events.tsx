@@ -1,5 +1,6 @@
 "use client";
 
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonEventCard from "@/components/common/Skeleton";
@@ -7,6 +8,7 @@ import { events, type EventItem } from "@/data/events";
 import { useCollection } from "@/lib/api";
 import { fadeUp, scaleIn, stagger } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -25,7 +27,7 @@ export default function Events() {
 
   return (
     <section id="events" className="section-anchor bg-cream py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="Events"
           title="Workshops, Webinars &"
@@ -85,13 +87,14 @@ export default function Events() {
                     href={`/events/${event.slug || event.id}`}
                     className="block h-full"
                   >
-                    <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10">
+                    <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary hover:shadow-2xl hover:shadow-primary/10">
                       <div className="relative h-44 shrink-0 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={event.image || "/images/dummy.jpeg"}
                           alt={event.title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute right-4 top-4 rounded-2xl bg-white/15 px-5 py-2 text-center text-white backdrop-blur-sm">
                           <span className="block text-2xl font-extrabold leading-none">
@@ -101,7 +104,6 @@ export default function Events() {
                             {event.month} {event.year}
                           </span>
                         </div>
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-secondary" />
                       </div>
 
                       <div className="flex flex-1 flex-col p-6">
@@ -162,7 +164,7 @@ export default function Events() {
             </AnimatePresence>
           </motion.div>
         )}
-      </div>
+      </Container>
     </section>
   );
 }

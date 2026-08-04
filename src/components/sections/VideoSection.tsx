@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import SkeletonVideoCard from "@/components/common/Skeleton";
 import { videos, youtubeEmbed, youtubeThumb, type Video } from "@/data/videos";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useCollection } from "@/lib/api";
 
 export default function VideoSection() {
@@ -21,7 +23,7 @@ export default function VideoSection() {
         id="video"
         className="section-anchor bg-primary-lighter py-20 lg:py-28"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Container>
           <SectionHeading
             eyebrow="YouTube"
             title="Watch &"
@@ -38,7 +40,7 @@ export default function VideoSection() {
               <SkeletonVideoCard />
             </div>
           </div>
-        </div>
+        </Container>
       </section>
     );
   }
@@ -48,7 +50,7 @@ export default function VideoSection() {
       id="video"
       className="section-anchor bg-primary-lighter py-20 lg:py-28"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="YouTube"
           title="Watch &"
@@ -101,11 +103,12 @@ export default function VideoSection() {
                   }`}
                 >
                   <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-ink/10">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={youtubeThumb(video.url)}
                       alt={video.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      fill
+                      sizes="128px"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     {!active && (
                       <span className="absolute inset-0 grid place-items-center bg-black/30 text-lg text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -139,7 +142,7 @@ export default function VideoSection() {
             </Hoverable>
           </motion.div>
         </motion.div>
-      </div>
+      </Container>
     </section>
   );
 }

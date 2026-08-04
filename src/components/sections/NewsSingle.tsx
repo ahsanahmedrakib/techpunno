@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { newsItems, type NewsItem } from "@/data/news";
 import { site } from "@/data/site";
@@ -15,7 +16,8 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
   const related = newsItems.filter((n) => n.slug !== item.slug).slice(0, 2);
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-24">
+    <Container className="py-16 lg:py-24">
+      <article className="mx-auto max-w-3xl">
       <Link
         href="/#news"
         className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
@@ -110,5 +112,6 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
         </div>
       )}
     </article>
+    </Container>
   );
 }

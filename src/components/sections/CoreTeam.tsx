@@ -1,5 +1,6 @@
 "use client";
 
+import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import SkeletonTeamCard from "@/components/common/Skeleton";
@@ -13,7 +14,7 @@ export default function CoreTeam() {
       id="team"
       className="section-anchor bg-primary-lighter py-20 lg:py-28"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="Core Team"
           title="The people behind"
@@ -35,7 +36,7 @@ export default function CoreTeam() {
             ))
           )}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

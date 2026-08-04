@@ -2,6 +2,7 @@
 
 import { navItems, site } from "@/data/site";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -23,7 +24,8 @@ export default function Navbar() {
           : "border-transparent bg-white/20 backdrop-blur-sm"
       }`}
     >
-      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav>
+        <Container className="flex h-18 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
           <span className="relative h-15 w-15 overflow-hidden rounded-xl">
             <Image
@@ -81,6 +83,7 @@ export default function Navbar() {
             />
           </div>
         </button>
+        </Container>
       </nav>
 
       <AnimatePresence>

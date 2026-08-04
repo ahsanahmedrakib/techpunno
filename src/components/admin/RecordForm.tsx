@@ -2,6 +2,7 @@
 
 import type { FieldDef } from "@/lib/collections";
 import axios from "axios";
+import Image from "next/image";
 import RichTextEditor from "./RichTextEditor";
 import {
   createContext,
@@ -135,13 +136,13 @@ function ImageUpload({
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 border-primary/30 bg-mist">
           {preview ? (
-            <img
+            <Image
               src={preview}
               alt=""
-              className="h-full w-full object-cover"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
+              fill
+              sizes="64px"
+              className="object-cover"
+              unoptimized={preview.startsWith("data:")}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-lg text-ink-soft/30">

@@ -2,6 +2,7 @@
 
 import { heroSlides, type HeroSlide } from "@/data/hero";
 import { site } from "@/data/site";
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import SkeletonHero from "@/components/common/Skeleton";
 import { motion } from "framer-motion";
@@ -48,7 +49,7 @@ export default function Hero() {
                 <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
 
-                <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:px-8">
+                <Container className="grid grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:gap-8">
                   <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -121,7 +122,7 @@ export default function Hero() {
                       💻 Learn Tech
                     </div>
                   </motion.div>
-                </div>
+                </Container>
               </div>
             </SwiperSlide>
           );
@@ -129,7 +130,7 @@ export default function Hero() {
       </Swiper>
 
       <div className="relative border-t border-ink/5 bg-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-ink/5 px-4 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-6 lg:px-8">
+        <Container className="grid grid-cols-1 divide-y divide-ink/5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {statCards.map((stat) => (
             <motion.div
               key={stat.label}
@@ -147,7 +148,7 @@ export default function Hero() {
               </span>
             </motion.div>
           ))}
-        </div>
+        </Container>
       </div>
     </section>
   );

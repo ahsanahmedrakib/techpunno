@@ -1,6 +1,7 @@
 "use client";
 
 import { navItems, site } from "@/data/site";
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -9,7 +10,7 @@ import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
 export default function Footer() {
   return (
     <footer className="bg-ink text-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
             <span className="relative h-13 w-13 overflow-hidden rounded-lg ring">
@@ -141,22 +142,22 @@ export default function Footer() {
             </p>
           </div>
         </div>
-      </div>
+      </Container>
 
       <div className="border-t border-white/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-white/60 sm:flex-row sm:px-6 lg:px-8">
+        <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-white/60 sm:flex-row">
           <p>
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
           <p>Built with 💚 for a safe digital society.</p>
-        </div>
+        </Container>
       </div>
 
       {/* Developer info  */}
       <div className="relative border-t border-white/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
-        <div className="mx-auto max-w-7xl">
+        <Container>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -232,7 +233,7 @@ export default function Footer() {
               </p>
             </div>
           </motion.div>
-        </div>
+        </Container>
       </div>
     </footer>
   );

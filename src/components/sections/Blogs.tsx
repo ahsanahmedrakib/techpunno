@@ -1,11 +1,13 @@
 "use client";
 
+import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonBlogCard from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { useCollection } from "@/lib/api";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Blogs() {
@@ -15,7 +17,7 @@ export default function Blogs() {
       id="blogs"
       className="section-anchor bg-primary-lighter py-20 lg:py-28"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="Blogs"
           title="Stories &"
@@ -44,13 +46,14 @@ export default function Blogs() {
                   href={`/blogs/${post.slug || post.id}`}
                   className="block h-full"
                 >
-                  <Hoverable className="group flex h-full flex-col overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15">
+                  <Hoverable className="group flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary hover:shadow-2xl hover:shadow-primary/15">
                     <div className="relative h-44 shrink-0 overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={post.image || "/images/dummy.jpeg"}
                         alt={post.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
                       <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
@@ -83,7 +86,7 @@ export default function Blogs() {
             ))
           )}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

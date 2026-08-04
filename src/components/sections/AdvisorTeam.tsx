@@ -1,5 +1,6 @@
 "use client";
 
+import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import SkeletonTeamCard from "@/components/common/Skeleton";
@@ -10,7 +11,7 @@ export default function AdvisorTeam() {
   const [members, loading] = useCollection<TeamMember>("advisors", advisors);
   return (
     <section id="advisors" className="section-anchor bg-cream py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Container>
         <SectionHeading
           eyebrow="Advisory Board"
           title="Guided by"
@@ -32,7 +33,7 @@ export default function AdvisorTeam() {
             ))
           )}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
