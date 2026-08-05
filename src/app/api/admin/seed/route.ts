@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCollection, collectionKeys } from "@/lib/db";
-import { collections } from "@/lib/collections";
+import { getCollection, tableKeys } from "@/lib/db";
+import { tables } from "@/lib/tables";
 
 function slugify(text: string): string {
   return text
@@ -30,11 +30,11 @@ async function generateUniqueSlug(
 
 export async function POST() {
   try {
-    for (const key of collectionKeys) {
+    for (const key of tableKeys) {
       const coll = await getCollection(key);
       const count = await coll.countDocuments();
       if (count === 0) {
-        const col = collections[key];
+        const col = tables[key];
         if (col.seed.length > 0) {
           const hasSlug = col.fields.some((f) => f.name === "slug");
           const docs = col.seed.map((s) => {
@@ -70,7 +70,7 @@ export async function POST() {
 
 export async function DELETE() {
   try {
-    for (const key of collectionKeys) {
+    for (const key of tableKeys) {
       const coll = await getCollection(key);
       await coll.deleteMany({});
     }

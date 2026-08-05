@@ -5,13 +5,13 @@ import Hoverable from "@/components/common/Hoverable";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonBlogCard from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Blogs() {
-  const [posts, loading] = useCollection<BlogPost>("blogs", blogPosts);
+  const [posts, loading] = useTable<BlogPost>("blogs", blogPosts);
   return (
     <section
       id="blogs"

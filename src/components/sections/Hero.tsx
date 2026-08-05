@@ -6,7 +6,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import SkeletonHero from "@/components/common/Skeleton";
 import { motion } from "framer-motion";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -19,7 +19,7 @@ const statCards = [
 ];
 
 export default function Hero() {
-  const [slides, loading] = useCollection<HeroSlide>("hero", heroSlides);
+  const [slides, loading] = useTable<HeroSlide>("hero", heroSlides);
 
   if (loading && slides.length === 0) {
     return <SkeletonHero />;

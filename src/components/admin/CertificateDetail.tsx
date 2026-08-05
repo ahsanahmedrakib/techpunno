@@ -13,7 +13,7 @@ import { useState } from "react";
 import { formatDate, formatDateAndTime } from "@/lib/utils";
 
 interface CertificateDetailProps {
-  record: Record<string, unknown>;
+  row: Record<string, unknown>;
 }
 
 function percentageColor(percentage: number): string {
@@ -21,17 +21,17 @@ function percentageColor(percentage: number): string {
   return "text-primary border-primary";
 }
 
-export default function CertificateDetail({ record }: CertificateDetailProps) {
+export default function CertificateDetail({ row }: CertificateDetailProps) {
   const [showCertificate, setShowCertificate] = useState(false);
 
-  const certificateId = String(record.certificateId ?? "");
-  const name = String(record.name ?? "");
-  const phone = String(record.phone ?? "");
-  const percentage = Number(record.percentage ?? 0);
-  const score = Number(record.score ?? 0);
-  const total = Number(record.total ?? 0);
-  const quizTitle = String(record.quizTitle ?? "Cyber Awareness Quiz");
-  const date = String(record.date ?? "");
+  const certificateId = String(row.certificateId ?? "");
+  const name = String(row.name ?? "");
+  const phone = String(row.phone ?? "");
+  const percentage = Number(row.percentage ?? 0);
+  const score = Number(row.score ?? 0);
+  const total = Number(row.total ?? 0);
+  const quizTitle = String(row.quizTitle ?? "Cyber Awareness Quiz");
+  const date = String(row.date ?? "");
 
   const openCertificate = () => {
     if (typeof window !== "undefined" && certificateId) {
@@ -111,7 +111,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
               Issue Date
             </p>
             <p className="mt-1 text-sm font-medium text-ink">
-              {date || formatDate(String(record.createdAt ?? ""))}
+              {date || formatDate(String(row.createdAt ?? ""))}
             </p>
           </div>
           <div className="bg-white p-5">
@@ -135,7 +135,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
               Stored On
             </p>
             <p className="mt-1 text-sm font-medium text-ink">
-              {formatDateAndTime(String(record.createdAt ?? ""))}
+              {formatDateAndTime(String(row.createdAt ?? ""))}
             </p>
           </div>
         </div>

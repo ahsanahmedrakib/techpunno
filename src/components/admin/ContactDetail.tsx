@@ -1,16 +1,16 @@
 "use client";
 
-import type { CollectionConfig } from "@/lib/collections";
+import type { TableConfig } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
 interface ContactDetailProps {
-  record: Record<string, unknown>;
-  config: CollectionConfig;
+  row: Record<string, unknown>;
+  config: TableConfig;
 }
 
-export default function ContactDetail({ record, config }: ContactDetailProps) {
+export default function ContactDetail({ row, config }: ContactDetailProps) {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex items-center gap-3">
@@ -37,7 +37,7 @@ export default function ContactDetail({ record, config }: ContactDetailProps) {
       <div className="rounded-2xl border-2 border-primary/40 bg-white p-6 shadow-sm">
         <div className="space-y-0">
           {config.fields.map((field, idx) => {
-            const value = record[field.name];
+            const value = row[field.name];
             if (value === undefined || value === null || value === "")
               return null;
 

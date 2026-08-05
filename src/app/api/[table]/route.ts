@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  collections,
+  tables,
   createDoc,
-  isCollectionKey,
+  isTableKey,
   listDocs,
   pagedDocs,
 } from "@/lib/db";
@@ -11,17 +11,17 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ collection: string }> },
+  { params }: { params: Promise<{ table: string }> },
 ) {
-  const { collection } = await params;
-  if (!isCollectionKey(collection)) {
-    return NextResponse.json({ error: "Unknown collection" }, { status: 404 });
+  const { table } = await params;
+  if (!isTableKey(table)) {
+    return NextResponse.json({ error: "Unknown table" }, { status: 404 });
   }
   try {
     const url = new URL(req.url);
 
     if (!url.searchParams.has("page")) {
-      const docs = await listDocs(collection);
+      const docs = await listDocs(table);
       return NextResponse.json(docs);
     }
 
@@ -32,7 +32,7 @@ export async function GET(
     );
     const search = url.searchParams.get("search") ?? "";
 
-    const result = await pagedDocs(collection, { page, pageSize, search });
+    const result = await pagedDocs(table, { page, pageSize, search });
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";
@@ -42,21 +42,21 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ collection: string }> },
+  { params }: { params: Promise<{ table: string }> },
 ) {
-  const { collection } = await params;
-  if (!isCollectionKey(collection)) {
-    return NextResponse.json({ error: "Unknown collection" }, { status: 404 });
+  const { table } = await params;
+  if (!isTableKey(table)) {
+    return NextResponse.json({ error: "Unknown table" }, { status: 404 });
   }
-  if (collections[collection].readOnly) {
+  if (tables[table].readOnly) {
     return NextResponse.json(
-      { error: "This collection is read-only" },
+      { error: "This table is read-only" },
       { status: 403 },
     );
   }
   try {
     const body = await req.json();
-    const doc = await createDoc(collection, body);
+    const doc = await createDoc(table, body);
     return NextResponse.json(doc, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";

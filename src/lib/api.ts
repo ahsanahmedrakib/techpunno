@@ -26,27 +26,27 @@ export interface PagedResult<T> {
 }
 
 export const api = {
-  list: <T>(collection: string) =>
-    http.get<T[]>(`/api/${collection}`).then((r) => r.data),
+  list: <T>(table: string) =>
+    http.get<T[]>(`/api/${table}`).then((r) => r.data),
   paged: <T>(
-    collection: string,
+    table: string,
     params: { page: number; pageSize: number; search?: string },
   ) =>
     http
-      .get<PagedResult<T>>(`/api/${collection}`, { params })
+      .get<PagedResult<T>>(`/api/${table}`, { params })
       .then((r) => r.data),
-  get: <T>(collection: string, id: string) =>
-    http.get<T>(`/api/${collection}/${id}`).then((r) => r.data),
-  create: <T>(collection: string, data: unknown) =>
-    http.post<T>(`/api/${collection}`, data).then((r) => r.data),
-  update: <T>(collection: string, id: string, data: unknown) =>
-    http.put<T>(`/api/${collection}/${id}`, data).then((r) => r.data),
-  remove: (collection: string, id: string) =>
-    http.delete<{ ok: boolean }>(`/api/${collection}/${id}`).then((r) => r.data),
+  get: <T>(table: string, id: string) =>
+    http.get<T>(`/api/${table}/${id}`).then((r) => r.data),
+  create: <T>(table: string, data: unknown) =>
+    http.post<T>(`/api/${table}`, data).then((r) => r.data),
+  update: <T>(table: string, id: string, data: unknown) =>
+    http.put<T>(`/api/${table}/${id}`, data).then((r) => r.data),
+  remove: (table: string, id: string) =>
+    http.delete<{ ok: boolean }>(`/api/${table}/${id}`).then((r) => r.data),
 };
 
-export function useCollection<T>(
-  collection: string,
+export function useTable<T>(
+  table: string,
   fallback: T[],
 ): [T[], boolean] {
   const [data, setData] = useState<T[]>(fallback);
@@ -55,7 +55,7 @@ export function useCollection<T>(
   useEffect(() => {
     let cancelled = false;
     api
-      .list<T>(collection)
+      .list<T>(table)
       .then((result) => {
         if (!cancelled) setData(result.length > 0 ? result : fallback);
       })
@@ -68,39 +68,39 @@ export function useCollection<T>(
     return () => {
       cancelled = true;
     };
-  }, [collection]);
+  }, [table]);
 
   return [data, loading];
 }
 
-export function useCollectionQuery<T>(collection: string) {
+export function useTableQuery<T>(table: string) {
   return useQuery({
-    queryKey: ["collection", collection],
-    queryFn: () => api.list<T>(collection),
+    queryKey: ["table", table],
+    queryFn: () => api.list<T>(table),
   });
 }
 
-export function useCreateDoc(collection: string) {
+export function useCreateDoc(table: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: unknown) => api.create(collection, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collection", collection] }),
+    mutationFn: (data: unknown) => api.create(table, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["table", table] }),
   });
 }
 
-export function useUpdateDoc(collection: string) {
+export function useUpdateDoc(table: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
-      api.update(collection, id, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collection", collection] }),
+      api.update(table, id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["table", table] }),
   });
 }
 
-export function useDeleteDoc(collection: string) {
+export function useDeleteDoc(table: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => api.remove(collection, id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collection", collection] }),
+    mutationFn: (id: string) => api.remove(table, id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["table", table] }),
   });
 }

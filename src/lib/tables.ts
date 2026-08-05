@@ -28,7 +28,7 @@ export interface FieldDef {
   min?: number;
 }
 
-export interface CollectionConfig {
+export interface TableConfig {
   key: string;
   label: string;
   singular: string;
@@ -39,7 +39,7 @@ export interface CollectionConfig {
   readOnly?: boolean;
 }
 
-export type CollectionKey =
+export type TableKey =
   | "advisors"
   | "coreteam"
   | "blogs"
@@ -51,7 +51,7 @@ export type CollectionKey =
   | "contacts"
   | "certificates";
 
-export const collections: Record<CollectionKey, CollectionConfig> = {
+export const tables: Record<TableKey, TableConfig> = {
   advisors: {
     key: "advisors",
     label: "Advisors",
@@ -216,8 +216,8 @@ export const collections: Record<CollectionKey, CollectionConfig> = {
   },
 };
 
-export function isCollectionKey(key: string): key is CollectionKey {
-  return key in collections;
+export function isTableKey(key: string): key is TableKey {
+  return key in tables;
 }
 
-export const collectionKeys = Object.keys(collections) as CollectionKey[];
+export const tableKeys = Object.keys(tables) as TableKey[];

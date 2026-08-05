@@ -5,7 +5,7 @@ import Hoverable from "@/components/common/Hoverable";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonEventCard from "@/components/common/Skeleton";
 import { events, type EventItem } from "@/data/events";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 import { fadeUp, scaleIn, stagger } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -20,7 +20,7 @@ const filters = [
 
 export default function Events() {
   const [filter, setFilter] = useState<string>("all");
-  const [items, loading] = useCollection<EventItem>("events", events);
+  const [items, loading] = useTable<EventItem>("events", events);
 
   const filtered =
     filter === "all" ? items : items.filter((event) => event.status === filter);

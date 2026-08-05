@@ -8,7 +8,7 @@ import {
   useUpdateDoc,
   type PagedResult,
 } from "@/lib/api";
-import type { CollectionConfig, CollectionKey } from "@/lib/collections";
+import type { TableConfig, TableKey } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Eye, Inbox, Pencil, Plus, Search, Trash2 } from "lucide-react";
@@ -16,16 +16,16 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ConfirmDialog from "./ConfirmDialog";
-import RecordForm from "./RecordForm";
+import RowForm from "./RowForm";
 import TablePagination from "./TablePagination";
 import TableSkeleton from "./TableSkeleton";
 
 interface Props {
-  collectionKey: CollectionKey;
-  config: CollectionConfig;
+  tableKey: TableKey;
+  config: TableConfig;
 }
 
-export default function CollectionManager({ collectionKey, config }: Props) {
+export default function TableManager({ tableKey, config }: Props) {
   const router = useRouter();
   const [view, setView] = useState<"list" | "create" | "edit">("list");
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
@@ -50,9 +50,9 @@ export default function CollectionManager({ collectionKey, config }: Props) {
   const { data, isLoading, error, isFetching } = useQuery<
     PagedResult<Record<string, unknown>>
   >({
-    queryKey: ["collection", collectionKey, page, pageSize, search],
+    queryKey: ["table", tableKey, page, pageSize, search],
     queryFn: () =>
-      api.paged<Record<string, unknown>>(collectionKey, {
+      api.paged<Record<string, unknown>>(tableKey, {
         page,
         pageSize,
         search,
@@ -60,13 +60,13 @@ export default function CollectionManager({ collectionKey, config }: Props) {
     placeholderData: keepPreviousData,
   });
 
-  const records = data?.docs ?? [];
+  const rows = data?.docs ?? [];
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
 
-  const createMutation = useCreateDoc(collectionKey);
-  const updateMutation = useUpdateDoc(collectionKey);
-  const deleteMutation = useDeleteDoc(collectionKey);
+  const createMutation = useCreateDoc(tableKey);
+  const updateMutation = useUpdateDoc(tableKey);
+  const deleteMutation = useDeleteDoc(tableKey);
 
   const handleCreate = async (data: Record<string, unknown>) => {
     try {
@@ -96,7 +96,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
       toast.success(`${config.singular} deleted`);
     } catch {
       toast.error(
-        "Failed to delete. The record may not exist in the database.",
+        "Failed to delete. The row may not exist in the database.",
       );
     }
     setDeletingId(null);
@@ -104,8 +104,8 @@ export default function CollectionManager({ collectionKey, config }: Props) {
 
   const getField = (name: string) => config.fields.find((f) => f.name === name);
 
-  const cellValue = (record: Record<string, unknown>, col: string) => {
-    const val = record[col];
+  const cellValue = (row: Record<string, unknown>, col: string) => {
+    const val = row[col];
     if (val === null || val === undefined) return "\u2014";
     if (Array.isArray(val)) return val.join(", ");
     const str = String(val);
@@ -144,14 +144,14 @@ export default function CollectionManager({ collectionKey, config }: Props) {
   }
 
   if (config.single) {
-    const record = records[0] ?? {};
+    const row = rows[0] ?? {};
     return (
       <div className="mx-auto max-w-2xl">
         <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
           <h3 className="mb-4 text-base font-bold text-ink">{config.label}</h3>
-          <RecordForm
+          <RowForm
             fields={config.fields}
-            initial={record}
+            initial={row}
             onSubmit={handleUpdate}
             onCancel={() => {}}
             submitLabel="Save Settings"
@@ -170,7 +170,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
               ? `New ${config.singular}`
               : `Edit ${config.singular}`}
           </h3>
-          <RecordForm
+          <RowForm
             fields={config.fields}
             initial={view === "edit" ? (editing ?? undefined) : undefined}
             onSubmit={view === "create" ? handleCreate : handleUpdate}
@@ -213,18 +213,18 @@ export default function CollectionManager({ collectionKey, config }: Props) {
               columns={config.listColumns.map((c) => getField(c)?.label ?? c)}
               rows={Math.min(pageSize, 10)}
             />
-          ) : records.length === 0 ? (
+          ) : rows.length === 0 ? (
             <div className="rounded-lg border-2 border-primary/30 bg-white py-20 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
                 <Inbox className="h-6 w-6" />
               </div>
               <p className="text-sm font-medium text-ink-soft">
-                {search ? "No records match your search" : "No records found"}
+                {search ? "No rows match your search" : "No rows found"}
               </p>
               <p className="mt-1 text-xs text-ink-soft/60">
                 {search
                   ? "Try a different keyword or clear the search"
-                  : "Start by creating a new record"}
+                  : "Start by creating a new row"}
               </p>
             </div>
           ) : (
@@ -247,13 +247,13 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {records.map((record, idx) => (
+                    {rows.map((row, idx) => (
                       <tr
-                        key={String(record.id ?? idx)}
+                        key={String(row.id ?? idx)}
                         className="border-t border-ink/10 transition-colors odd:bg-white even:bg-mist/30 hover:bg-primary-lighter/40"
                       >
                         {config.listColumns.map((col) => {
-                          const val = String(cellValue(record, col));
+                          const val = String(cellValue(row, col));
                           const field = getField(col);
                           const isBadge =
                             field?.type === "select" ||
@@ -272,7 +272,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                 </span>
                               ) : isDate && val !== "\u2014" ? (
                                 <span className="font-medium whitespace-nowrap text-ink-soft">
-                                  {formatDateAndTime(record[col] as string)}
+                                  {formatDateAndTime(row[col] as string)}
                                 </span>
                               ) : (
                                 <span
@@ -280,7 +280,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                   title={
                                     val === "\u2014"
                                       ? undefined
-                                      : String(record[col])
+                                      : String(row[col])
                                   }
                                 >
                                   {val}
@@ -295,7 +295,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                               <button
                                 onClick={() =>
                                   router.push(
-                                    `/admin/${collectionKey}/${record.id}`,
+                                    `/admin/${tableKey}/${row.id}`,
                                   )
                                 }
                                 className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
@@ -307,7 +307,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                               <>
                                 <button
                                   onClick={() => {
-                                    setEditing(record);
+                                    setEditing(row);
                                     setView("edit");
                                   }}
                                   className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
@@ -317,7 +317,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    setDeletingId(String(record.id))
+                                    setDeletingId(String(row.id))
                                   }
                                   className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
                                 >
@@ -353,7 +353,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
       <ConfirmDialog
         open={!!deletingId}
         title={`Delete ${config.singular}?`}
-        message="This action cannot be undone. The record will be permanently removed."
+        message="This action cannot be undone. The row will be permanently removed."
         onConfirm={() => deletingId && handleDelete(deletingId)}
         onCancel={() => setDeletingId(null)}
       />

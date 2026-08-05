@@ -2,10 +2,10 @@
 
 import { site } from "@/data/site";
 import {
-  collectionKeys,
-  collections,
-  type CollectionKey,
-} from "@/lib/collections";
+  tableKeys,
+  tables,
+  type TableKey,
+} from "@/lib/tables";
 import {
   ArrowLeft,
   Calendar,
@@ -27,7 +27,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const collectionIcons: Record<CollectionKey, LucideIcon> = {
+const tableIcons: Record<TableKey, LucideIcon> = {
   advisors: Users,
   coreteam: Star,
   blogs: FileText,
@@ -40,7 +40,7 @@ const collectionIcons: Record<CollectionKey, LucideIcon> = {
   certificates: Medal,
 };
 
-export default function AdminShell({
+export default function AdminSidebar({
   children,
 }: {
   children: React.ReactNode;
@@ -96,15 +96,15 @@ export default function AdminShell({
 
           <div className="pt-4 pb-1 px-3">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/25">
-              Collections
+              Tables
             </p>
           </div>
 
-          {collectionKeys.map((key) => {
-            const col = collections[key];
+          {tableKeys.map((key) => {
+            const col = tables[key];
             const href = `/admin/${key}`;
             const active = pathname.startsWith(href);
-            const Icon = collectionIcons[key];
+            const Icon = tableIcons[key];
             return (
               <Link
                 key={key}
@@ -158,7 +158,7 @@ export default function AdminShell({
                 const key = parts[1];
                 if (key === "contacts" && parts.length > 2)
                   return "Contact Detail";
-                if (isCollectionKey(key)) return collections[key].label;
+                if (isTableKey(key)) return tables[key].label;
               }
               return "Admin";
             })()}
@@ -171,7 +171,7 @@ export default function AdminShell({
   );
 }
 
-function isCollectionKey(key: string): key is CollectionKey {
-  return key in collections;
+function isTableKey(key: string): key is TableKey {
+  return key in tables;
 }
 

@@ -9,10 +9,10 @@ import { videos, youtubeEmbed, youtubeThumb, type Video } from "@/data/videos";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 
 export default function VideoSection() {
-  const [videosData, loading] = useCollection<Video>("videos", videos);
+  const [videosData, loading] = useTable<Video>("videos", videos);
   const items = videosData.length ? videosData : videos;
   const [current, setCurrent] = useState<Video>(items[0]);
   const activeVideo = items.find((v) => v.id === current.id) ?? items[0];

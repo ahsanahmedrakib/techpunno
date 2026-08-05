@@ -5,10 +5,10 @@ import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import SkeletonTeamCard from "@/components/common/Skeleton";
 import { advisors, type TeamMember } from "@/data/team";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 
 export default function AdvisorTeam() {
-  const [members, loading] = useCollection<TeamMember>("advisors", advisors);
+  const [members, loading] = useTable<TeamMember>("advisors", advisors);
   return (
     <section id="advisors" className="section-anchor bg-cream py-20 lg:py-28">
       <Container>

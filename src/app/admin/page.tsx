@@ -8,7 +8,6 @@ import {
   ClipboardList,
   Database,
   FileText,
-  Files,
   Folder,
   Home,
   Mail,
@@ -19,9 +18,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { api } from "@/lib/api";
-import { collections, collectionKeys, type CollectionKey } from "@/lib/collections";
+import { tables, tableKeys, type TableKey } from "@/lib/tables";
 
-const icons: Record<CollectionKey, LucideIcon> = {
+const icons: Record<TableKey, LucideIcon> = {
   advisors: Users,
   coreteam: Star,
   blogs: FileText,
@@ -36,15 +35,15 @@ const icons: Record<CollectionKey, LucideIcon> = {
 
 export default function AdminDashboard() {
   const results = useQueries({
-    queries: collectionKeys.map((key) => ({
-      queryKey: ["collection", key],
+    queries: tableKeys.map((key) => ({
+      queryKey: ["table", key],
       queryFn: () => api.paged(key, { page: 1, pageSize: 1 }),
     })),
   });
 
   const counts: Record<string, number> = {};
   const sources: Record<string, "db" | "error"> = {};
-  collectionKeys.forEach((key, i) => {
+  tableKeys.forEach((key, i) => {
     const r = results[i];
     if (r.status === "success" && r.data) {
       counts[key] = r.data.total;
@@ -58,15 +57,14 @@ export default function AdminDashboard() {
     }
   });
 
-  const totalRecords = Object.values(counts).reduce((a, b) => a + b, 0);
   const dbCount = Object.values(sources).filter((s) => s === "db").length;
   const loading = results.some((r) => r.status === "pending");
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {loading
-          ? [0, 1, 2].map((i) => (
+          ? [0, 1].map((i) => (
               <div
                 key={i}
                 className="flex items-center gap-4 rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm"
@@ -87,24 +85,11 @@ export default function AdminDashboard() {
                     </span>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
-                        Collections
+                        Tables
                       </p>
                       <p className="mt-0.5 text-3xl font-bold text-ink">
-                        {collectionKeys.length}
+                        {tableKeys.length}
                       </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-primary">
-                      <Files className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
-                        Total Records
-                      </p>
-                      <p className="mt-0.5 text-3xl font-bold text-ink">{totalRecords}</p>
                     </div>
                   </div>
                 </div>
@@ -118,7 +103,7 @@ export default function AdminDashboard() {
                         DB Connected
                       </p>
                       <p className="mt-0.5 text-3xl font-bold text-ink">
-                        {dbCount}/{collectionKeys.length}
+                        {dbCount}/{tableKeys.length}
                       </p>
                     </div>
                   </div>
@@ -129,11 +114,11 @@ export default function AdminDashboard() {
 
       <div>
         <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-ink-soft/60">
-          Manage Collections
+          Manage Tables
         </h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {loading
-            ? Array.from({ length: collectionKeys.length }).map((_, i) => (
+            ? Array.from({ length: tableKeys.length }).map((_, i) => (
                 <div
                   key={i}
                   className="rounded-2xl border-2 border-primary/30 bg-white p-5 shadow-sm"
@@ -146,8 +131,8 @@ export default function AdminDashboard() {
                   <div className="mt-2 h-3 w-1/2 animate-pulse rounded-full bg-mist" />
                 </div>
               ))
-            : collectionKeys.map((key) => {
-                const col = collections[key];
+            : tableKeys.map((key) => {
+                const col = tables[key];
                 const count = counts[key] ?? 0;
                 const src = sources[key] ?? "db";
                 const Icon = icons[key];
@@ -175,7 +160,7 @@ export default function AdminDashboard() {
                       {col.label}
                     </h4>
                     <p className="mt-1 text-xs text-ink-soft">
-                      {count} record{count !== 1 ? "s" : ""}
+                      {count} row{count !== 1 ? "s" : ""}
                       {col.readOnly && " · Read-only"}
                       {col.single && " · Single"}
                     </p>

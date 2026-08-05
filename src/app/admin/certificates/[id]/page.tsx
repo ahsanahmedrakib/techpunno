@@ -12,11 +12,11 @@ export default function CertificateDetailPage() {
   const id = params.id as string;
 
   const {
-    data: record,
+    data: row,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["collection", "certificates", id],
+    queryKey: ["table", "certificates", id],
     queryFn: () => api.get<Record<string, unknown>>("certificates", id),
   });
 
@@ -24,7 +24,7 @@ export default function CertificateDetailPage() {
     return <Loading text="Loading..." />;
   }
 
-  if (error || !record) {
+  if (error || !row) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mist text-2xl text-ink-soft/30">
@@ -43,6 +43,6 @@ export default function CertificateDetailPage() {
     );
   }
 
-  return <CertificateDetail record={record} />;
+  return <CertificateDetail row={row} />;
 }
 

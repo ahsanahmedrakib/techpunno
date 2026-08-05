@@ -1,6 +1,6 @@
 "use client";
 
-import type { FieldDef } from "@/lib/collections";
+import type { FieldDef } from "@/lib/tables";
 import axios from "axios";
 import { Camera } from "lucide-react";
 import Image from "next/image";
@@ -17,7 +17,7 @@ const FileRegistryContext = createContext<React.MutableRefObject<
   Map<string, File>
 > | null>(null);
 
-interface RecordFormProps {
+interface RowFormProps {
   fields: FieldDef[];
   initial?: Record<string, unknown>;
   onSubmit: (data: Record<string, unknown>) => Promise<void>;
@@ -207,13 +207,13 @@ async function uploadPending(
   return results;
 }
 
-export default function RecordForm({
+export default function RowForm({
   fields,
   initial,
   onSubmit,
   onCancel,
   submitLabel = "Save",
-}: RecordFormProps) {
+}: RowFormProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     toFormValues(fields, initial),
   );

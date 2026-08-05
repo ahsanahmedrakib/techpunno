@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { collections } from "@/lib/collections";
+import { tables } from "@/lib/tables";
 import ContactDetail from "@/components/admin/ContactDetail";
 import Loading from "@/components/common/Loading";
 
@@ -11,8 +11,8 @@ export default function ContactDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: record, isLoading, error } = useQuery({
-    queryKey: ["collection", "contacts", id],
+  const { data: row, isLoading, error } = useQuery({
+    queryKey: ["table", "contacts", id],
     queryFn: () => api.get<Record<string, unknown>>("contacts", id),
   });
 
@@ -20,7 +20,7 @@ export default function ContactDetailPage() {
     return <Loading text="Loading..." />;
   }
 
-  if (error || !record) {
+  if (error || !row) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mist text-2xl text-ink-soft/30">
@@ -37,5 +37,5 @@ export default function ContactDetailPage() {
     );
   }
 
-  return <ContactDetail record={record} config={collections.contacts} />;
+  return <ContactDetail row={row} config={tables.contacts} />;
 }

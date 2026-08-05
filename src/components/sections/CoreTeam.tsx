@@ -5,10 +5,10 @@ import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import SkeletonTeamCard from "@/components/common/Skeleton";
 import { coreTeam, type TeamMember } from "@/data/team";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 
 export default function CoreTeam() {
-  const [members, loading] = useCollection<TeamMember>("coreteam", coreTeam);
+  const [members, loading] = useTable<TeamMember>("coreteam", coreTeam);
   return (
     <section
       id="team"

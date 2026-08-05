@@ -9,7 +9,7 @@ import { newsItems, type NewsItem } from "@/data/news";
 import { fadeUp, stagger } from "@/lib/motion";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useCollection } from "@/lib/api";
+import { useTable } from "@/lib/api";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
   Hot: "bg-secondary text-white",
@@ -18,7 +18,7 @@ const badgeStyles: Record<NewsItem["badge"], string> = {
 };
 
 export default function News() {
-  const [items, loading] = useCollection<NewsItem>("news", newsItems);
+  const [items, loading] = useTable<NewsItem>("news", newsItems);
   const [primary, secondary, ...rest] = items;
 
   if (loading && items.length === 0) {

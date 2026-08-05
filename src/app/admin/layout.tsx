@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AdminShell from "@/components/admin/AdminShell";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export const metadata: Metadata = {
   title: "Admin | TechPunno",
@@ -10,5 +10,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminSidebar>{children}</AdminSidebar>;
 }

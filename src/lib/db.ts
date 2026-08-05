@@ -1,21 +1,21 @@
 import { Collection, ObjectId } from "mongodb";
 import { getDbName, getMongoClient } from "@/lib/mongodb";
 import {
-  collections,
-  isCollectionKey,
-  collectionKeys,
-  type CollectionKey,
-  type CollectionConfig,
+  tables,
+  isTableKey,
+  tableKeys,
+  type TableKey,
+  type TableConfig,
   type FieldDef,
   type FieldType,
-} from "@/lib/collections";
+} from "@/lib/tables";
 
 export {
-  collections,
-  isCollectionKey,
-  collectionKeys,
-  type CollectionKey,
-  type CollectionConfig,
+  tables,
+  isTableKey,
+  tableKeys,
+  type TableKey,
+  type TableConfig,
   type FieldDef,
   type FieldType,
 };
@@ -32,8 +32,8 @@ function slugify(text: string): string {
     .replace(/-+$/, "");
 }
 
-function hasSlugField(key: CollectionKey): boolean {
-  return collections[key].fields.some((f) => f.name === "slug");
+function hasSlugField(key: TableKey): boolean {
+  return tables[key].fields.some((f) => f.name === "slug");
 }
 
 async function generateUniqueSlug(
@@ -67,14 +67,14 @@ function mapDoc<T>(doc: Record<string, unknown>): T {
 }
 
 export async function getCollection(
-  key: CollectionKey,
+  key: TableKey,
 ): Promise<Collection<Record<string, unknown>>> {
   const client = await getMongoClient();
   const db = client.db(getDbName());
   return db.collection<Record<string, unknown>>(key);
 }
 
-export async function listDocs(key: CollectionKey): Promise<unknown[]> {
+export async function listDocs(key: TableKey): Promise<unknown[]> {
   const coll = await getCollection(key);
   const docs = (await coll.find({}).sort({ _id: 1 }).toArray()) as Record<
     string,
@@ -96,11 +96,11 @@ function escapeRegex(text: string): string {
 }
 
 function buildSearchFilter(
-  key: CollectionKey,
+  key: TableKey,
   search: string,
 ): Record<string, unknown> {
   if (!search) return {};
-  const searchable = collections[key].fields
+  const searchable = tables[key].fields
     .filter(
       (f) =>
         f.type === "text" || f.type === "textarea" || f.type === "list",
@@ -116,7 +116,7 @@ function buildSearchFilter(
 }
 
 export async function pagedDocs<T = unknown>(
-  key: CollectionKey,
+  key: TableKey,
   options: { page: number; pageSize: number; search?: string },
 ): Promise<PagedResult<T>> {
   const coll = await getCollection(key);
@@ -137,7 +137,7 @@ export async function pagedDocs<T = unknown>(
   };
 }
 
-export async function getDoc(key: CollectionKey, rawId: string): Promise<unknown | null> {
+export async function getDoc(key: TableKey, rawId: string): Promise<unknown | null> {
   const coll = await getCollection(key);
   let doc = (await coll.findOne(await resolveIdFilter(key, rawId))) as Record<
     string,
@@ -166,7 +166,7 @@ export async function getDoc(key: CollectionKey, rawId: string): Promise<unknown
 }
 
 async function resolveIdFilter(
-  key: CollectionKey,
+  key: TableKey,
   rawId: string,
 ): Promise<Record<string, unknown>> {
   if (/^[0-9a-fA-F]{24}$/.test(rawId)) {
@@ -191,10 +191,10 @@ async function resolveIdFilter(
 }
 
 function pickFields(
-  key: CollectionKey,
+  key: TableKey,
   body: Record<string, unknown>,
 ): Record<string, unknown> {
-  const col = collections[key];
+  const col = tables[key];
   const picked: Record<string, unknown> = {};
   for (const field of col.fields) {
     if (field.type === "readonly") continue;
@@ -206,7 +206,7 @@ function pickFields(
 }
 
 export async function createDoc(
-  key: CollectionKey,
+  key: TableKey,
   body: Record<string, unknown>,
 ): Promise<unknown> {
   const coll = await getCollection(key);
@@ -225,7 +225,7 @@ export async function createDoc(
 }
 
 export async function updateDoc(
-  key: CollectionKey,
+  key: TableKey,
   rawId: string,
   body: Record<string, unknown>,
 ): Promise<unknown | null> {
@@ -255,7 +255,7 @@ export async function updateDoc(
 }
 
 export async function removeDoc(
-  key: CollectionKey,
+  key: TableKey,
   rawId: string,
 ): Promise<boolean> {
   const coll = await getCollection(key);
@@ -265,7 +265,7 @@ export async function removeDoc(
 }
 
 export async function getDocBySlug(
-  key: CollectionKey,
+  key: TableKey,
   slug: string,
 ): Promise<unknown | null> {
   const coll = await getCollection(key);

@@ -5,12 +5,48 @@ import { Download } from "lucide-react";
 import { Lobster } from "next/font/google";
 import Image from "next/image";
 import { QRCodeCanvas } from "qrcode.react";
-import { useRef } from "react";
+import { useId, useMemo, useRef } from "react";
 
 const lobster = Lobster({
   weight: "400",
   subsets: ["latin"],
 });
+
+function cogPoints(
+  cx: number,
+  cy: number,
+  teeth: number,
+  outer: number,
+  inner: number,
+): string {
+  const pts: string[] = [];
+  for (let i = 0; i < teeth * 2; i++) {
+    const r = i % 2 === 0 ? outer : inner;
+    const a = (Math.PI / teeth) * i - Math.PI / 2;
+    pts.push(
+      `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`,
+    );
+  }
+  return pts.join(" ");
+}
+
+function starPoints(
+  cx: number,
+  cy: number,
+  outer: number,
+  inner: number,
+): string {
+  const pts: string[] = [];
+  const rot = -Math.PI / 2;
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? outer : inner;
+    const a = rot + i * (Math.PI / 5);
+    pts.push(
+      `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`,
+    );
+  }
+  return pts.join(" ");
+}
 
 interface CertificateProps {
   name?: string;
@@ -32,6 +68,26 @@ export default function Certificate({
   certificateUrl,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
+  const sealId = useId().replace(/[^a-zA-Z0-9]/g, "");
+
+  const laurelLeaves = useMemo(() => {
+    const leaves: { cx: number; cy: number; angle: number }[] = [];
+    const branch = (fromDeg: number, toDeg: number) => {
+      const steps = 6;
+      for (let i = 0; i < steps; i++) {
+        const deg = fromDeg + ((toDeg - fromDeg) * (i + 0.5)) / steps;
+        const rad = (deg * Math.PI) / 180;
+        leaves.push({
+          cx: 50 + 36 * Math.cos(rad),
+          cy: 50 + 36 * Math.sin(rad),
+          angle: deg,
+        });
+      }
+    };
+    branch(150, 95);
+    branch(30, 85);
+    return leaves;
+  }, []);
 
   const qrValue = certificateUrl ?? "";
 
@@ -243,24 +299,150 @@ export default function Certificate({
               </div>
             </div>
 
-            {/* Seal Ribbon */}
+            {/* Award Seal */}
             <div className="relative flex flex-col items-center">
-              <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-r from-amber-400 via-yellow-300 to-amber-500 border-4 border-yellow-200 shadow-md">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-dashed border-amber-600">
-                  <div className="h-8 w-8 rounded-full bg-amber-400" />
-                </div>
+              <div className="relative z-10 flex h-24 w-24 items-center justify-center">
+                <svg
+                  viewBox="0 0 100 100"
+                  className="h-full w-full drop-shadow-lg"
+                >
+                  <defs>
+                    <radialGradient
+                      id={`${sealId}-body`}
+                      cx="38%"
+                      cy="32%"
+                      r="80%"
+                    >
+                      <stop offset="0%" stopColor="#fef3c7" />
+                      <stop offset="40%" stopColor="#f5c542" />
+                      <stop offset="72%" stopColor="#d9991f" />
+                      <stop offset="100%" stopColor="#8a5d0e" />
+                    </radialGradient>
+                    <radialGradient
+                      id={`${sealId}-center`}
+                      cx="40%"
+                      cy="34%"
+                      r="85%"
+                    >
+                      <stop offset="0%" stopColor="#fffbe8" />
+                      <stop offset="60%" stopColor="#f5c542" />
+                      <stop offset="100%" stopColor="#c98f1c" />
+                    </radialGradient>
+                    <path
+                      id={`${sealId}-arcTop`}
+                      d="M 25,50 A 25,25 0 0 1 75,50"
+                    />
+                    <path
+                      id={`${sealId}-arcBottom`}
+                      d="M 75,50 A 25,25 0 0 1 25,50"
+                    />
+                  </defs>
+
+                  <polygon
+                    points={cogPoints(50, 50, 36, 48.5, 44)}
+                    fill="#7c4a03"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="44.5"
+                    fill={`url(#${sealId}-body)`}
+                    stroke="#fde68a"
+                    strokeOpacity="0.9"
+                    strokeWidth="0.8"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="41.5"
+                    fill="none"
+                    stroke="#8a5d0e"
+                    strokeOpacity="0.35"
+                    strokeWidth="0.9"
+                  />
+
+                  <path
+                    d="M 50,83 A 33,33 0 0 1 21.4,66.5"
+                    fill="none"
+                    stroke="#8a5d0e"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M 50,83 A 33,33 0 0 0 78.6,66.5"
+                    fill="none"
+                    stroke="#8a5d0e"
+                    strokeWidth="1.5"
+                  />
+                  {laurelLeaves.map((leaf, i) => (
+                    <ellipse
+                      key={i}
+                      cx={leaf.cx}
+                      cy={leaf.cy}
+                      rx="2.4"
+                      ry="6"
+                      fill="#8a5d0e"
+                      opacity="0.95"
+                      transform={`rotate(${leaf.angle - 90} ${leaf.cx} ${leaf.cy})`}
+                    />
+                  ))}
+
+                  <text
+                    fill="#7c4a03"
+                    fontSize="8"
+                    fontWeight="700"
+                    fontFamily="sans-serif"
+                  >
+                    <textPath
+                      href={`#${sealId}-arcTop`}
+                      startOffset="7.3"
+                      textLength="64"
+                      lengthAdjust="spacingAndGlyphs"
+                    >
+                      TECH PUNNO
+                    </textPath>
+                  </text>
+                  <text
+                    fill="#7c4a03"
+                    fontSize="6.5"
+                    fontWeight="700"
+                    fontFamily="sans-serif"
+                  >
+                    <textPath
+                      href={`#${sealId}-arcBottom`}
+                      startOffset="7.3"
+                      textLength="64"
+                      lengthAdjust="spacingAndGlyphs"
+                    >
+                      CYBER QUIZ 2026
+                    </textPath>
+                  </text>
+
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="17.5"
+                    fill={`url(#${sealId}-center)`}
+                    stroke="#8a5d0e"
+                    strokeOpacity="0.4"
+                    strokeWidth="0.8"
+                  />
+                  <polygon
+                    points={starPoints(50, 50, 12, 5.2)}
+                    fill="#1a3a68"
+                  />
+                </svg>
               </div>
-              <div className="-mt-3 flex gap-1">
-                <div className="h-8 w-4 bg-amber-500 [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
-                <div className="h-8 w-4 bg-amber-500 [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
+              <div className="pointer-events-none absolute top-[3.4rem] flex w-14 justify-center">
+                <div className="h-9 w-4.5 rounded-b-sm bg-linear-to-b from-amber-500 to-amber-800 shadow-sm [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
+                <div className="-ml-px h-9 w-4.5 rounded-b-sm bg-linear-to-b from-amber-600 to-amber-900 shadow-sm [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
               </div>
             </div>
 
-            <div className="w-52 text-center">
+            <div className="w-52 text-center invisible">
               <div className="flex flex-col items-center">
                 <Image
-                  src={"/images/certificate/sign-2.png"}
-                  alt={`Sign-2`}
+                  src={"/images/certificate/sign-1.png"}
+                  alt={`Sign-1`}
                   height={300}
                   width={120}
                   unoptimized
@@ -269,11 +451,9 @@ export default function Certificate({
               </div>
               <div className="border-t border-gray-600 pt-1">
                 <p className="font-sans text-lg font-bold uppercase tracking-wide text-[#1a3a68]">
-                  Rajibul Islam Imon
+                  Mehedi Hasan
                 </p>
-                <p className="font-sans text-sm text-gray-600">
-                  Event Coordinator
-                </p>
+                <p className="font-sans text-sm text-gray-600">Founder</p>
               </div>
             </div>
           </div>

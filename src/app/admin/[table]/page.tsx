@@ -1,26 +1,21 @@
 import { notFound } from "next/navigation";
-import { collections, isCollectionKey, type CollectionKey } from "@/lib/collections";
-import CollectionManager from "@/components/admin/CollectionManager";
+import { tables, isTableKey, type TableKey } from "@/lib/tables";
+import TableManager from "@/components/admin/TableManager";
 
 export const dynamic = "force-dynamic";
 
-export default async function CollectionPage({
+export default async function TablePage({
   params,
 }: {
-  params: Promise<{ collection: string }>;
+  params: Promise<{ table: string }>;
 }) {
-  const { collection } = await params;
+  const { table } = await params;
 
-  if (!isCollectionKey(collection)) {
+  if (!isTableKey(table)) {
     notFound();
   }
 
-  const config = collections[collection as CollectionKey];
+  const config = tables[table as TableKey];
 
-  return (
-    <CollectionManager
-      collectionKey={collection as CollectionKey}
-      config={config}
-    />
-  );
+  return <TableManager tableKey={table as TableKey} config={config} />;
 }
