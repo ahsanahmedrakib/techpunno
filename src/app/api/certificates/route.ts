@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
-import { getCollection } from "@/lib/db";
+import { getCollection, listDocs, pagedDocs } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -28,14 +28,22 @@ async function generateCertificateId(
   throw new Error("Failed to generate a unique certificate ID");
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const coll = await getCollection("certificates");
-    const docs = (await coll.find({}).sort({ createdAt: -1 }).toArray()) as Record<
-      string,
-      unknown
-    >[];
-    return NextResponse.json(docs.map((d) => mapDoc(d)));
+    const url = new URL(req.url);
+    if (!url.searchParams.has("page")) {
+      const docs = await listDocs("certificates");
+      return NextResponse.json(docs);
+    }
+
+    const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
+    const pageSize = Math.min(
+      100,
+      Math.max(1, Number(url.searchParams.get("pageSize")) || 10),
+    );
+    const search = url.searchParams.get("search") ?? "";
+    const result = await pagedDocs("certificates", { page, pageSize, search });
+    return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";
     return NextResponse.json({ error: message }, { status: 500 });

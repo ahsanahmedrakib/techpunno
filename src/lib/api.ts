@@ -17,9 +17,24 @@ http.interceptors.response.use(
   },
 );
 
+export interface PagedResult<T> {
+  docs: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export const api = {
   list: <T>(collection: string) =>
     http.get<T[]>(`/api/${collection}`).then((r) => r.data),
+  paged: <T>(
+    collection: string,
+    params: { page: number; pageSize: number; search?: string },
+  ) =>
+    http
+      .get<PagedResult<T>>(`/api/${collection}`, { params })
+      .then((r) => r.data),
   get: <T>(collection: string, id: string) =>
     http.get<T>(`/api/${collection}/${id}`).then((r) => r.data),
   create: <T>(collection: string, data: unknown) =>

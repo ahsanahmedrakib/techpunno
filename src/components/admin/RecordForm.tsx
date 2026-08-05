@@ -7,9 +7,7 @@ import Image from "next/image";
 import RichTextEditor from "./RichTextEditor";
 import {
   createContext,
-  useCallback,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -83,11 +81,19 @@ function ImageUpload({
   error?: string;
 }) {
   const registry = useContext(FileRegistryContext);
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState<string | null>(() =>
+    value && !value.startsWith("__pending:")
+      ? value.split("/").pop() ?? null
+      : null,
+  );
+  const [preview, setPreview] = useState<string | null>(() =>
+    value && !value.startsWith("__pending:") ? value : null,
+  );
+  const [prevValue, setPrevValue] = useState(value);
 
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value);
     if (value && !value.startsWith("__pending:")) {
       setFileName(value.split("/").pop() ?? null);
       setPreview(value);
@@ -95,27 +101,24 @@ function ImageUpload({
       setFileName(null);
       setPreview(null);
     }
-  }, [value]);
+  }
 
-  const handleFile = useCallback(
-    (file: File) => {
-      if (!file.type.startsWith("image/")) return;
-      setFileName(file.name);
-      const reader = new FileReader();
-      reader.onload = (e) => setPreview(e.target?.result as string);
-      reader.readAsDataURL(file);
-      registry?.current.set(field.name, file);
-      onChange(`__pending:${file.name}`);
-    },
-    [field.name, onChange, registry],
-  );
+  const handleFile = (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (e) => setPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+    registry?.current.set(field.name, file);
+    onChange(`__pending:${file.name}`);
+  };
 
-  const clear = useCallback(() => {
+  const clear = () => {
     setFileName(null);
     setPreview(null);
     registry?.current.delete(field.name);
     onChange("");
-  }, [field.name, onChange, registry]);
+  };
 
   return (
     <div>
@@ -211,7 +214,9 @@ export default function RecordForm({
   onCancel,
   submitLabel = "Save",
 }: RecordFormProps) {
-  const [values, setValues] = useState<Record<string, string>>({});
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    toFormValues(fields, initial),
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const fileRegistry = useRef<Map<string, File>>(new Map());
@@ -225,10 +230,11 @@ export default function RecordForm({
     return [{ question: "", options: ["", "", "", ""], correctIndex: 0 }];
   });
 
-  useEffect(() => {
+  const [prevInitial, setPrevInitial] = useState(initial);
+  if (initial !== prevInitial) {
+    setPrevInitial(initial);
     setValues(toFormValues(fields, initial));
     setErrors({});
-    fileRegistry.current.clear();
     const initialQ = initial?.questions;
     if (Array.isArray(initialQ) && initialQ.length > 0) {
       setQuestionsData(initialQ as QuizQuestionData[]);
@@ -237,7 +243,7 @@ export default function RecordForm({
         { question: "", options: ["", "", "", ""], correctIndex: 0 },
       ]);
     }
-  }, [fields, initial]);
+  }
 
   const setValue = (name: string, val: string) => {
     setValues((prev) => ({ ...prev, [name]: val }));

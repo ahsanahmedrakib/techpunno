@@ -1,8 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { site } from "@/data/site";
+import {
+  collectionKeys,
+  collections,
+  type CollectionKey,
+} from "@/lib/collections";
 import {
   ArrowLeft,
   Calendar,
@@ -19,11 +22,10 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import {
-  collections,
-  collectionKeys,
-  type CollectionKey,
-} from "@/lib/collections";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const collectionIcons: Record<CollectionKey, LucideIcon> = {
   advisors: Users,
@@ -61,8 +63,14 @@ export default function AdminShell({
         }`}
       >
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold shadow-lg shadow-primary/30">
-            T
+          <span className="relative h-9 w-9 overflow-hidden rounded-xl">
+            <Image
+              src={site.logo}
+              alt={`${site.name} logo`}
+              fill
+              sizes="40px"
+              className="object-cover"
+            />
           </span>
           <div>
             <h1 className="text-sm font-bold tracking-wide">TechPunno</h1>
@@ -148,7 +156,8 @@ export default function AdminShell({
               const parts = pathname.split("/").filter(Boolean);
               if (parts.length >= 2) {
                 const key = parts[1];
-                if (key === "contacts" && parts.length > 2) return "Contact Detail";
+                if (key === "contacts" && parts.length > 2)
+                  return "Contact Detail";
                 if (isCollectionKey(key)) return collections[key].label;
               }
               return "Admin";
@@ -165,3 +174,4 @@ export default function AdminShell({
 function isCollectionKey(key: string): key is CollectionKey {
   return key in collections;
 }
+

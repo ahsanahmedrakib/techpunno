@@ -4,12 +4,13 @@ import {
   createDoc,
   isCollectionKey,
   listDocs,
+  pagedDocs,
 } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ collection: string }> },
 ) {
   const { collection } = await params;
@@ -17,8 +18,22 @@ export async function GET(
     return NextResponse.json({ error: "Unknown collection" }, { status: 404 });
   }
   try {
-    const docs = await listDocs(collection);
-    return NextResponse.json(docs);
+    const url = new URL(req.url);
+
+    if (!url.searchParams.has("page")) {
+      const docs = await listDocs(collection);
+      return NextResponse.json(docs);
+    }
+
+    const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
+    const pageSize = Math.min(
+      100,
+      Math.max(1, Number(url.searchParams.get("pageSize")) || 10),
+    );
+    const search = url.searchParams.get("search") ?? "";
+
+    const result = await pagedDocs(collection, { page, pageSize, search });
+    return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";
     return NextResponse.json({ error: message }, { status: 500 });

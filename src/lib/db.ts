@@ -83,6 +83,60 @@ export async function listDocs(key: CollectionKey): Promise<unknown[]> {
   return docs.map((d) => mapDoc(d));
 }
 
+export interface PagedResult<T> {
+  docs: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+function escapeRegex(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function buildSearchFilter(
+  key: CollectionKey,
+  search: string,
+): Record<string, unknown> {
+  if (!search) return {};
+  const searchable = collections[key].fields
+    .filter(
+      (f) =>
+        f.type === "text" || f.type === "textarea" || f.type === "list",
+    )
+    .map((f) => f.name);
+  if (searchable.length === 0) return {};
+  const regex = escapeRegex(search);
+  return {
+    $or: searchable.map((name) => ({
+      [name]: { $regex: regex, $options: "i" },
+    })),
+  };
+}
+
+export async function pagedDocs<T = unknown>(
+  key: CollectionKey,
+  options: { page: number; pageSize: number; search?: string },
+): Promise<PagedResult<T>> {
+  const coll = await getCollection(key);
+  const filter = buildSearchFilter(key, options.search ?? "");
+  const total = await coll.countDocuments(filter);
+  const docs = (await coll
+    .find(filter)
+    .sort({ createdAt: -1, _id: -1 })
+    .skip((options.page - 1) * options.pageSize)
+    .limit(options.pageSize)
+    .toArray()) as Record<string, unknown>[];
+  return {
+    docs: docs.map((d) => mapDoc<T>(d)),
+    total,
+    page: options.page,
+    pageSize: options.pageSize,
+    totalPages: Math.ceil(total / options.pageSize),
+  };
+}
+
 export async function getDoc(key: CollectionKey, rawId: string): Promise<unknown | null> {
   const coll = await getCollection(key);
   let doc = (await coll.findOne(await resolveIdFilter(key, rawId))) as Record<

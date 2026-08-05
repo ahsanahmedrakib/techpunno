@@ -10,20 +10,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { formatDate, formatDateAndTime } from "@/lib/utils";
 
 interface CertificateDetailProps {
   record: Record<string, unknown>;
-}
-
-function formatDate(value: unknown): string {
-  if (!value) return "\u2014";
-  const date = new Date(String(value));
-  if (Number.isNaN(date.getTime())) return String(value);
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 }
 
 function percentageColor(percentage: number): string {
@@ -121,7 +111,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
               Issue Date
             </p>
             <p className="mt-1 text-sm font-medium text-ink">
-              {date || formatDate(record.createdAt)}
+              {date || formatDate(String(record.createdAt ?? ""))}
             </p>
           </div>
           <div className="bg-white p-5">
@@ -145,7 +135,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
               Stored On
             </p>
             <p className="mt-1 text-sm font-medium text-ink">
-              {formatDate(record.createdAt)}
+              {formatDateAndTime(String(record.createdAt ?? ""))}
             </p>
           </div>
         </div>

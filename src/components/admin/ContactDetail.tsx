@@ -1,6 +1,7 @@
 "use client";
 
 import type { CollectionConfig } from "@/lib/collections";
+import { formatDateAndTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -79,6 +80,11 @@ export default function ContactDetail({ record, config }: ContactDetailProps) {
                       </a>
                     </div>
                   </div>
+                ) : field.name === "createdAt" ||
+                  field.name === "updatedAt" ? (
+                  <p className="rounded-xl bg-cream/50 px-3 py-2 text-sm text-ink">
+                    {formatDateAndTime(String(value))}
+                  </p>
                 ) : (
                   <p className="rounded-xl bg-cream/50 px-3 py-2 text-sm text-ink">
                     {String(value)}

@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   const results = useQueries({
     queries: collectionKeys.map((key) => ({
       queryKey: ["collection", key],
-      queryFn: () => api.list(key),
+      queryFn: () => api.paged(key, { page: 1, pageSize: 1 }),
     })),
   });
 
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   collectionKeys.forEach((key, i) => {
     const r = results[i];
     if (r.status === "success" && r.data) {
-      counts[key] = r.data.length;
+      counts[key] = r.data.total;
       sources[key] = "db";
     } else if (r.status === "error") {
       counts[key] = 0;

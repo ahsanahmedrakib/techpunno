@@ -2,17 +2,23 @@
 
 import Loading from "@/components/common/Loading";
 import {
-  useCollectionQuery,
+  api,
   useCreateDoc,
   useDeleteDoc,
   useUpdateDoc,
+  type PagedResult,
 } from "@/lib/api";
 import type { CollectionConfig, CollectionKey } from "@/lib/collections";
+import { formatDateAndTime } from "@/lib/utils";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Eye, Inbox, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ConfirmDialog from "./ConfirmDialog";
 import RecordForm from "./RecordForm";
+import TablePagination from "./TablePagination";
+import TableSkeleton from "./TableSkeleton";
 
 interface Props {
   collectionKey: CollectionKey;
@@ -25,11 +31,39 @@ export default function CollectionManager({ collectionKey, config }: Props) {
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const {
-    data: records = [],
-    isLoading,
-    error,
-  } = useCollectionQuery<Record<string, unknown>>(collectionKey);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const next = searchInput.trim();
+      if (next !== search) {
+        setSearch(next);
+        setPage(1);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchInput, search]);
+
+  const { data, isLoading, error, isFetching } = useQuery<
+    PagedResult<Record<string, unknown>>
+  >({
+    queryKey: ["collection", collectionKey, page, pageSize, search],
+    queryFn: () =>
+      api.paged<Record<string, unknown>>(collectionKey, {
+        page,
+        pageSize,
+        search,
+      }),
+    placeholderData: keepPreviousData,
+  });
+
+  const records = data?.docs ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 1;
+
   const createMutation = useCreateDoc(collectionKey);
   const updateMutation = useUpdateDoc(collectionKey);
   const deleteMutation = useDeleteDoc(collectionKey);
@@ -95,13 +129,13 @@ export default function CollectionManager({ collectionKey, config }: Props) {
     return "bg-mist text-ink-soft border border-ink/15";
   };
 
-  if (isLoading) {
-    return <Loading text="Loading records..." />;
+  if (config.single && isLoading) {
+    return <Loading text="Loading settings..." />;
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border-2 border-secondary/30 bg-white py-20 text-center">
+      <div className="rounded-lg border-2 border-secondary/30 bg-white py-20 text-center">
         <p className="text-sm font-medium text-secondary">
           {(error as Error).message || "Failed to load data"}
         </p>
@@ -113,7 +147,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
     const record = records[0] ?? {};
     return (
       <div className="mx-auto max-w-2xl">
-        <div className="rounded-2xl border-2 border-primary/50 bg-white p-6 shadow-sm">
+        <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
           <h3 className="mb-4 text-base font-bold text-ink">{config.label}</h3>
           <RecordForm
             fields={config.fields}
@@ -130,7 +164,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
   return (
     <div className="space-y-5">
       {(view === "create" || view === "edit") && (
-        <div className="rounded-2xl border-2 border-primary/50 bg-white p-6 shadow-sm">
+        <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
           <h3 className="mb-4 text-base font-bold text-ink">
             {view === "create"
               ? `New ${config.singular}`
@@ -151,58 +185,63 @@ export default function CollectionManager({ collectionKey, config }: Props) {
 
       {view === "list" && (
         <>
-          <div className="flex items-center justify-between rounded-2xl border-2 border-primary/40 bg-white px-5 py-4 shadow-sm">
-            <p className="text-sm font-medium text-ink">
-              {records.length} record{records.length !== 1 ? "s" : ""}
-            </p>
-            {!config.readOnly && (
-              <button
-                onClick={() => setView("create")}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
+          <div className="flex flex-col gap-3 rounded-lg border-2 border-primary/30 bg-white px-4 py-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+            <div className="relative w-full max-w-sm">
+              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-ink-soft/50" />
+              <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder={`Search ${config.label.toLowerCase()}...`}
+                className="w-full rounded-lg border border-ink/10 bg-cream py-2 pr-3 pl-9 text-sm text-ink outline-none transition-colors placeholder:text-ink-soft/50 focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <div className="flex items-center justify-between gap-3 lg:justify-end">
+              {!config.readOnly && (
+                <button
+                  onClick={() => setView("create")}
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg"
                 >
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-                New {config.singular}
-              </button>
-            )}
+                  <Plus className="h-4 w-4" />
+                  New {config.singular}
+                </button>
+              )}
+            </div>
           </div>
 
-          {records.length === 0 ? (
-            <div className="rounded-2xl border-2 border-primary/30 bg-white py-20 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-2xl text-ink-soft/30">
-                ?
+          {isLoading || isFetching ? (
+            <TableSkeleton
+              columns={config.listColumns.map((c) => getField(c)?.label ?? c)}
+              rows={Math.min(pageSize, 10)}
+            />
+          ) : records.length === 0 ? (
+            <div className="rounded-lg border-2 border-primary/30 bg-white py-20 text-center">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
+                <Inbox className="h-6 w-6" />
               </div>
               <p className="text-sm font-medium text-ink-soft">
-                No records found
+                {search ? "No records match your search" : "No records found"}
               </p>
               <p className="mt-1 text-xs text-ink-soft/60">
-                Start by creating a new record
+                {search
+                  ? "Try a different keyword or clear the search"
+                  : "Start by creating a new record"}
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border-2 border-primary/50 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b-2 border-primary/20 bg-primary-tint">
+                    <tr className="bg-linear-to-r from-[#1a3a68] to-primary text-white">
                       {config.listColumns.map((col) => (
                         <th
                           key={col}
-                          className="px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft/70"
+                          className="px-4 py-3.5 text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase"
                         >
                           {getField(col)?.label ?? col}
                         </th>
                       ))}
-                      <th className="px-5 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-ink-soft/70">
+                      <th className="px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
                         Actions
                       </th>
                     </tr>
@@ -211,7 +250,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                     {records.map((record, idx) => (
                       <tr
                         key={String(record.id ?? idx)}
-                        className="border-b-2 border-primary/10 transition-colors hover:bg-primary-tint/50 last:border-b-0"
+                        className="border-t border-ink/10 transition-colors odd:bg-white even:bg-mist/30 hover:bg-primary-lighter/40"
                       >
                         {config.listColumns.map((col) => {
                           const val = String(cellValue(record, col));
@@ -221,21 +260,36 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                             col === "mode" ||
                             col === "status" ||
                             col === "badge";
+                          const isDate =
+                            col === "createdAt" || col === "updatedAt";
                           return (
-                            <td key={col} className="px-5 py-3.5 text-ink">
+                            <td key={col} className="px-4 py-3 text-ink">
                               {isBadge && val !== "\u2014" ? (
                                 <span
                                   className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold ${badgeColor(val)}`}
                                 >
                                   {val}
                                 </span>
+                              ) : isDate && val !== "\u2014" ? (
+                                <span className="font-medium whitespace-nowrap text-ink-soft">
+                                  {formatDateAndTime(record[col] as string)}
+                                </span>
                               ) : (
-                                <span className="line-clamp-1">{val}</span>
+                                <span
+                                  className="line-clamp-1 max-w-72"
+                                  title={
+                                    val === "\u2014"
+                                      ? undefined
+                                      : String(record[col])
+                                  }
+                                >
+                                  {val}
+                                </span>
                               )}
                             </td>
                           );
                         })}
-                        <td className="px-5 py-3.5">
+                        <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-2">
                             {config.readOnly ? (
                               <button
@@ -246,17 +300,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                 }
                                 className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
                               >
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                  <circle cx="12" cy="12" r="3" />
-                                </svg>
+                                <Eye className="h-3.5 w-3.5" />
                                 View
                               </button>
                             ) : (
@@ -268,17 +312,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                   }}
                                   className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
                                 >
-                                  <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                  >
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                  </svg>
+                                  <Pencil className="h-3.5 w-3.5" />
                                   Edit
                                 </button>
                                 <button
@@ -287,17 +321,7 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                                   }
                                   className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
                                 >
-                                  <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                  >
-                                    <polyline points="3 6 5 6 21 6" />
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                  </svg>
+                                  <Trash2 className="h-3.5 w-3.5" />
                                   Delete
                                 </button>
                               </>
@@ -309,6 +333,18 @@ export default function CollectionManager({ collectionKey, config }: Props) {
                   </tbody>
                 </table>
               </div>
+
+              <TablePagination
+                page={page}
+                pageSize={pageSize}
+                total={total}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                onPageSizeChange={(size) => {
+                  setPageSize(size);
+                  setPage(1);
+                }}
+              />
             </div>
           )}
         </>
