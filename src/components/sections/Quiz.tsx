@@ -23,6 +23,7 @@ const optionLabels = ["A", "B", "C", "D"];
 
 export default function Quiz() {
   const [quizSetsList, setQuizSetsList] = useState<QuizSet[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedSet, setSelectedSet] = useState<QuizSet | null>(null);
   const questions = selectedSet?.questions ?? [];
   const [step, setStep] = useState<Step>("select");
@@ -38,10 +39,12 @@ export default function Quiz() {
       .then((list) => {
         if (!cancelled) {
           setQuizSetsList(list.length > 0 ? list : quizSets);
+          setLoading(false);
         }
       })
       .catch(() => {
         setQuizSetsList(quizSets);
+        setLoading(false);
       });
     return () => {
       cancelled = true;
@@ -117,30 +120,46 @@ export default function Quiz() {
             </p>
 
             <div className="mt-8 space-y-4">
-              {quizSetsList.map((set, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => selectQuizSet(set)}
-                  className="w-full rounded-3xl border-2 border-primary/40 bg-white p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-lg"
-                >
-                  <h3 className="text-lg font-bold text-ink">{set.title}</h3>
-                  <p className="mt-1 text-sm text-ink-soft">
-                    {set.description}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-soft">
-                    <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                      ⏱ {set.durationSeconds / 60} min
-                    </span>
-                    <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                      📊 Pass: {PASSING_SCORE}%
-                    </span>
-                    <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                      📝 {set.questions?.length} questions
-                    </span>
-                  </div>
-                </button>
-              ))}
+              {loading
+                ? [0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="w-full rounded-3xl border-2 border-ink/5 bg-white p-6 shadow-sm"
+                    >
+                      <div className="h-5 w-2/3 animate-pulse rounded-full bg-mist" />
+                      <div className="mt-3 h-4 w-full animate-pulse rounded-full bg-mist" />
+                      <div className="mt-2 h-4 w-4/5 animate-pulse rounded-full bg-mist" />
+                      <div className="mt-4 flex flex-wrap gap-3">
+                        <div className="h-6 w-20 animate-pulse rounded-full bg-mist" />
+                        <div className="h-6 w-24 animate-pulse rounded-full bg-mist" />
+                        <div className="h-6 w-28 animate-pulse rounded-full bg-mist" />
+                      </div>
+                    </div>
+                  ))
+                : quizSetsList.map((set, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => selectQuizSet(set)}
+                      className="w-full rounded-3xl border-2 border-primary/40 bg-white p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-lg"
+                    >
+                      <h3 className="text-lg font-bold text-ink">{set.title}</h3>
+                      <p className="mt-1 text-sm text-ink-soft">
+                        {set.description}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-soft">
+                        <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                          ⏱ {set.durationSeconds / 60} min
+                        </span>
+                        <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                          📊 Pass: {PASSING_SCORE}%
+                        </span>
+                        <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                          📝 {set.questions?.length} questions
+                        </span>
+                      </div>
+                    </button>
+                  ))}
             </div>
           </div>
         )}

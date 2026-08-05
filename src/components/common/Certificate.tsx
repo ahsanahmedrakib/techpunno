@@ -1,6 +1,14 @@
 "use client";
 
+import { site } from "@/data/site";
+import { Lobster } from "next/font/google";
+import Image from "next/image";
 import { useRef } from "react";
+
+const lobster = Lobster({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 interface CertificateProps {
   name?: string;
@@ -27,7 +35,17 @@ export default function Certificate({
       year: "numeric",
     });
 
-  const certId = `TP-${new Date().getFullYear()}-${String(phone).slice(-4) || "0000"}`;
+  function generateCertificateId(phone: string): string {
+    const map = "ABCDEFGHIJ";
+
+    const encoded = phone
+      .replace(/\D/g, "")
+      .replace(/[0-9]/g, (digit) => map[Number(digit)]);
+
+    const year = new Date().getFullYear().toString().slice(-2);
+
+    return `${year}-${encoded}`;
+  }
 
   const handleDownloadPDF = async () => {
     const element = certificateRef.current;
@@ -90,45 +108,50 @@ export default function Certificate({
         <div
           ref={certificateRef}
           id="certificate-print"
-          className="relative box-border flex h-185.5 w-262.5 flex-col justify-between border-3 border-white bg-[#f8f9f2] p-8 text-gray-800 select-none print:h-[210mm] print:w-[297mm] print:border-none"
+          className="certificate-texture relative box-border flex h-185.5 w-262.5 flex-col justify-between border-3 border-white p-8 text-gray-800 select-none print:h-[210mm] print:w-[297mm] print:border-none"
         >
           {/* Top Decorative Shapes */}
-          <div className="absolute top-0 left-0 h-16 w-80 bg-[#1a3a68] [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]" />
-          <div className="absolute top-0 left-85 h-2 w-36 bg-[#f0a828]" />
+          <div className="absolute top-0 left-0 h-8 w-96 bg-[#1a3a68] [clip-path:polygon(0_0,100%_0,88%_100%,0_100%)]" />
+          <div className="absolute top-0 right-0 h-2 w-[45%] bg-[#f0a828]" />
+
+          {/* Left Top | Decorative Bars */}
+          <div className="absolute top-7 left-0 h-80 w-8 bg-[#1a3a68] [clip-path:polygon(0_0,100%_0,100%_88%,0_100%)]" />
+          {/* Right Bottom | Decorative Bars */}
+          <div className="absolute top-82 right-0 h-96 w-8 bg-[#1a3a68] [clip-path:polygon(0_12%,100%_0,100%_100%,0_100%)]" />
 
           {/* Bottom Decorative Shapes */}
-          <div className="absolute right-0 bottom-0 h-20 w-96 bg-[#1a3a68] [clip-path:polygon(18%_0,100%_0,100%_100%,0_100%)]" />
-          <div className="absolute bottom-0 left-12 h-1.5 w-80 bg-[#f0a828]" />
-
-          {/* Left/Right Decorative Bars */}
-          <div className="absolute top-16 left-0 h-80 w-8 bg-[#1a3a68]" />
-          <div className="absolute top-72 right-0 h-96 w-8 bg-[#1a3a68]" />
+          <div className="absolute right-0 bottom-0 h-8 w-96 bg-[#1a3a68] [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]" />
+          <div className="absolute bottom-0 left-0 h-2 w-[45%] bg-[#f0a828]" />
 
           {/* Header Section */}
-          <div className="relative z-10 flex justify-between px-12 pt-4 items-start">
-            <div className="flex-1 pr-12 text-center">
+          <div className="relative z-10 flex flex-col justify-center items-center overflow-hidden">
+            {/* Logo Shield */}
+            <div className="flex flex-col items-center">
+              <Image
+                src={site.logo}
+                alt={`${site.name} logo`}
+                height={300}
+                width={120}
+                unoptimized
+                className="object-cover"
+              />
+            </div>
+            <div className="text-center mt-3">
               <p className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-gray-700">
                 Tech Punno Presents
               </p>
-              <h1 className="mt-1 font-sans text-3xl font-extrabold uppercase tracking-wider text-[#1a3a68]">
+              <h1
+                style={{ fontWeight: 800 }}
+                className={`${lobster.className} mt-1 text-5xl font-extrabold uppercase leading-16 tracking-widest text-[#1a3a68]`}
+              >
                 Cyber Smart Girls Initiative 2026
               </h1>
-              <h2 className="mt-0.5 font-sans text-2xl font-bold uppercase tracking-wider text-[#2e8b57]">
+              <h2
+                style={{ fontWeight: 700 }}
+                className={`${lobster.className} mt-1 text-4xl font-bold uppercase tracking-widest text-[#2e8b57]`}
+              >
                 Cyber Quiz Competition
               </h2>
-            </div>
-
-            {/* Logo Shield */}
-            <div className="flex flex-col items-center">
-              <div className="flex h-16 w-14 items-center justify-center bg-linear-to-br from-red-600 via-emerald-600 to-green-600 p-1 text-xs font-bold text-white [clip-path:polygon(0_0,100%_0,100%_75%,50%_100%,0_75%)]">
-                🛡️
-              </div>
-              <p className="mt-1 font-sans text-sm font-black tracking-tight text-[#8b0000]">
-                TECH PUNNO
-              </p>
-              <p className="font-sans text-[8px] uppercase tracking-widest text-gray-500">
-                SECURE. LEAD. GROW.
-              </p>
             </div>
           </div>
 
@@ -160,7 +183,9 @@ export default function Certificate({
               {percentage !== undefined && (
                 <>
                   . Certificate ID:{" "}
-                  <span className="font-semibold text-gray-900">{certId}</span>
+                  <span className="font-semibold text-gray-900">
+                    {generateCertificateId(phone)}
+                  </span>
                 </>
               )}
               .
@@ -173,14 +198,21 @@ export default function Certificate({
           {/* Signatures & Award Seal */}
           <div className="relative z-10 flex justify-between px-16 pb-8 items-end">
             <div className="w-52 text-center">
-              <div className="flex h-10 items-center justify-center font-serif text-lg font-bold italic text-gray-800">
-                Mehedi
+              <div className="flex flex-col items-center">
+                <Image
+                  src={"/images/certificate/sign-1.png"}
+                  alt={`Sign-1`}
+                  height={300}
+                  width={120}
+                  unoptimized
+                  className="object-cover"
+                />
               </div>
               <div className="border-t border-gray-600 pt-1">
-                <p className="font-sans text-sm font-bold uppercase tracking-wide text-[#1a3a68]">
+                <p className="font-sans text-lg font-bold uppercase tracking-wide text-[#1a3a68]">
                   Mehedi Hasan
                 </p>
-                <p className="font-sans text-xs text-gray-600">Founder</p>
+                <p className="font-sans text-sm text-gray-600">Founder</p>
               </div>
             </div>
 
@@ -198,14 +230,21 @@ export default function Certificate({
             </div>
 
             <div className="w-52 text-center">
-              <div className="flex h-10 items-center justify-center font-serif text-lg font-bold italic text-gray-800">
-                Rajibul
+              <div className="flex flex-col items-center">
+                <Image
+                  src={"/images/certificate/sign-2.png"}
+                  alt={`Sign-2`}
+                  height={300}
+                  width={120}
+                  unoptimized
+                  className="object-cover"
+                />
               </div>
               <div className="border-t border-gray-600 pt-1">
-                <p className="font-sans text-sm font-bold uppercase tracking-wide text-[#1a3a68]">
+                <p className="font-sans text-lg font-bold uppercase tracking-wide text-[#1a3a68]">
                   Rajibul Islam Imon
                 </p>
-                <p className="font-sans text-xs text-gray-600">
+                <p className="font-sans text-sm text-gray-600">
                   Event Coordinator
                 </p>
               </div>
@@ -216,4 +255,3 @@ export default function Certificate({
     </div>
   );
 }
-

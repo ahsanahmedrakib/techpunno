@@ -71,6 +71,17 @@ body {
     scroll-margin-top: 5.5rem;
   }
 
+  .certificate-texture {
+    background-color: #f8f9f2;
+    background-image:
+      radial-gradient(rgba(26, 58, 104, 0.06) 1px, transparent 1px),
+      radial-gradient(rgba(26, 58, 104, 0.04) 1px, transparent 1px);
+    background-size: 12px 12px, 24px 24px;
+    background-position:
+      0 0,
+      6px 6px;
+  }
+
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
