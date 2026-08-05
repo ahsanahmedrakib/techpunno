@@ -1,15 +1,21 @@
 "use client";
 
-import { navItems, site } from "@/data/site";
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
+import { navItems, site } from "@/data/site";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import VolunteerFooter from "../sections/VolunteerFooter";
 import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
 
 export default function Footer() {
+  const path = usePathname();
+  console.log();
   return (
     <footer className="bg-ink text-white">
+      {path !== "/volunteer" && <VolunteerFooter />}
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
@@ -34,7 +40,12 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
               </svg>
               Follow us on Facebook
@@ -66,20 +77,20 @@ export default function Footer() {
           </h4>
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
             <li>
-              <a
-                href="/#contact"
+              <Link
+                href="/volunteer"
                 className="transition-colors hover:text-primary-light"
               >
                 Become a Volunteer
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/#events"
                 className="transition-colors hover:text-primary-light"
               >
                 Attend an Event
-              </a>
+              </Link>
             </li>
             <li>
               <a
@@ -133,14 +144,6 @@ export default function Footer() {
             </li>
             <li>{site.address}</li>
           </ul>
-          <div className="mt-5 rounded-2xl bg-white/5 p-4 text-sm text-white/70">
-            <span className="font-semibold text-primary-light">
-              Want to volunteer?
-            </span>
-            <p className="mt-1">
-              Fill out the contact form and our volunteer team will reach out.
-            </p>
-          </div>
         </div>
       </Container>
 

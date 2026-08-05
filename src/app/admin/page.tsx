@@ -10,12 +10,14 @@ import {
   Database,
   FileText,
   Folder,
+  HeartHandshake,
   Home,
   Mail,
   Medal,
   Newspaper,
   Star,
   Users,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 import { api } from "@/lib/api";
@@ -33,6 +35,8 @@ const icons: Record<TableKey, LucideIcon> = {
   contacts: Mail,
   certificates: Medal,
   certificateconfig: BadgeCheck,
+  volunteers: HeartHandshake,
+  volunteerconfig: Wallet,
 };
 
 export default function AdminDashboard() {

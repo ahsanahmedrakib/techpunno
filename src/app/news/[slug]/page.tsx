@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Footer from "@/components/common/Footer";
-import Navbar from "@/components/common/Navbar";
 import NewsSingle from "@/components/sections/NewsSingle";
 import { newsItems, type NewsItem } from "@/data/news";
 import { getDocBySlug } from "@/lib/db";
@@ -40,12 +38,8 @@ export default async function NewsPage({ params }: Props) {
   if (!item) notFound();
 
   return (
-    <>
-      <Navbar />
-      <main className="flex-1 bg-mist">
-        <NewsSingle item={item} />
-      </main>
-      <Footer />
-    </>
+    <main className="flex-1 bg-mist">
+      <NewsSingle item={item} />
+    </main>
   );
 }

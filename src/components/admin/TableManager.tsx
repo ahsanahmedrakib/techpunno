@@ -11,7 +11,7 @@ import {
 import type { TableConfig, TableKey } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Eye, Inbox, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Check, Eye, Hourglass, Inbox, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -35,6 +35,7 @@ export default function TableManager({ tableKey, config }: Props) {
   const [pageSize, setPageSize] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -47,15 +48,28 @@ export default function TableManager({ tableKey, config }: Props) {
     return () => clearTimeout(timer);
   }, [searchInput, search]);
 
+  const statusField = config.statusField;
+  const statusOptions = config.statusOptions ?? [];
+
   const { data, isLoading, error, isFetching } = useQuery<
     PagedResult<Record<string, unknown>>
   >({
-    queryKey: ["table", tableKey, page, pageSize, search],
+    queryKey: [
+      "table",
+      tableKey,
+      page,
+      pageSize,
+      search,
+      statusFilter,
+      statusField,
+    ],
     queryFn: () =>
       api.paged<Record<string, unknown>>(tableKey, {
         page,
         pageSize,
         search,
+        filterField: statusField,
+        filterValue: statusFilter || undefined,
       }),
     placeholderData: keepPreviousData,
   });
@@ -100,6 +114,23 @@ export default function TableManager({ tableKey, config }: Props) {
     setDeletingId(null);
   };
 
+  const handleStatusChange = async (
+    id: string,
+    value: string,
+    label: string,
+  ) => {
+    if (!statusField) return;
+    try {
+      await updateMutation.mutateAsync({
+        id,
+        data: { [statusField]: value },
+      });
+      toast.success(`${config.singular} marked as ${label.toLowerCase()}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Update failed");
+    }
+  };
+
   const getField = (name: string) => config.fields.find((f) => f.name === name);
 
   const cellValue = (row: Record<string, unknown>, col: string) => {
@@ -124,6 +155,12 @@ export default function TableManager({ tableKey, config }: Props) {
       return "bg-blue-50 text-blue-600 border-2 border-blue-300";
     if (val === "Online")
       return "bg-purple-50 text-purple-600 border-2 border-purple-300";
+    if (val === "pending")
+      return "bg-amber-50 text-amber-600 border-2 border-amber-300";
+    if (val === "approved")
+      return "bg-primary-lighter text-primary border-2 border-primary/40";
+    if (val === "rejected")
+      return "bg-secondary-light text-secondary border-2 border-secondary/40";
     return "bg-mist text-ink-soft border border-ink/15";
   };
 
@@ -215,6 +252,23 @@ export default function TableManager({ tableKey, config }: Props) {
               />
             </div>
             <div className="flex items-center justify-between gap-3 lg:justify-end">
+              {statusField && statusOptions.length > 0 && (
+                <select
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  className="cursor-pointer rounded-lg border border-ink/10 bg-white px-3 py-2 text-sm font-medium text-ink outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="">All status</option>
+                  {statusOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              )}
               {!config.readOnly && (
                 <button
                   onClick={() => setView("create")}
@@ -328,6 +382,57 @@ export default function TableManager({ tableKey, config }: Props) {
                                 </button>
                               ) : (
                                 <>
+                                  {statusField && statusOptions.length > 0 && (
+                                    <>
+                                      {statusOptions
+                                        .filter(
+                                          (opt) =>
+                                            String(row[statusField] ?? "") !==
+                                            opt,
+                                        )
+                                        .map((opt) => {
+                                          const isApprove = opt === "approved";
+                                          const isReject = opt === "rejected";
+                                          return (
+                                            <button
+                                              key={opt}
+                                              onClick={() =>
+                                                handleStatusChange(
+                                                  String(row.id),
+                                                  opt,
+                                                  isApprove
+                                                    ? "Approved"
+                                                    : isReject
+                                                      ? "Rejected"
+                                                      : "Pending",
+                                                )
+                                              }
+                                              title={`Mark as ${opt}`}
+                                              className={`cursor-pointer inline-flex items-center gap-1 rounded-lg border-2 px-2.5 py-1.5 text-xs font-medium transition-all ${
+                                                isApprove
+                                                  ? "border-primary/40 bg-primary-lighter text-primary hover:border-primary/70 hover:bg-primary-lighter/70"
+                                                  : isReject
+                                                    ? "border-secondary/40 bg-secondary-light text-secondary hover:border-secondary/70 hover:bg-secondary-light/70"
+                                                    : "border-amber-300 bg-amber-50 text-amber-600 hover:border-amber-400"
+                                              }`}
+                                            >
+                                              {isApprove ? (
+                                                <Check className="h-3.5 w-3.5" />
+                                              ) : isReject ? (
+                                                <X className="h-3.5 w-3.5" />
+                                              ) : (
+                                                <Hourglass className="h-3.5 w-3.5" />
+                                              )}
+                                              {isApprove
+                                                ? "Approve"
+                                                : isReject
+                                                  ? "Reject"
+                                                  : "Pending"}
+                                            </button>
+                                          );
+                                        })}
+                                    </>
+                                  )}
                                   <button
                                     onClick={() => {
                                       setEditing(row);

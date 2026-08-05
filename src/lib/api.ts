@@ -30,7 +30,13 @@ export const api = {
     http.get<T[]>(`/api/${table}`).then((r) => r.data),
   paged: <T>(
     table: string,
-    params: { page: number; pageSize: number; search?: string },
+    params: {
+      page: number;
+      pageSize: number;
+      search?: string;
+      filterField?: string;
+      filterValue?: string;
+    },
   ) =>
     http
       .get<PagedResult<T>>(`/api/${table}`, { params })

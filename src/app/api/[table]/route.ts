@@ -52,8 +52,16 @@ export async function GET(
       Math.max(1, Number(url.searchParams.get("pageSize")) || 10),
     );
     const search = url.searchParams.get("search") ?? "";
+    const filterField = url.searchParams.get("filterField") ?? undefined;
+    const filterValue = url.searchParams.get("filterValue") ?? undefined;
 
-    const result = await pagedDocs(table, { page, pageSize, search });
+    const result = await pagedDocs(table, {
+      page,
+      pageSize,
+      search,
+      filterField,
+      filterValue,
+    });
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";

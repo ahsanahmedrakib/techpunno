@@ -13,6 +13,7 @@ import {
   Clapperboard,
   ClipboardList,
   FileText,
+  HeartHandshake,
   Home,
   LayoutDashboard,
   Mail,
@@ -21,6 +22,7 @@ import {
   Newspaper,
   Star,
   Users,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -40,6 +42,8 @@ const tableIcons: Record<TableKey, LucideIcon> = {
   contacts: Mail,
   certificates: Medal,
   certificateconfig: BadgeCheck,
+  volunteers: HeartHandshake,
+  volunteerconfig: Wallet,
 };
 
 export default function AdminSidebar({

@@ -6,6 +6,7 @@ import { advisors, coreTeam } from "@/data/team";
 import { quizSets } from "@/data/quiz";
 import { videos } from "@/data/videos";
 import { defaultCertificateConfig } from "@/data/certificate";
+import { defaultVolunteerConfig, volunteerInterestOptions } from "@/data/volunteer";
 
 export type FieldType =
   | "text"
@@ -13,6 +14,7 @@ export type FieldType =
   | "richtext"
   | "number"
   | "select"
+  | "multiselect"
   | "image"
   | "list"
   | "readonly"
@@ -38,6 +40,9 @@ export interface TableConfig {
   listColumns: string[];
   single?: boolean;
   readOnly?: boolean;
+  defaultStatus?: string;
+  statusField?: string;
+  statusOptions?: string[];
 }
 
 export type TableKey =
@@ -51,7 +56,9 @@ export type TableKey =
   | "quizsets"
   | "contacts"
   | "certificates"
-  | "certificateconfig";
+  | "certificateconfig"
+  | "volunteers"
+  | "volunteerconfig";
 
 export const tables: Record<TableKey, TableConfig> = {
   advisors: {
@@ -236,6 +243,65 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "qrLabel", label: "QR label", type: "text", required: true, placeholder: "e.g. Scan to verify" },
     ],
     seed: [defaultCertificateConfig as unknown as Record<string, unknown>],
+  },
+  volunteers: {
+    key: "volunteers",
+    label: "Volunteers",
+    singular: "Volunteer",
+    defaultStatus: "pending",
+    statusField: "status",
+    statusOptions: ["pending", "approved", "rejected"],
+    listColumns: [
+      "fullName",
+      "institute",
+      "membershipType",
+      "status",
+      "createdAt",
+      "updatedAt",
+    ],
+    fields: [
+      { name: "fullName", label: "Full Name (পূর্ণ নাম)", type: "text", required: true, list: true, placeholder: "e.g. Rahim Uddin" },
+      { name: "fatherName", label: "Father's Name (পিতার নাম)", type: "text", required: true, placeholder: "e.g. Abdul Karim" },
+      { name: "motherName", label: "Mother's Name (মাতার নাম)", type: "text", required: true, placeholder: "e.g. Fatema Begum" },
+      { name: "dateOfBirth", label: "Date of Birth (জন্ম তারিখ)", type: "text", required: true, placeholder: "e.g. 2005-01-15" },
+      { name: "gender", label: "Gender (লিঙ্গ)", type: "select", options: ["Male", "Female", "Other"], required: true, placeholder: "Select gender" },
+      { name: "mobile", label: "Mobile Number (মোবাইল নম্বর)", type: "text", required: true, list: true, placeholder: "e.g. 017XXXXXXXX" },
+      { name: "email", label: "Email (ইমেইল)", type: "text", placeholder: "you@example.com" },
+      { name: "whatsapp", label: "WhatsApp Number (হোয়াটসঅ্যাপ নম্বর)", type: "text", placeholder: "e.g. 017XXXXXXXX" },
+      { name: "guardianName", label: "Guardian's Name (অভিভাবকের নাম)", type: "text", required: true, placeholder: "Guardian / Emergency contact" },
+      { name: "guardianRelation", label: "Guardian Relation (সম্পর্ক)", type: "text", required: true, placeholder: "e.g. Father" },
+      { name: "guardianMobile", label: "Guardian Mobile (মোবাইল)", type: "text", required: true, placeholder: "e.g. 017XXXXXXXX" },
+      { name: "institute", label: "Institution Name (প্রতিষ্ঠানের নাম)", type: "text", required: true, list: true, placeholder: "e.g. XYZ School & College" },
+      { name: "department", label: "Department / Section (বিভাগ/শাখা)", type: "text", placeholder: "e.g. Science / Class 9" },
+      { name: "educationLevel", label: "Education Level (শিক্ষার স্তর)", type: "select", options: ["School", "College", "University", "Other"], required: true, placeholder: "Select level" },
+      { name: "interestAreas", label: "Interest Area (আগ্রহের ক্ষেত্র)", type: "multiselect", options: volunteerInterestOptions },
+      { name: "membershipType", label: "Membership Type (সদস্যপদ ধরন)", type: "select", options: ["Ambassador", "Volunteer"], required: true, placeholder: "Select type" },
+      { name: "registrationFee", label: "Registration Fee (৳)", type: "text", placeholder: "e.g. 50" },
+      { name: "paidBy", label: "Paid By (পেমেন্ট মাধ্যম)", type: "select", options: ["Cash", "bKash", "Nagad"], placeholder: "Select method" },
+      { name: "transactionId", label: "Transaction ID", type: "text", placeholder: "e.g. 8P7Q2R3A" },
+      { name: "image", label: "Photo (ছবি)", type: "image" },
+      { name: "officeNote", label: "Office Note (অফিস নোট)", type: "textarea", placeholder: "Internal notes" },
+      { name: "approvedBy", label: "Approved By (অনুমোদনকারী)", type: "select", options: ["Founder", "Co-Founder", "Team Leader", "Panel Member"], placeholder: "Select approver" },
+      { name: "status", label: "Status (অবস্থা)", type: "select", options: ["pending", "approved", "rejected"], required: true, list: true, placeholder: "Select status" },
+      { name: "createdAt", label: "Registered", type: "readonly", list: true },
+      { name: "updatedAt", label: "Updated", type: "readonly", list: true },
+    ],
+    seed: [],
+  },
+  volunteerconfig: {
+    key: "volunteerconfig",
+    label: "Volunteer Config",
+    singular: "Configuration",
+    single: true,
+    listColumns: ["bkashNumber", "registrationFee", "createdAt", "updatedAt"],
+    fields: [
+      { name: "bkashNumber", label: "bKash Number (পেমেন্ট নম্বর)", type: "text", required: true, list: true, placeholder: "e.g. 017XXXXXXXX" },
+      { name: "bkashQr", label: "bKash QR Code Image", type: "image", placeholder: "/images/uploads/..." },
+      { name: "registrationFee", label: "Registration Fee (৳)", type: "text", required: true, list: true, placeholder: "e.g. 50" },
+      { name: "createdAt", label: "Created", type: "readonly", list: true },
+      { name: "updatedAt", label: "Updated", type: "readonly", list: true },
+    ],
+    seed: [defaultVolunteerConfig as unknown as Record<string, unknown>],
   },
 };
 

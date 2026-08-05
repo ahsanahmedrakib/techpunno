@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Certificate from "@/components/common/Certificate";
-import Footer from "@/components/common/Footer";
-import Navbar from "@/components/common/Navbar";
 import { getCertificateConfig } from "@/lib/certificate-config";
 import { getCollection } from "@/lib/db";
 
@@ -59,20 +57,16 @@ export default async function CertificatePage({ params }: PageProps) {
   const config = await getCertificateConfig();
 
   return (
-    <>
-      <Navbar />
-      <main className="flex-1 bg-gray-100">
-        <Certificate
-          name={String(cert.name ?? "")}
-          percentage={Number(cert.percentage)}
-          phone={String(cert.phone ?? "")}
-          date={cert.date ? String(cert.date) : undefined}
-          certificateId={String(cert.certificateId)}
-          certificateUrl={certificateUrl}
-          config={config}
-        />
-      </main>
-      <Footer />
-    </>
+    <main className="flex-1 bg-gray-100">
+      <Certificate
+        name={String(cert.name ?? "")}
+        percentage={Number(cert.percentage)}
+        phone={String(cert.phone ?? "")}
+        date={cert.date ? String(cert.date) : undefined}
+        certificateId={String(cert.certificateId)}
+        certificateUrl={certificateUrl}
+        config={config}
+      />
+    </main>
   );
 }

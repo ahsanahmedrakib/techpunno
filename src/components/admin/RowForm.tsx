@@ -33,9 +33,10 @@ function toFormValues(
   for (const field of fields) {
     if (field.type === "readonly") continue;
     const val = initial?.[field.name];
-    if (field.type === "list" && Array.isArray(val))
-      values[field.name] = val.join("\n");
-    else if (field.type === "number" && typeof val === "number")
+    if (field.type === "list" || field.type === "multiselect") {
+      if (Array.isArray(val)) values[field.name] = val.join("\n");
+      else if (typeof val === "string") values[field.name] = val;
+    } else if (field.type === "number" && typeof val === "number")
       values[field.name] = String(val);
     else values[field.name] = String(val ?? "");
   }
@@ -52,7 +53,7 @@ function toPayload(
     const raw = values[field.name] ?? "";
     if (field.type === "number")
       payload[field.name] = raw === "" ? null : Number(raw);
-    else if (field.type === "list")
+    else if (field.type === "list" || field.type === "multiselect")
       payload[field.name] = raw
         .split("\n")
         .map((l) => l.trim())
@@ -320,6 +321,7 @@ export default function RowForm({
                 field.type === "textarea" ||
                 field.type === "richtext" ||
                 field.type === "list" ||
+                field.type === "multiselect" ||
                 field.type === "image" ||
                 field.type === "questions"
                   ? "sm:col-span-2"
@@ -351,6 +353,69 @@ export default function RowForm({
                       One item per line
                     </p>
                   )}
+                  {errors[field.name] && (
+                    <p className="mt-1 text-xs font-medium text-secondary">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ) : field.type === "multiselect" ? (
+                <div>
+                  <div className="flex flex-wrap gap-2">
+                    {field.options?.map((opt) => {
+                      const selected = (values[field.name] ?? "")
+                        .split("\n")
+                        .map((l) => l.trim())
+                        .filter(Boolean)
+                        .includes(opt);
+                      const toggle = () => {
+                        const current = (values[field.name] ?? "")
+                          .split("\n")
+                          .map((l) => l.trim())
+                          .filter((l) => l && l !== opt);
+                        setValue(
+                          field.name,
+                          selected
+                            ? current.join("\n")
+                            : [...current, opt].join("\n"),
+                        );
+                      };
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={toggle}
+                          className={`cursor-pointer inline-flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all ${
+                            selected
+                              ? "border-primary bg-primary-lighter text-primary"
+                              : "border-ink/10 bg-white text-ink-soft hover:border-primary/40"
+                          }`}
+                        >
+                          <span
+                            className={`grid h-4 w-4 place-items-center rounded border-2 transition-all ${
+                              selected
+                                ? "border-primary bg-primary text-white"
+                                : "border-ink/20"
+                            }`}
+                          >
+                            {selected && (
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                              >
+                                <path d="M20 6 9 17l-5-5" />
+                              </svg>
+                            )}
+                          </span>
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
                   {errors[field.name] && (
                     <p className="mt-1 text-xs font-medium text-secondary">
                       {errors[field.name]}

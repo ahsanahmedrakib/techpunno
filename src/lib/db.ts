@@ -117,10 +117,19 @@ function buildSearchFilter(
 
 export async function pagedDocs<T = unknown>(
   key: TableKey,
-  options: { page: number; pageSize: number; search?: string },
+  options: {
+    page: number;
+    pageSize: number;
+    search?: string;
+    filterField?: string;
+    filterValue?: string;
+  },
 ): Promise<PagedResult<T>> {
   const coll = await getCollection(key);
   const filter = buildSearchFilter(key, options.search ?? "");
+  if (options.filterField && options.filterValue) {
+    filter[options.filterField] = options.filterValue;
+  }
   const total = await coll.countDocuments(filter);
   const docs = (await coll
     .find(filter)
@@ -214,6 +223,10 @@ export async function createDoc(
   const now = new Date().toISOString();
   doc.createdAt = now;
   doc.updatedAt = now;
+  const statusField = tables[key].statusField ?? "status";
+  if (tables[key].defaultStatus && doc[statusField] === undefined) {
+    doc[statusField] = tables[key].defaultStatus;
+  }
   if (hasSlugField(key)) {
     const title = String(doc.title || doc.name || "");
     const base = slugify(title);

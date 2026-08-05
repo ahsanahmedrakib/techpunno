@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Footer from "@/components/common/Footer";
-import Navbar from "@/components/common/Navbar";
 import Quiz from "@/components/sections/Quiz";
 
 export const metadata: Metadata = {
@@ -11,12 +9,8 @@ export const metadata: Metadata = {
 
 export default function QuizPage() {
   return (
-    <>
-      <Navbar />
-      <main className="flex-1 bg-mist">
-        <Quiz />
-      </main>
-      <Footer />
-    </>
+    <main className="flex-1 bg-mist">
+      <Quiz />
+    </main>
   );
 }
