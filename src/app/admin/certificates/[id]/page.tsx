@@ -1,18 +1,21 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import { collections } from "@/lib/collections";
-import ContactDetail from "@/components/admin/ContactDetail";
+import CertificateDetail from "@/components/admin/CertificateDetail";
 import Loading from "@/components/common/Loading";
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function CertificateDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: record, isLoading, error } = useQuery({
+  const {
+    data: record,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["collection", "certificates", id],
     queryFn: () => api.get<Record<string, unknown>>("certificates", id),
   });
@@ -40,7 +43,6 @@ export default function CertificateDetailPage() {
     );
   }
 
-  return (
-    <ContactDetail record={record} config={collections.certificates} />
-  );
+  return <CertificateDetail record={record} />;
 }
+

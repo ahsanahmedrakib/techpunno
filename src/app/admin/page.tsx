@@ -44,53 +44,71 @@ export default function AdminDashboard() {
 
   const totalRecords = Object.values(counts).reduce((a, b) => a + b, 0);
   const dbCount = Object.values(sources).filter((s) => s === "db").length;
+  const loading = results.some((r) => r.status === "pending");
 
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-              📁
-            </span>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
-                Collections
-              </p>
-              <p className="mt-0.5 text-3xl font-bold text-ink">
-                {collectionKeys.length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-              📄
-            </span>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
-                Total Records
-              </p>
-              <p className="mt-0.5 text-3xl font-bold text-ink">{totalRecords}</p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-              🔗
-            </span>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
-                DB Connected
-              </p>
-              <p className="mt-0.5 text-3xl font-bold text-ink">
-                {dbCount}/{collectionKeys.length}
-              </p>
-            </div>
-          </div>
-        </div>
+        {loading
+          ? [0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="flex items-center gap-4 rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm"
+              >
+                <span className="h-10 w-10 animate-pulse rounded-xl bg-mist" />
+                <div className="flex-1">
+                  <div className="h-3 w-24 animate-pulse rounded-full bg-mist" />
+                  <div className="mt-2 h-7 w-16 animate-pulse rounded-full bg-mist" />
+                </div>
+              </div>
+            ))
+          : (
+              <>
+                <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
+                      📁
+                    </span>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
+                        Collections
+                      </p>
+                      <p className="mt-0.5 text-3xl font-bold text-ink">
+                        {collectionKeys.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
+                      📄
+                    </span>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
+                        Total Records
+                      </p>
+                      <p className="mt-0.5 text-3xl font-bold text-ink">{totalRecords}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
+                      🔗
+                    </span>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
+                        DB Connected
+                      </p>
+                      <p className="mt-0.5 text-3xl font-bold text-ink">
+                        {dbCount}/{collectionKeys.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
       </div>
 
       <div>
@@ -98,41 +116,55 @@ export default function AdminDashboard() {
           Manage Collections
         </h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {collectionKeys.map((key) => {
-            const col = collections[key];
-            const count = counts[key] ?? 0;
-            const src = sources[key] ?? "db";
-            return (
-              <Link
-                key={key}
-                href={`/admin/${key}`}
-                className="group rounded-2xl border-2 border-primary/30 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-md"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream text-xl transition-colors group-hover:bg-primary-lighter">
-                    {icons[key]}
-                  </span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      src === "db"
-                        ? "bg-primary-lighter text-primary"
-                        : "bg-secondary-light text-secondary"
-                    }`}
-                  >
-                    {src === "db" ? "LIVE" : "ERROR"}
-                  </span>
+          {loading
+            ? Array.from({ length: collectionKeys.length }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border-2 border-primary/30 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="h-11 w-11 animate-pulse rounded-xl bg-mist" />
+                    <span className="h-5 w-16 animate-pulse rounded-full bg-mist" />
+                  </div>
+                  <div className="mt-3 h-4 w-2/3 animate-pulse rounded-full bg-mist" />
+                  <div className="mt-2 h-3 w-1/2 animate-pulse rounded-full bg-mist" />
                 </div>
-                <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-primary">
-                  {col.label}
-                </h4>
-                <p className="mt-1 text-xs text-ink-soft">
-                  {count} record{count !== 1 ? "s" : ""}
-                  {col.readOnly && " · Read-only"}
-                  {col.single && " · Single"}
-                </p>
-              </Link>
-            );
-          })}
+              ))
+            : collectionKeys.map((key) => {
+                const col = collections[key];
+                const count = counts[key] ?? 0;
+                const src = sources[key] ?? "db";
+                return (
+                  <Link
+                    key={key}
+                    href={`/admin/${key}`}
+                    className="group rounded-2xl border-2 border-primary/30 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-md"
+                  >
+                    <div className="flex items-start justify-between">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream text-xl transition-colors group-hover:bg-primary-lighter">
+                        {icons[key]}
+                      </span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          src === "db"
+                            ? "bg-primary-lighter text-primary"
+                            : "bg-secondary-light text-secondary"
+                        }`}
+                      >
+                        {src === "db" ? "LIVE" : "ERROR"}
+                      </span>
+                    </div>
+                    <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-primary">
+                      {col.label}
+                    </h4>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      {count} record{count !== 1 ? "s" : ""}
+                      {col.readOnly && " · Read-only"}
+                      {col.single && " · Single"}
+                    </p>
+                  </Link>
+                );
+              })}
         </div>
       </div>
     </div>
