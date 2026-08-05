@@ -48,7 +48,8 @@ export type CollectionKey =
   | "news"
   | "videos"
   | "quizsets"
-  | "contacts";
+  | "contacts"
+  | "certificates";
 
 export const collections: Record<CollectionKey, CollectionConfig> = {
   advisors: {
@@ -189,6 +190,26 @@ export const collections: Record<CollectionKey, CollectionConfig> = {
       { name: "subject", label: "Subject", type: "text", list: true, placeholder: "Message subject" },
       { name: "message", label: "Message", type: "textarea", placeholder: "Type the message body" },
       { name: "createdAt", label: "Received", type: "readonly", list: true },
+      { name: "updatedAt", label: "Updated", type: "readonly", list: true },
+    ],
+    seed: [],
+  },
+  certificates: {
+    key: "certificates",
+    label: "Certificates",
+    singular: "Certificate",
+    readOnly: true,
+    listColumns: ["certificateId", "name", "percentage", "quizTitle", "createdAt"],
+    fields: [
+      { name: "certificateId", label: "Certificate ID", type: "text", list: true },
+      { name: "name", label: "Name", type: "text", list: true, placeholder: "e.g. Jane Doe" },
+      { name: "phone", label: "Phone", type: "text", placeholder: "e.g. 01XXXXXXXXX" },
+      { name: "percentage", label: "Percentage", type: "number", list: true, placeholder: "e.g. 90" },
+      { name: "score", label: "Score", type: "number", placeholder: "e.g. 9" },
+      { name: "total", label: "Total Questions", type: "number", placeholder: "e.g. 10" },
+      { name: "quizTitle", label: "Quiz Title", type: "text", list: true, placeholder: "e.g. Cyber Security Basics" },
+      { name: "date", label: "Issue Date", type: "text", placeholder: "e.g. 5 August 2026" },
+      { name: "createdAt", label: "Issued", type: "readonly", list: true },
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [],

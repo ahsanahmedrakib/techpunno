@@ -5,7 +5,14 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { quizSets, type QuizSet } from "@/data/quiz";
 import { api } from "@/lib/api";
-import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
 
 type Step = "select" | "form" | "quiz" | "result";
 
@@ -22,15 +29,20 @@ const formatTime = (s: number) => {
 const optionLabels = ["A", "B", "C", "D"];
 
 export default function Quiz() {
+  const router = useRouter();
   const [quizSetsList, setQuizSetsList] = useState<QuizSet[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSet, setSelectedSet] = useState<QuizSet | null>(null);
-  const questions = selectedSet?.questions ?? [];
+  const questions = useMemo(
+    () => selectedSet?.questions ?? [],
+    [selectedSet],
+  );
   const [step, setStep] = useState<Step>("select");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [timeLeft, setTimeLeft] = useState(10 * 60);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,17 +68,67 @@ export default function Quiz() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const submitQuiz = useCallback(async () => {
+    if (submitting) return;
+    setSubmitting(true);
+
+    const total = questions.length;
+    const score = questions.filter(
+      (q, idx) => answers[idx] === q.correctIndex,
+    ).length;
+    const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+
+    if (percentage >= 80) {
+      try {
+        const cert = await api.create<{ certificateId: string }>(
+          "certificates",
+          {
+            name,
+            phone,
+            percentage,
+            score,
+            total,
+            quizTitle: selectedSet?.title ?? "",
+            date: new Date().toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          },
+        );
+        router.push(`/certificate/${cert.certificateId}`);
+        return;
+      } catch {
+        // Saving failed — show the in-page result instead.
+        setSubmitting(false);
+        transitionTo("result");
+        return;
+      }
+    }
+
+    setSubmitting(false);
+    transitionTo("result");
+  }, [
+    submitting,
+    questions,
+    answers,
+    name,
+    phone,
+    selectedSet,
+    router,
+  ]);
+
   useEffect(() => {
     if (step !== "quiz") return;
     const timer = setTimeout(() => {
       if (timeLeft <= 1) {
-        transitionTo("result");
+        void submitQuiz();
         return;
       }
       setTimeLeft((t) => t - 1);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [step, timeLeft]);
+  }, [step, timeLeft, submitQuiz]);
 
   const selectQuizSet = (set: QuizSet) => {
     setSelectedSet(set);
@@ -317,11 +379,11 @@ export default function Quiz() {
               <Hoverable>
                 <button
                   type="button"
-                  onClick={() => transitionTo("result")}
-                  disabled={timeLeft <= 0}
+                  onClick={() => void submitQuiz()}
+                  disabled={submitting}
                   className="w-full rounded-full bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-ink/30 disabled:shadow-none sm:w-auto sm:px-12"
                 >
-                  Submit Answers
+                  {submitting ? "Submitting..." : "Submit Answers"}
                 </button>
               </Hoverable>
               <p className="text-xs text-ink-soft">

@@ -1,8 +1,10 @@
 "use client";
 
 import { site } from "@/data/site";
+import { Download } from "lucide-react";
 import { Lobster } from "next/font/google";
 import Image from "next/image";
+import { QRCodeCanvas } from "qrcode.react";
 import { useRef } from "react";
 
 const lobster = Lobster({
@@ -16,6 +18,8 @@ interface CertificateProps {
   phone?: string;
   date?: string;
   embed?: boolean;
+  certificateId?: string;
+  certificateUrl?: string;
 }
 
 export default function Certificate({
@@ -24,8 +28,12 @@ export default function Certificate({
   phone = "",
   date,
   embed = false,
+  certificateId,
+  certificateUrl,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
+
+  const qrValue = certificateUrl ?? "";
 
   const displayDate =
     date ||
@@ -46,6 +54,8 @@ export default function Certificate({
 
     return `${year}-${encoded}`;
   }
+
+  const displayCertificateId = certificateId || generateCertificateId(phone);
 
   const handleDownloadPDF = async () => {
     const element = certificateRef.current;
@@ -94,12 +104,13 @@ export default function Certificate({
       }
     >
       {/* Action Buttons */}
-      <div className="mb-6 flex gap-4 print:hidden">
+      <div className="mb-6 mt-16 flex gap-4 print:hidden">
         <button
           onClick={handleDownloadPDF}
-          className="cursor-pointer rounded-lg bg-emerald-700 px-5 py-2.5 font-sans font-medium text-white shadow-md transition hover:bg-emerald-800"
+          className="cursor-pointer flex gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 font-sans font-medium text-white shadow-md transition hover:bg-emerald-800"
         >
-          📥 Download PDF
+          <span> Download PDF</span>
+          <Download />
         </button>
       </div>
 
@@ -123,6 +134,22 @@ export default function Certificate({
           <div className="absolute right-0 bottom-0 h-8 w-96 bg-[#1a3a68] [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]" />
           <div className="absolute bottom-0 left-0 h-2 w-[45%] bg-[#f0a828]" />
 
+          {qrValue && (
+            <div className="absolute flex w-28 flex-col items-center top-5 right-1">
+              <div className="border-2 border-[#1a3a68]/30 bg-white p-2 shadow-sm">
+                <QRCodeCanvas
+                  value={qrValue}
+                  size={76}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#1a3a68"
+                />
+              </div>
+              <p className="mt-1 font-sans text-[10px] font-bold uppercase tracking-wide text-gray-600">
+                Scan to verify
+              </p>
+            </div>
+          )}
           {/* Header Section */}
           <div className="relative z-10 flex flex-col justify-center items-center overflow-hidden">
             {/* Logo Shield */}
@@ -184,7 +211,7 @@ export default function Certificate({
                 <>
                   . Certificate ID:{" "}
                   <span className="font-semibold text-gray-900">
-                    {generateCertificateId(phone)}
+                    {displayCertificateId}
                   </span>
                 </>
               )}

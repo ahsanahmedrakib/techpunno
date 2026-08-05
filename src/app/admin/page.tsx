@@ -15,6 +15,7 @@ const icons: Record<CollectionKey, string> = {
   videos: "🎬",
   quizsets: "📋",
   contacts: "📬",
+  certificates: "🏅",
 };
 
 export default function AdminDashboard() {
