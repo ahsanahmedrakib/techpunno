@@ -220,9 +220,6 @@ export default function Certificate({
               />
             </div>
             <div className="text-center mt-3">
-              <p className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-gray-700">
-                Tech Punno Presents
-              </p>
               <h1
                 style={{ fontWeight: 800 }}
                 className={`${lobster.className} mt-1 text-5xl font-extrabold uppercase leading-16 tracking-widest text-[#1a3a68]`}

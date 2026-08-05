@@ -1,16 +1,10 @@
 "use client";
 
 import Certificate from "@/components/common/Certificate";
-import {
-  ChevronLeft,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  Medal,
-} from "lucide-react";
+import { formatDate, formatDateAndTime } from "@/lib/utils";
+import { ChevronLeft, ExternalLink, Eye, EyeOff, Medal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { formatDate, formatDateAndTime } from "@/lib/utils";
 
 interface CertificateDetailProps {
   row: Record<string, unknown>;
@@ -44,7 +38,7 @@ export default function CertificateDetail({ row }: CertificateDetailProps) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex items-center gap-3">
         <Link
           href="/admin/certificates"
