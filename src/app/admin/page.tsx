@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useQueries } from "@tanstack/react-query";
 import {
+  BadgeCheck,
   Calendar,
   Clapperboard,
   ClipboardList,
@@ -31,6 +32,7 @@ const icons: Record<TableKey, LucideIcon> = {
   quizsets: ClipboardList,
   contacts: Mail,
   certificates: Medal,
+  certificateconfig: BadgeCheck,
 };
 
 export default function AdminDashboard() {

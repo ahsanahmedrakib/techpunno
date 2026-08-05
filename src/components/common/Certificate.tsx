@@ -1,6 +1,11 @@
 "use client";
 
+import {
+  defaultCertificateConfig,
+  type CertificateConfig,
+} from "@/data/certificate";
 import { site } from "@/data/site";
+import { useCertificateConfig } from "@/hooks/useCertificateConfig";
 import { Download } from "lucide-react";
 import { Lobster } from "next/font/google";
 import Image from "next/image";
@@ -56,6 +61,7 @@ interface CertificateProps {
   embed?: boolean;
   certificateId?: string;
   certificateUrl?: string;
+  config?: CertificateConfig;
 }
 
 export default function Certificate({
@@ -66,9 +72,12 @@ export default function Certificate({
   embed = false,
   certificateId,
   certificateUrl,
+  config,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
   const sealId = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const { config: fetchedConfig } = useCertificateConfig();
+  const cfg = config ?? fetchedConfig ?? defaultCertificateConfig;
 
   const laurelLeaves = useMemo(() => {
     const leaves: { cx: number; cy: number; angle: number }[] = [];
@@ -202,7 +211,7 @@ export default function Certificate({
                 />
               </div>
               <p className="mt-1 font-sans text-[10px] font-bold uppercase tracking-wide text-gray-600">
-                Scan to verify
+                {cfg.qrLabel}
               </p>
             </div>
           )}
@@ -224,13 +233,13 @@ export default function Certificate({
                 style={{ fontWeight: 800 }}
                 className={`${lobster.className} mt-1 text-5xl font-extrabold uppercase leading-16 tracking-widest text-[#1a3a68]`}
               >
-                Cyber Smart Girls Initiative 2026
+                {cfg.eventTitle}
               </h1>
               <h2
                 style={{ fontWeight: 700 }}
                 className={`${lobster.className} mt-1 text-4xl font-bold uppercase tracking-widest text-[#2e8b57]`}
               >
-                Cyber Quiz Competition
+                {cfg.eventSubtitle}
               </h2>
             </div>
           </div>
@@ -238,7 +247,7 @@ export default function Certificate({
           {/* Main Content */}
           <div className="relative z-10 my-2 px-16 text-center">
             <p className="mb-4 font-sans text-lg font-bold uppercase tracking-[0.2em] text-gray-700">
-              This is to certify that
+              {cfg.certifyText}
             </p>
 
             <h3 className="mb-6 font-serif text-4xl font-bold italic text-gray-900 underline decoration-1 decoration-gray-300 underline-offset-8 md:text-5xl">
@@ -248,7 +257,7 @@ export default function Certificate({
             <p className="mx-auto max-w-3xl font-sans text-base leading-relaxed text-gray-700">
               for successfully completing the{" "}
               <span className="font-semibold text-gray-900">
-                TechPunno Cyber Awareness Quiz
+                {cfg.quizTitle}
               </span>
               {percentage !== undefined && (
                 <>
@@ -271,7 +280,7 @@ export default function Certificate({
               .
             </p>
             <p className="mt-2 font-sans text-base text-gray-700">
-              We wish {name.split(" ")[0]} all the best for future success.
+              {cfg.wishText.replace("{name}", name.split(" ")[0])}
             </p>
           </div>
 
@@ -280,7 +289,7 @@ export default function Certificate({
             <div className="w-52 text-center">
               <div className="flex flex-col items-center">
                 <Image
-                  src={"/images/certificate/sign-1.png"}
+                  src={cfg.signatoryImage}
                   alt={`Sign-1`}
                   height={300}
                   width={120}
@@ -290,9 +299,11 @@ export default function Certificate({
               </div>
               <div className="border-t border-gray-600 pt-1">
                 <p className="font-sans text-lg font-bold uppercase tracking-wide text-[#1a3a68]">
-                  Mehedi Hasan
+                  {cfg.signatoryName}
                 </p>
-                <p className="font-sans text-sm text-gray-600">Founder</p>
+                <p className="font-sans text-sm text-gray-600">
+                  {cfg.signatoryRole}
+                </p>
               </div>
             </div>
 
@@ -395,7 +406,7 @@ export default function Certificate({
                       textLength="64"
                       lengthAdjust="spacingAndGlyphs"
                     >
-                      TECH PUNNO
+                      {cfg.sealTopText}
                     </textPath>
                   </text>
                   <text
@@ -410,7 +421,7 @@ export default function Certificate({
                       textLength="64"
                       lengthAdjust="spacingAndGlyphs"
                     >
-                      CYBER QUIZ 2026
+                      {cfg.sealBottomText}
                     </textPath>
                   </text>
 
@@ -438,7 +449,7 @@ export default function Certificate({
             <div className="w-52 text-center invisible">
               <div className="flex flex-col items-center">
                 <Image
-                  src={"/images/certificate/sign-1.png"}
+                  src={cfg.signatoryImage}
                   alt={`Sign-1`}
                   height={300}
                   width={120}
@@ -448,9 +459,11 @@ export default function Certificate({
               </div>
               <div className="border-t border-gray-600 pt-1">
                 <p className="font-sans text-lg font-bold uppercase tracking-wide text-[#1a3a68]">
-                  Mehedi Hasan
+                  {cfg.signatoryName}
                 </p>
-                <p className="font-sans text-sm text-gray-600">Founder</p>
+                <p className="font-sans text-sm text-gray-600">
+                  {cfg.signatoryRole}
+                </p>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { newsItems } from "@/data/news";
 import { advisors, coreTeam } from "@/data/team";
 import { quizSets } from "@/data/quiz";
 import { videos } from "@/data/videos";
+import { defaultCertificateConfig } from "@/data/certificate";
 
 export type FieldType =
   | "text"
@@ -49,7 +50,8 @@ export type TableKey =
   | "videos"
   | "quizsets"
   | "contacts"
-  | "certificates";
+  | "certificates"
+  | "certificateconfig";
 
 export const tables: Record<TableKey, TableConfig> = {
   advisors: {
@@ -213,6 +215,27 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [],
+  },
+  certificateconfig: {
+    key: "certificateconfig",
+    label: "Certificate Config",
+    singular: "Configuration",
+    single: true,
+    listColumns: ["eventTitle", "signatoryName", "createdAt", "updatedAt"],
+    fields: [
+      { name: "eventTitle", label: "Event title", type: "text", required: true, list: true, placeholder: "e.g. Cyber Smart Girls Initiative 2026" },
+      { name: "eventSubtitle", label: "Event subtitle", type: "text", required: true, placeholder: "e.g. Cyber Quiz Competition" },
+      { name: "certifyText", label: "Certification line", type: "text", required: true, placeholder: "e.g. This is to certify that" },
+      { name: "quizTitle", label: "Quiz title", type: "text", required: true, placeholder: "e.g. TechPunno Cyber Awareness Quiz" },
+      { name: "wishText", label: "Wish message", type: "textarea", required: true, placeholder: "Use {name} as the recipient name, e.g. We wish {name} all the best." },
+      { name: "signatoryName", label: "Signatory name", type: "text", required: true, list: true, placeholder: "e.g. Mehedi Hasan" },
+      { name: "signatoryRole", label: "Signatory role", type: "text", required: true, placeholder: "e.g. Founder" },
+      { name: "signatoryImage", label: "Signature image", type: "image", placeholder: "/images/certificate/sign-1.png" },
+      { name: "sealTopText", label: "Seal top text", type: "text", required: true, placeholder: "e.g. TECH PUNNO" },
+      { name: "sealBottomText", label: "Seal bottom text", type: "text", required: true, placeholder: "e.g. CYBER QUIZ 2026" },
+      { name: "qrLabel", label: "QR label", type: "text", required: true, placeholder: "e.g. Scan to verify" },
+    ],
+    seed: [defaultCertificateConfig as unknown as Record<string, unknown>],
   },
 };
 

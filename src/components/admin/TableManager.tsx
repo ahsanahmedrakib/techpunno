@@ -95,9 +95,7 @@ export default function TableManager({ tableKey, config }: Props) {
       await deleteMutation.mutateAsync(id);
       toast.success(`${config.singular} deleted`);
     } catch {
-      toast.error(
-        "Failed to delete. The row may not exist in the database.",
-      );
+      toast.error("Failed to delete. The row may not exist in the database.");
     }
     setDeletingId(null);
   };
@@ -145,16 +143,37 @@ export default function TableManager({ tableKey, config }: Props) {
 
   if (config.single) {
     const row = rows[0] ?? {};
+    const rowId = row.id ? String(row.id) : "";
+
+    const handleSingleSubmit = async (data: Record<string, unknown>) => {
+      try {
+        if (rowId) {
+          await updateMutation.mutateAsync({ id: rowId, data });
+          toast.success(`${config.singular} updated`);
+        } else {
+          await createMutation.mutateAsync(data);
+          toast.success(`${config.singular} created`);
+        }
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Save failed");
+      }
+    };
+
     return (
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-7xl">
         <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
           <h3 className="mb-4 text-base font-bold text-ink">{config.label}</h3>
+          <p className="mb-4 text-xs text-ink-soft">
+            {rowId
+              ? "This configuration is saved. Editing it updates the existing record."
+              : "No configuration saved yet. Saving creates the record — afterwards you can only update it."}
+          </p>
           <RowForm
             fields={config.fields}
             initial={row}
-            onSubmit={handleUpdate}
+            onSubmit={handleSingleSubmit}
             onCancel={() => {}}
-            submitLabel="Save Settings"
+            submitLabel={rowId ? "Save Settings" : "Add Settings"}
           />
         </div>
       </div>
@@ -199,7 +218,7 @@ export default function TableManager({ tableKey, config }: Props) {
               {!config.readOnly && (
                 <button
                   onClick={() => setView("create")}
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg"
+                  className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg"
                 >
                   <Plus className="h-4 w-4" />
                   New {config.singular}
@@ -213,20 +232,6 @@ export default function TableManager({ tableKey, config }: Props) {
               columns={config.listColumns.map((c) => getField(c)?.label ?? c)}
               rows={Math.min(pageSize, 10)}
             />
-          ) : rows.length === 0 ? (
-            <div className="rounded-lg border-2 border-primary/30 bg-white py-20 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
-                <Inbox className="h-6 w-6" />
-              </div>
-              <p className="text-sm font-medium text-ink-soft">
-                {search ? "No rows match your search" : "No rows found"}
-              </p>
-              <p className="mt-1 text-xs text-ink-soft/60">
-                {search
-                  ? "Try a different keyword or clear the search"
-                  : "Start by creating a new row"}
-              </p>
-            </div>
           ) : (
             <div className="overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm">
               <div className="overflow-x-auto">
@@ -247,104 +252,123 @@ export default function TableManager({ tableKey, config }: Props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.map((row, idx) => (
-                      <tr
-                        key={String(row.id ?? idx)}
-                        className="border-t border-ink/10 transition-colors odd:bg-white even:bg-mist/30 hover:bg-primary-lighter/40"
-                      >
-                        {config.listColumns.map((col) => {
-                          const val = String(cellValue(row, col));
-                          const field = getField(col);
-                          const isBadge =
-                            field?.type === "select" ||
-                            col === "mode" ||
-                            col === "status" ||
-                            col === "badge";
-                          const isDate =
-                            col === "createdAt" || col === "updatedAt";
-                          return (
-                            <td key={col} className="px-4 py-3 text-ink">
-                              {isBadge && val !== "\u2014" ? (
-                                <span
-                                  className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold ${badgeColor(val)}`}
-                                >
-                                  {val}
-                                </span>
-                              ) : isDate && val !== "\u2014" ? (
-                                <span className="font-medium whitespace-nowrap text-ink-soft">
-                                  {formatDateAndTime(row[col] as string)}
-                                </span>
-                              ) : (
-                                <span
-                                  className="line-clamp-1 max-w-72"
-                                  title={
-                                    val === "\u2014"
-                                      ? undefined
-                                      : String(row[col])
-                                  }
-                                >
-                                  {val}
-                                </span>
-                              )}
-                            </td>
-                          );
-                        })}
-                        <td className="px-4 py-3">
-                          <div className="flex items-center justify-end gap-2">
-                            {config.readOnly ? (
-                              <button
-                                onClick={() =>
-                                  router.push(
-                                    `/admin/${tableKey}/${row.id}`,
-                                  )
-                                }
-                                className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
-                              >
-                                <Eye className="h-3.5 w-3.5" />
-                                View
-                              </button>
-                            ) : (
-                              <>
-                                <button
-                                  onClick={() => {
-                                    setEditing(row);
-                                    setView("edit");
-                                  }}
-                                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
-                                >
-                                  <Pencil className="h-3.5 w-3.5" />
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    setDeletingId(String(row.id))
-                                  }
-                                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                  Delete
-                                </button>
-                              </>
-                            )}
+                    {rows.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={config.listColumns.length + 1}
+                          className="px-4 py-16 text-center"
+                        >
+                          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
+                            <Inbox className="h-6 w-6" />
                           </div>
+                          <p className="text-sm font-medium text-ink-soft">
+                            {search ? "No rows match your search" : "No rows found"}
+                          </p>
+                          <p className="mt-1 text-xs text-ink-soft/60">
+                            {search
+                              ? "Try a different keyword or clear the search"
+                              : "Start by creating a new row"}
+                          </p>
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      rows.map((row, idx) => (
+                        <tr
+                          key={String(row.id ?? idx)}
+                          className="border-t border-ink/10 transition-colors odd:bg-white even:bg-mist/30 hover:bg-primary-lighter/40"
+                        >
+                          {config.listColumns.map((col) => {
+                            const val = String(cellValue(row, col));
+                            const field = getField(col);
+                            const isBadge =
+                              field?.type === "select" ||
+                              col === "mode" ||
+                              col === "status" ||
+                              col === "badge";
+                            const isDate =
+                              col === "createdAt" || col === "updatedAt";
+                            return (
+                              <td key={col} className="px-4 py-3 text-ink">
+                                {isBadge && val !== "\u2014" ? (
+                                  <span
+                                    className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold ${badgeColor(val)}`}
+                                  >
+                                    {val}
+                                  </span>
+                                ) : isDate && val !== "\u2014" ? (
+                                  <span className="font-medium whitespace-nowrap text-ink-soft">
+                                    {formatDateAndTime(row[col] as string)}
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="line-clamp-1 max-w-72"
+                                    title={
+                                      val === "\u2014"
+                                        ? undefined
+                                        : String(row[col])
+                                    }
+                                  >
+                                    {val}
+                                  </span>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td className="px-4 py-3">
+                            <div className="flex items-center justify-end gap-2">
+                              {config.readOnly ? (
+                                <button
+                                  onClick={() =>
+                                    router.push(`/admin/${tableKey}/${row.id}`)
+                                  }
+                                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                  View
+                                </button>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() => {
+                                      setEditing(row);
+                                      setView("edit");
+                                    }}
+                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => setDeletingId(String(row.id))}
+                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                    Delete
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
 
-              <TablePagination
-                page={page}
-                pageSize={pageSize}
-                total={total}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                onPageSizeChange={(size) => {
-                  setPageSize(size);
-                  setPage(1);
-                }}
-              />
+              {rows.length > 0 && (
+                <TablePagination
+                  page={page}
+                  pageSize={pageSize}
+                  total={total}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                  onPageSizeChange={(size) => {
+                    setPageSize(size);
+                    setPage(1);
+                  }}
+                />
+              )}
             </div>
           )}
         </>

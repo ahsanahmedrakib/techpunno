@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Certificate from "@/components/common/Certificate";
 import Footer from "@/components/common/Footer";
 import Navbar from "@/components/common/Navbar";
+import { getCertificateConfig } from "@/lib/certificate-config";
 import { getCollection } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,7 @@ export default async function CertificatePage({ params }: PageProps) {
   }
 
   const certificateUrl = await resolveCertificateUrl(certificateId);
+  const config = await getCertificateConfig();
 
   return (
     <>
@@ -67,6 +69,7 @@ export default async function CertificatePage({ params }: PageProps) {
           date={cert.date ? String(cert.date) : undefined}
           certificateId={String(cert.certificateId)}
           certificateUrl={certificateUrl}
+          config={config}
         />
       </main>
       <Footer />

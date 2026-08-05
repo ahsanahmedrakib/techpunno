@@ -78,7 +78,7 @@ export default function QuestionsEditor({
               type="button"
               onClick={() => removeQuestion(qIdx)}
               disabled={questions.length <= 1}
-              className="rounded-lg border border-secondary/20 px-2.5 py-1 text-[11px] font-medium text-secondary transition-all hover:bg-secondary-light disabled:opacity-30"
+              className="cursor-pointer rounded-lg border border-secondary/20 px-2.5 py-1 text-[11px] font-medium text-secondary transition-all hover:bg-secondary-light disabled:opacity-30"
             >
               Remove
             </button>
@@ -98,7 +98,7 @@ export default function QuestionsEditor({
                 <button
                   type="button"
                   onClick={() => update(qIdx, { correctIndex: oIdx })}
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-all ${
+                  className={`cursor-pointer flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-all ${
                     q.correctIndex === oIdx
                       ? "bg-primary text-white shadow-sm"
                       : "border border-ink/15 bg-white text-ink-soft hover:border-primary/40"
@@ -118,7 +118,7 @@ export default function QuestionsEditor({
                   <button
                     type="button"
                     onClick={() => removeOption(qIdx, oIdx)}
-                    className="shrink-0 text-ink-soft/40 hover:text-secondary"
+                    className="cursor-pointer shrink-0 text-ink-soft/40 hover:text-secondary"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -128,7 +128,7 @@ export default function QuestionsEditor({
             <button
               type="button"
               onClick={() => addOption(qIdx)}
-              className="mt-1 text-xs font-medium text-primary hover:underline"
+              className="cursor-pointer mt-1 text-xs font-medium text-primary hover:underline"
             >
               + Add option
             </button>
@@ -139,7 +139,7 @@ export default function QuestionsEditor({
       <button
         type="button"
         onClick={addQuestion}
-        className="w-full rounded-xl border-2 border-dashed border-primary/30 py-2.5 text-sm font-semibold text-primary transition-all hover:border-primary/60 hover:bg-primary-lighter/30"
+        className="cursor-pointer w-full rounded-xl border-2 border-dashed border-primary/30 py-2.5 text-sm font-semibold text-primary transition-all hover:border-primary/60 hover:bg-primary-lighter/30"
       >
         + Add Question
       </button>

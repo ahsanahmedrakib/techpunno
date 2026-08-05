@@ -32,7 +32,7 @@ function getPageItems(page: number, totalPages: number): (number | string)[] {
 }
 
 const pageButtonClass = (active: boolean) =>
-  `grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-semibold transition-all ${
+  `cursor-pointer grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-semibold transition-all ${
     active
       ? "bg-primary text-white shadow-md shadow-primary/30"
       : "border border-ink/10 bg-white text-ink hover:border-primary/50 hover:text-primary"
@@ -77,7 +77,7 @@ export default function TablePagination({
           type="button"
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="grid h-9 w-9 place-items-center rounded-lg border border-ink/10 bg-white text-ink transition-all hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink/10 disabled:hover:text-ink"
+          className="cursor-pointer grid h-9 w-9 place-items-center rounded-lg border border-ink/10 bg-white text-ink transition-all hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink/10 disabled:hover:text-ink"
           aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -105,7 +105,7 @@ export default function TablePagination({
           type="button"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          className="grid h-9 w-9 place-items-center rounded-lg border border-ink/10 bg-white text-ink transition-all hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink/10 disabled:hover:text-ink"
+          className="cursor-pointer grid h-9 w-9 place-items-center rounded-lg border border-ink/10 bg-white text-ink transition-all hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink/10 disabled:hover:text-ink"
           aria-label="Next page"
         >
           <ChevronRight className="h-4 w-4" />

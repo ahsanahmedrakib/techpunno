@@ -8,6 +8,7 @@ import {
 } from "@/lib/tables";
 import {
   ArrowLeft,
+  BadgeCheck,
   Calendar,
   Clapperboard,
   ClipboardList,
@@ -38,6 +39,7 @@ const tableIcons: Record<TableKey, LucideIcon> = {
   quizsets: ClipboardList,
   contacts: Mail,
   certificates: Medal,
+  certificateconfig: BadgeCheck,
 };
 
 export default function AdminSidebar({
@@ -146,7 +148,7 @@ export default function AdminSidebar({
         <header className="flex items-center gap-4 border-b-2 border-primary/20 bg-white px-6 py-4 shadow-sm lg:px-8">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-xl border border-ink/10 p-2 text-ink transition-colors hover:bg-mist lg:hidden"
+            className="cursor-pointer rounded-xl border border-ink/10 p-2 text-ink transition-colors hover:bg-mist lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>

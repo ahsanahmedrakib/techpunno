@@ -171,7 +171,7 @@ function ImageUpload({
               e.stopPropagation();
               clear();
             }}
-            className="shrink-0 rounded-lg border border-secondary/20 px-2.5 py-1.5 text-[11px] font-medium text-secondary transition-all hover:bg-secondary-light"
+            className="cursor-pointer shrink-0 rounded-lg border border-secondary/20 px-2.5 py-1.5 text-[11px] font-medium text-secondary transition-all hover:bg-secondary-light"
           >
             Remove
           </button>
@@ -443,7 +443,7 @@ export default function RowForm({
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting && (
               <span className="inline-block h-4 w-4 animate-pulse rounded bg-primary/30" />
@@ -453,7 +453,7 @@ export default function RowForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border-2 border-primary/30 px-6 py-2.5 text-sm font-semibold text-ink transition-all hover:bg-mist hover:border-primary/50"
+            className="cursor-pointer rounded-xl border-2 border-primary/30 px-6 py-2.5 text-sm font-semibold text-ink transition-all hover:bg-mist hover:border-primary/50"
           >
             Cancel
           </button>

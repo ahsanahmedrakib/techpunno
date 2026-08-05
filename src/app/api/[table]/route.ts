@@ -2,12 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   tables,
   createDoc,
+  getCollection,
   isTableKey,
   listDocs,
   pagedDocs,
+  type TableKey,
 } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
+
+async function singleTableResponse(table: TableKey, withPage: boolean) {
+  const docs = await listDocs(table);
+  const doc = docs[0] ?? tables[table].seed[0] ?? {};
+  if (!withPage) {
+    return NextResponse.json([doc]);
+  }
+  return NextResponse.json({
+    docs: [doc],
+    total: docs.length,
+    page: 1,
+    pageSize: 10,
+    totalPages: docs.length > 0 ? 1 : 0,
+  });
+}
 
 export async function GET(
   req: NextRequest,
@@ -19,6 +36,10 @@ export async function GET(
   }
   try {
     const url = new URL(req.url);
+
+    if (tables[table].single) {
+      return singleTableResponse(table, url.searchParams.has("page"));
+    }
 
     if (!url.searchParams.has("page")) {
       const docs = await listDocs(table);
@@ -53,6 +74,19 @@ export async function POST(
       { error: "This table is read-only" },
       { status: 403 },
     );
+  }
+  if (tables[table].single) {
+    const coll = await getCollection(table);
+    const count = await coll.countDocuments();
+    if (count > 0) {
+      return NextResponse.json(
+        {
+          error:
+            "Configuration already exists. Save your changes to update it instead of creating a new one.",
+        },
+        { status: 409 },
+      );
+    }
   }
   try {
     const body = await req.json();
