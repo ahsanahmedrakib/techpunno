@@ -2,6 +2,7 @@
 
 import type { FieldDef } from "@/lib/collections";
 import axios from "axios";
+import { Camera } from "lucide-react";
 import Image from "next/image";
 import RichTextEditor from "./RichTextEditor";
 import {
@@ -145,8 +146,8 @@ function ImageUpload({
               unoptimized={preview.startsWith("data:")}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-lg text-ink-soft/30">
-              📷
+            <div className="flex h-full w-full items-center justify-center text-ink-soft/30">
+              <Camera className="h-7 w-7" />
             </div>
           )}
         </div>

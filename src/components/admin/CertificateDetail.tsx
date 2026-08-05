@@ -1,6 +1,13 @@
 "use client";
 
 import Certificate from "@/components/common/Certificate";
+import {
+  ChevronLeft,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Medal,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -53,17 +60,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
           href="/admin/certificates"
           className="inline-flex items-center gap-1.5 rounded-xl border-2 border-primary/30 bg-white px-4 py-2 text-sm font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter/50 hover:text-primary shadow-sm"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M19 12H5" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
+          <ChevronLeft className="h-4 w-4" />
           Back
         </Link>
         <h2 className="text-lg font-bold text-ink">Certificate Detail</h2>
@@ -76,8 +73,8 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
           <div className="absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-white/5" />
           <div className="relative flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="grid h-20 w-20 place-items-center rounded-2xl bg-amber-400/20 text-5xl shadow-inner ring-1 ring-white/30">
-                🏅
+              <div className="grid h-20 w-20 place-items-center rounded-2xl bg-amber-400/20 text-amber-300 shadow-inner ring-1 ring-white/30">
+                <Medal className="h-10 w-10" />
               </div>
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-300">
@@ -159,17 +156,11 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
             onClick={() => setShowCertificate((v) => !v)}
             className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-primary/20 transition-all hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg"
           >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <polyline points="9 11 12 14 22 4" />
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-            </svg>
+            {showCertificate ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
             {showCertificate ? "Hide Certificate" : "View Certificate"}
           </button>
           <button
@@ -178,18 +169,7 @@ export default function CertificateDetail({ record }: CertificateDetailProps) {
             disabled={!certificateId}
             className="cursor-pointer inline-flex items-center gap-2 rounded-xl border-2 border-primary/40 bg-white px-5 py-2.5 text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary-lighter disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
+            <ExternalLink className="h-4 w-4" />
             Open Public Link
           </button>
         </div>

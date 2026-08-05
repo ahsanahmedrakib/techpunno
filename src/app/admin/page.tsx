@@ -2,20 +2,36 @@
 
 import Link from "next/link";
 import { useQueries } from "@tanstack/react-query";
+import {
+  Calendar,
+  Clapperboard,
+  ClipboardList,
+  Database,
+  FileText,
+  Files,
+  Folder,
+  Home,
+  Mail,
+  Medal,
+  Newspaper,
+  Star,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { api } from "@/lib/api";
 import { collections, collectionKeys, type CollectionKey } from "@/lib/collections";
 
-const icons: Record<CollectionKey, string> = {
-  advisors: "👥",
-  coreteam: "⭐",
-  blogs: "📝",
-  events: "📅",
-  hero: "🏠",
-  news: "📰",
-  videos: "🎬",
-  quizsets: "📋",
-  contacts: "📬",
-  certificates: "🏅",
+const icons: Record<CollectionKey, LucideIcon> = {
+  advisors: Users,
+  coreteam: Star,
+  blogs: FileText,
+  events: Calendar,
+  hero: Home,
+  news: Newspaper,
+  videos: Clapperboard,
+  quizsets: ClipboardList,
+  contacts: Mail,
+  certificates: Medal,
 };
 
 export default function AdminDashboard() {
@@ -66,8 +82,8 @@ export default function AdminDashboard() {
               <>
                 <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-                      📁
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-primary">
+                      <Folder className="h-5 w-5" />
                     </span>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
@@ -81,8 +97,8 @@ export default function AdminDashboard() {
                 </div>
                 <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-                      📄
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-primary">
+                      <Files className="h-5 w-5" />
                     </span>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
@@ -94,8 +110,8 @@ export default function AdminDashboard() {
                 </div>
                 <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-lg text-primary">
-                      🔗
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-lighter text-primary">
+                      <Database className="h-5 w-5" />
                     </span>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
@@ -134,6 +150,7 @@ export default function AdminDashboard() {
                 const col = collections[key];
                 const count = counts[key] ?? 0;
                 const src = sources[key] ?? "db";
+                const Icon = icons[key];
                 return (
                   <Link
                     key={key}
@@ -141,8 +158,8 @@ export default function AdminDashboard() {
                     className="group rounded-2xl border-2 border-primary/30 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-md"
                   >
                     <div className="flex items-start justify-between">
-                      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream text-xl transition-colors group-hover:bg-primary-lighter">
-                        {icons[key]}
+                      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream text-primary transition-colors group-hover:bg-primary-lighter">
+                        <Icon className="h-5 w-5" />
                       </span>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${

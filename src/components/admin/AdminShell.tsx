@@ -4,22 +4,38 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
+  ArrowLeft,
+  Calendar,
+  Clapperboard,
+  ClipboardList,
+  FileText,
+  Home,
+  LayoutDashboard,
+  Mail,
+  Medal,
+  Menu,
+  Newspaper,
+  Star,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import {
   collections,
   collectionKeys,
   type CollectionKey,
 } from "@/lib/collections";
 
-const collectionIcons: Record<CollectionKey, string> = {
-  advisors: "👥",
-  coreteam: "⭐",
-  blogs: "📝",
-  events: "📅",
-  hero: "🏠",
-  news: "📰",
-  videos: "🎬",
-  quizsets: "📋",
-  contacts: "📬",
-  certificates: "🏅",
+const collectionIcons: Record<CollectionKey, LucideIcon> = {
+  advisors: Users,
+  coreteam: Star,
+  blogs: FileText,
+  events: Calendar,
+  hero: Home,
+  news: Newspaper,
+  videos: Clapperboard,
+  quizsets: ClipboardList,
+  contacts: Mail,
+  certificates: Medal,
 };
 
 export default function AdminShell({
@@ -65,7 +81,7 @@ export default function AdminShell({
             }`}
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-sm">
-              📊
+              <LayoutDashboard className="h-4 w-4" />
             </span>
             Dashboard
           </Link>
@@ -80,6 +96,7 @@ export default function AdminShell({
             const col = collections[key];
             const href = `/admin/${key}`;
             const active = pathname.startsWith(href);
+            const Icon = collectionIcons[key];
             return (
               <Link
                 key={key}
@@ -92,11 +109,11 @@ export default function AdminShell({
                 }`}
               >
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg text-sm ${
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg ${
                     active ? "bg-white/20" : "bg-white/5"
                   }`}
                 >
-                  {collectionIcons[key]}
+                  <Icon className="h-4 w-4" />
                 </span>
                 {col.label}
               </Link>
@@ -109,8 +126,8 @@ export default function AdminShell({
             href="/"
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/40 transition-all hover:bg-white/10 hover:text-white"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5 text-sm">
-              ↩
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5">
+              <ArrowLeft className="h-4 w-4" />
             </span>
             Back to site
           </Link>
@@ -121,11 +138,9 @@ export default function AdminShell({
         <header className="flex items-center gap-4 border-b-2 border-primary/20 bg-white px-6 py-4 shadow-sm lg:px-8">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-xl border border-ink/10 p-2 transition-colors hover:bg-mist lg:hidden"
+            className="rounded-xl border border-ink/10 p-2 text-ink transition-colors hover:bg-mist lg:hidden"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 12h18M3 6h18M3 18h18" />
-            </svg>
+            <Menu className="h-5 w-5" />
           </button>
           <h2 className="text-lg font-bold text-ink">
             {(() => {

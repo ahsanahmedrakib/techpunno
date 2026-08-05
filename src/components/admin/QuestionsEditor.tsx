@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useState } from "react";
 
 export type QuizQuestionData = {
@@ -119,7 +120,7 @@ export default function QuestionsEditor({
                     onClick={() => removeOption(qIdx, oIdx)}
                     className="shrink-0 text-ink-soft/40 hover:text-secondary"
                   >
-                    ✕
+                    <X className="h-4 w-4" />
                   </button>
                 )}
               </div>
