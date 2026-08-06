@@ -1,4 +1,4 @@
-import { missionText } from "@/data/volunteer";
+import { missionText } from "@/data/volunteers";
 import { motion } from "framer-motion";
 import {
   ClipboardList,
@@ -54,14 +54,14 @@ const VolunteerFooter = () => {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href={"/volunteer#registration"}
+                  href={"/volunteers#registration"}
                   className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-primary shadow-xl shadow-primary/20 transition-transform hover:-translate-y-0.5"
                 >
                   <ClipboardList className="h-4 w-4" />
                   Register Now
                 </Link>
                 <Link
-                  href="/volunteer"
+                  href="/volunteers"
                   className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 px-7 py-3.5 text-sm font-bold text-white transition-all hover:border-white/70 hover:bg-white/10"
                 >
                   <Users className="h-4 w-4" />

@@ -6,7 +6,7 @@ import {
   privacyText,
   volunteerInterestOptions,
   volunteerRules,
-} from "@/data/volunteer";
+} from "@/data/volunteers";
 import { useVolunteerConfig } from "@/hooks/useVolunteerConfig";
 import { api } from "@/lib/api";
 import { volunteerSchema, type VolunteerFormValues } from "@/lib/validation";
@@ -99,6 +99,7 @@ export default function VolunteerForm() {
     },
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const watchGender = watch("gender");
   const watchMembershipType = watch("membershipType");
   const watchPaidBy = watch("paidBy");

@@ -15,7 +15,7 @@ export default function Footer() {
   console.log();
   return (
     <footer className="bg-ink text-white">
-      {path !== "/volunteer" && <VolunteerFooter />}
+      {path !== "/volunteers" && <VolunteerFooter />}
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ export default function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
             <li>
               <Link
-                href="/volunteer"
+                href="/volunteers"
                 className="transition-colors hover:text-primary-light"
               >
                 Become a Volunteer

@@ -1,11 +1,11 @@
-export interface VolunteerConfig {
+export interface VolunteersConfig {
   bkashNumber: string;
   bkashQr: string;
   registrationFee: string;
 }
 
-export const defaultVolunteerConfig: VolunteerConfig = {
-  bkashNumber: "017XXXXXXXX",
+export const defaultVolunteerConfig: VolunteersConfig = {
+  bkashNumber: "016619878054",
   bkashQr: "",
   registrationFee: "৳ 50",
 };
@@ -41,3 +41,4 @@ export const declarationText =
 
 export const privacyText =
   "আপনার দেওয়া তথ্য শুধুমাত্র Tech Punno-এর অভ্যন্তরীণ কার্যক্রমে ব্যবহৃত হবে। কোনো তৃতীয় পক্ষের সাথে শেয়ার করা হবে না।";
+
