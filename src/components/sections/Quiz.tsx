@@ -168,6 +168,7 @@ export default function Quiz() {
   return (
     <section className="section-anchor py-16 lg:py-24">
       <Container>
+        <div key={step} className="animate-fade-in">
         {step === "select" && (
           <div className="w-full">
             <span className="inline-flex rounded-full bg-primary-lighter px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary">
@@ -481,6 +482,7 @@ export default function Quiz() {
             </div>
           </div>
         )}
+        </div>
       </Container>
     </section>
   );

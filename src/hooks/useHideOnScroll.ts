@@ -1,20 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export function useHideOnScroll() {
-  const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    const isScrollingDown = latest > previous;
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const isScrollingDown = y > lastY;
+      lastY = y;
 
-    setHidden(isScrollingDown && latest > 160);
-    setScrolled(latest > 24);
-  });
+      setHidden(isScrollingDown && y > 160);
+      setScrolled(y > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return { hidden, scrolled };
 }

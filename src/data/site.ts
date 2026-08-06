@@ -8,7 +8,7 @@ export const site = {
   facebook: "https://www.facebook.com/techpunnobd2",
   messenger: "https://m.me/techpunnobd2",
   whatsapp: "https://wa.me/8801XXXXXXXXXX",
-  youtube: "https://www.youtube.com/@techpunno",
+  youtube: "https://www.youtube.com/@TechPunno",
   email: "techpunno@gmail.com",
   phone: "+880 1XXX-XXXXXX",
   address: "Dhaka, Bangladesh",
@@ -18,7 +18,6 @@ export const site = {
 export type NavItem = { label: string; href: string };
 
 export const navItems: NavItem[] = [
-  { label: "Home", href: "/#home" },
   { label: "Videos", href: "/#video" },
   { label: "Events", href: "/#events" },
   { label: "Blogs", href: "/#blogs" },

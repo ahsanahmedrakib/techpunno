@@ -2,11 +2,11 @@
 
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
+import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonBlogCard from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { useTable } from "@/lib/api";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,12 +34,10 @@ export default function Blogs() {
             </>
           ) : (
             posts.map((post, index) => (
-              <motion.article
+              <Reveal
                 key={post.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: (index % 3) * 0.12 }}
+                variant={index % 2 === 0 ? "fade-up" : "zoom"}
+                delay={(index % 3) * 120}
                 className="h-full"
               >
                 <Link
@@ -82,7 +80,7 @@ export default function Blogs() {
                     </div>
                   </Hoverable>
                 </Link>
-              </motion.article>
+              </Reveal>
             ))
           )}
         </div>
@@ -90,4 +88,3 @@ export default function Blogs() {
     </section>
   );
 }
-

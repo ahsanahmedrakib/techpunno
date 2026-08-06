@@ -4,10 +4,9 @@ import { useState } from "react";
 import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
+import Reveal from "@/components/common/Reveal";
 import SkeletonVideoCard from "@/components/common/Skeleton";
 import { videos, youtubeEmbed, youtubeThumb, type Video } from "@/data/videos";
-import { fadeUp, stagger } from "@/lib/motion";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useTable } from "@/lib/api";
 
@@ -58,14 +57,8 @@ export default function VideoSection() {
           description="Free tutorials, workshop recordings and awareness content — produced by volunteers for everyone."
         />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 gap-8 lg:grid-cols-5"
-        >
-          <motion.div variants={fadeUp} className="lg:col-span-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+          <Reveal variant="fade-left" className="lg:col-span-3">
             <div className="overflow-hidden rounded-3xl bg-ink shadow-2xl shadow-ink/20 ring-1 ring-ink/10">
               <div className="aspect-video w-full">
                 <iframe
@@ -86,9 +79,9 @@ export default function VideoSection() {
                 <h3 className="text-lg font-bold text-ink">{activeVideo.title}</h3>
               </div>
             </div>
-          </motion.div>
+          </Reveal>
 
-          <motion.div variants={fadeUp} className="space-y-4 lg:col-span-2">
+          <Reveal variant="fade-right" delay={150} className="space-y-4 lg:col-span-2">
             {items.map((video) => {
               const active = video.id === activeVideo.id;
               return (
@@ -140,8 +133,8 @@ export default function VideoSection() {
               Visit our YouTube channel →
             </a>
             </Hoverable>
-          </motion.div>
-        </motion.div>
+          </Reveal>
+        </div>
       </Container>
     </section>
   );

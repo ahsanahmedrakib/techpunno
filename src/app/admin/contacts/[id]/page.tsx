@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -27,12 +28,12 @@ export default function ContactDetailPage() {
           ?
         </div>
         <p className="text-sm font-medium text-ink-soft">Contact message not found.</p>
-        <a
+        <Link
           href="/admin/contacts"
           className="inline-flex items-center gap-1.5 rounded-xl border-2 border-primary/30 bg-white px-4 py-2 text-sm font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter/50 hover:text-primary shadow-sm"
         >
           ← Back to contacts
-        </a>
+        </Link>
       </div>
     );
   }

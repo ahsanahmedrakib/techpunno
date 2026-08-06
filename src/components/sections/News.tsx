@@ -4,10 +4,9 @@ import Link from "next/link";
 import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
+import Reveal from "@/components/common/Reveal";
 import Skeleton from "@/components/common/Skeleton";
 import { newsItems, type NewsItem } from "@/data/news";
-import { fadeUp, stagger } from "@/lib/motion";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useTable } from "@/lib/api";
 
@@ -50,17 +49,13 @@ export default function News() {
           description="Milestones, announcements and recaps from our journey across Bangladesh."
         />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-8 lg:grid-cols-2"
-        >
-          {[primary, secondary].filter(Boolean).map((item) => (
-            <motion.article
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {[primary, secondary].filter(Boolean).map((item, i) => (
+            <Reveal
               key={item!.id}
-              variants={fadeUp}
+              variant="zoom"
+              scale={0.95}
+              delay={i * 120}
               className="h-full"
             >
               <Link
@@ -102,60 +97,60 @@ export default function News() {
                   </div>
                 </Hoverable>
               </Link>
-            </motion.article>
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
 
         {rest.length > 0 && (
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {rest.map((item) => (
-              <Link
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {rest.map((item, i) => (
+              <Reveal
                 key={item.id}
-                href={`/news/${item.slug || item.id}`}
-                className="block h-full"
+                variant={i % 2 === 0 ? "fade-up" : "zoom"}
+                delay={(i % 4) * 100}
+                className="h-full"
               >
-                <Hoverable className="flex h-full flex-col rounded-2xl border-2 border-primary/40 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-white hover:shadow-lg">
-                  <div className="relative h-36 shrink-0 overflow-hidden rounded-t-2xl">
-                    <Image
-                      src={item.image || "/images/dummy.jpeg"}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[item.badge]}`}
-                      >
-                        {item.badge}
-                      </span>
-                      <span className="text-xs font-medium text-ink-soft">
-                        {item.date}
+                <Link
+                  href={`/news/${item.slug || item.id}`}
+                  className="block h-full"
+                >
+                  <Hoverable className="flex h-full flex-col rounded-2xl border-2 border-primary/40 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-white hover:shadow-lg">
+                    <div className="relative h-36 shrink-0 overflow-hidden rounded-t-2xl">
+                      <Image
+                        src={item.image || "/images/dummy.jpeg"}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[item.badge]}`}
+                        >
+                          {item.badge}
+                        </span>
+                        <span className="text-xs font-medium text-ink-soft">
+                          {item.date}
+                        </span>
+                      </div>
+                      <h3 className="mt-3 text-base font-bold leading-snug text-ink transition-colors hover:text-primary">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-soft">
+                        {item.summary}
+                      </p>
+                      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                        Learn more →
                       </span>
                     </div>
-                    <h3 className="mt-3 text-base font-bold leading-snug text-ink transition-colors hover:text-primary">
-                      {item.title}
-                    </h3>
-                    <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-soft">
-                      {item.summary}
-                    </p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                      Learn more →
-                    </span>
-                  </div>
-                </Hoverable>
-              </Link>
+                  </Hoverable>
+                </Link>
+              </Reveal>
             ))}
-          </motion.div>
+          </div>
         )}
       </Container>
     </section>

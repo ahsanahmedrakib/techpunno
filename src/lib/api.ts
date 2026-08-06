@@ -74,7 +74,7 @@ export function useTable<T>(
     return () => {
       cancelled = true;
     };
-  }, [table]);
+  }, [table, fallback]);
 
   return [data, loading];
 }

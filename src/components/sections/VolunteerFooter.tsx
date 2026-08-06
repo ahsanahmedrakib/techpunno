@@ -1,5 +1,5 @@
 import { missionText } from "@/data/volunteers";
-import { motion } from "framer-motion";
+import Reveal from "@/components/common/Reveal";
 import {
   ClipboardList,
   HeartHandshake,
@@ -37,11 +37,7 @@ const VolunteerFooter = () => {
 
         <Container className="relative">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+            <Reveal variant="fade-left" distance={24}>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/90 backdrop-blur-sm">
                 <HeartHandshake className="h-4 w-4" />
                 Join Tech Punno
@@ -68,12 +64,12 @@ const VolunteerFooter = () => {
                   Meet our Volunteers
                 </Link>
               </div>
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
+            <Reveal
+              variant="fade-right"
+              distance={24}
+              delay={150}
               className="grid grid-cols-1 gap-4"
             >
               <div className="rounded-3xl border border-white/15 bg-white/10 p-7 backdrop-blur-sm">
@@ -98,7 +94,7 @@ const VolunteerFooter = () => {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </Reveal>
           </div>
         </Container>
       </section>

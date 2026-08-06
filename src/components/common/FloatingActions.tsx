@@ -2,7 +2,6 @@
 
 import { site } from "@/data/site";
 import Hoverable from "@/components/common/Hoverable";
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
 
@@ -20,65 +19,52 @@ export default function FloatingActions() {
 
   return (
     <div className="fixed bottom-2 right-2 z-50 flex flex-col items-end gap-2">
-      <AnimatePresence>
-        {showTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.6, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.6, y: 10 }}
-            transition={{ duration: 0.25 }}
-            onClick={scrollToTop}
-            aria-label="Scroll to top"
-            className="grid h-8 w-8 mr-2 place-items-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark"
+      {showTop && (
+        <button
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          className="animate-float-in grid h-8 w-8 mr-2 place-items-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m18 15-6-6-6 6" />
-            </svg>
-          </motion.button>
-        )}
-      </AnimatePresence>
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+        </button>
+      )}
 
       <Hoverable>
-        <motion.a
-          initial={{ opacity: 0, scale: 0.6, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.25, delay: 0.05 }}
+        <a
           href={site.messenger}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on Messenger with Techpunno"
           title="Chat on Messenger with Techpunno"
-          className="grid h-12 w-12 place-items-center rounded-full bg-[#0084FF] text-white transition-transform hover:-translate-y-1"
+          className="animate-float-in grid h-12 w-12 place-items-center rounded-full bg-[#0084FF] text-white transition-transform hover:-translate-y-1"
         >
           <MessengerIcon size={22} />
-        </motion.a>
+        </a>
       </Hoverable>
 
       <Hoverable>
-        <motion.a
-          initial={{ opacity: 0, scale: 0.6, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.25, delay: 0.1 }}
+        <a
           href={site.whatsapp}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp with Techpunno"
           title="Chat on WhatsApp with Techpunno"
-          className="grid h-12 w-12 place-items-center rounded-full bg-[#25D366] text-white transition-transform hover:-translate-y-1"
+          className="animate-float-in grid h-12 w-12 place-items-center rounded-full bg-[#25D366] text-white transition-transform hover:-translate-y-1"
         >
           <WhatsappIcon size={22} />
-        </motion.a>
+        </a>
       </Hoverable>
     </div>
   );
 }
-

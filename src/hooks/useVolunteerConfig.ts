@@ -1,6 +1,6 @@
 "use client";
 
-import type { VolunteerConfig } from "@/data/volunteers";
+import type { VolunteersConfig } from "@/data/volunteers";
 import { defaultVolunteerConfig } from "@/data/volunteers";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
@@ -8,11 +8,11 @@ import { useQuery } from "@tanstack/react-query";
 export function useVolunteerConfig() {
   return useQuery({
     queryKey: ["volunteer-config"],
-    queryFn: async (): Promise<VolunteerConfig> => {
+    queryFn: async (): Promise<VolunteersConfig> => {
       try {
         const docs = await api.list<Record<string, unknown>>("volunteerconfig");
         return (
-          (docs[0] as unknown as VolunteerConfig) ?? defaultVolunteerConfig
+          (docs[0] as unknown as VolunteersConfig) ?? defaultVolunteerConfig
         );
       } catch {
         return defaultVolunteerConfig;

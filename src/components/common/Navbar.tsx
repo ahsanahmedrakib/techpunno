@@ -4,7 +4,6 @@ import { navItems, site } from "@/data/site";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
-import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,11 +13,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.header
-      initial={false}
-      animate={{ y: hidden ? "-100%" : "0%" }}
-      transition={{ duration: 0.35, ease: "easeInOut" }}
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+    <header
+      className={`animate-nav-in fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      } ${
         scrolled
           ? "border-ink/5 bg-white/40 shadow-sm backdrop-blur-md"
           : "border-transparent bg-white/20 backdrop-blur-sm"
@@ -26,7 +24,11 @@ export default function Navbar() {
     >
       <nav>
         <Container className="flex h-18 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="animate-slide-link flex items-center gap-3"
+          style={{ animationDelay: "120ms" }}
+        >
           <span className="relative h-15 w-15 overflow-hidden rounded-xl">
             <Image
               src={site.logo}
@@ -47,11 +49,12 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
-          {navItems.map((item) => (
+          {navItems.map((item, i) => (
             <Hoverable key={item.href}>
               <Link
                 href={item.href}
-                className="block rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
+                className="nav-link block rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
+                style={{ animationDelay: `${200 + i * 60}ms` }}
               >
                 {item.label}
               </Link>
@@ -63,7 +66,8 @@ export default function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={open}
-          className="grid h-11 w-11 place-items-center rounded-xl border border-ink/10 text-ink lg:hidden"
+          className="animate-slide-link grid h-11 w-11 place-items-center rounded-xl border border-ink/10 text-ink lg:hidden"
+          style={{ animationDelay: "200ms" }}
         >
           <div className="flex w-5 flex-col gap-1.5">
             <span
@@ -86,32 +90,24 @@ export default function Navbar() {
         </Container>
       </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-ink/5 bg-white/95 backdrop-blur-md lg:hidden"
-          >
-            <div className="space-y-1 px-4 py-4">
-              {navItems.map((item) => (
-                <Hoverable key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
-                  >
-                    {item.label}
-                  </Link>
-                </Hoverable>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+      {open && (
+        <div className="animate-menu-in overflow-hidden border-t border-ink/5 bg-white/95 backdrop-blur-md lg:hidden">
+          <div className="space-y-1 px-4 py-4">
+            {navItems.map((item, i) => (
+              <Hoverable key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="animate-slide-link block rounded-xl px-4 py-3 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  {item.label}
+                </Link>
+              </Hoverable>
+            ))}
+          </div>
+        </div>
+      )}
+    </header>
   );
 }
-

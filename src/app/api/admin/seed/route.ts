@@ -14,20 +14,6 @@ function slugify(text: string): string {
     .replace(/-+$/, "");
 }
 
-async function generateUniqueSlug(
-  coll: { findOne: (filter: Record<string, unknown>, opts?: { projection?: Record<string, number> }) => Promise<Record<string, unknown> | null> },
-  base: string,
-): Promise<string> {
-  let slug = base;
-  let counter = 1;
-  while (true) {
-    const exists = await coll.findOne({ slug }, { projection: { _id: 1 } });
-    if (!exists) return slug;
-    slug = `${base}-${counter}`;
-    counter++;
-  }
-}
-
 export async function POST() {
   try {
     for (const key of tableKeys) {

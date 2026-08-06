@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { fadeUp } from "@/lib/motion";
+import Reveal from "@/components/common/Reveal";
 
 type SectionHeadingProps = {
   eyebrow: string;
@@ -21,11 +20,10 @@ export default function SectionHeading({
   const centered = align === "center";
 
   return (
-    <motion.div
-      variants={fadeUp}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
+    <Reveal
+      variant="blur"
+      distance={16}
+      duration={800}
       className={`mb-12 max-w-2xl ${centered ? "mx-auto text-center" : ""}`}
     >
       <span
@@ -41,6 +39,6 @@ export default function SectionHeading({
           {description}
         </p>
       )}
-    </motion.div>
+    </Reveal>
   );
 }

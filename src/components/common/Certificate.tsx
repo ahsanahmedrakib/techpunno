@@ -165,7 +165,7 @@ export default function Certificate({
       className={
         embed
           ? "flex flex-col items-center font-serif"
-          : "flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4 font-serif md:p-8"
+          : "animate-fade-in flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4 font-serif md:p-8"
       }
     >
       {/* Action Buttons */}

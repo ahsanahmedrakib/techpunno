@@ -12,7 +12,6 @@ import { api } from "@/lib/api";
 import { volunteerSchema, type VolunteerFormValues } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   Camera,
   Check,
@@ -190,13 +189,9 @@ export default function VolunteerForm() {
   if (submitted) {
     return (
       <div className="mx-auto max-w-xl rounded-3xl border-2 border-primary/40 bg-white p-10 text-center shadow-2xl shadow-primary/10">
-        <motion.div
-          initial={{ scale: 0.6, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full bg-primary-lighter text-primary"
-        >
+        <div className="animate-pop-in mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full bg-primary-lighter text-primary">
           <Check className="h-10 w-10" />
-        </motion.div>
+        </div>
         <h2 className="text-2xl font-bold text-ink">Registration Submitted!</h2>
         <p className="mt-3 text-sm leading-relaxed text-ink-soft">
           ধন্যবাদ! আপনার আবেদনটি জমা হয়েছে। আপনার তথ্য যাচাই ও পেমেন্ট নিশ্চিত
@@ -226,12 +221,7 @@ export default function VolunteerForm() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mx-auto max-w-6xl rounded-3xl border-2 border-primary/40 bg-cream p-6 shadow-2xl shadow-primary/10 sm:p-10"
-    >
+    <div className="mx-auto max-w-6xl rounded-3xl border-2 border-primary/40 bg-cream p-6 shadow-2xl shadow-primary/10 sm:p-10">
       {/* Step indicator */}
       <ol className="mb-10 grid grid-cols-3 gap-2">
         {steps.map((s, i) => (
@@ -273,14 +263,7 @@ export default function VolunteerForm() {
       </ol>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.3 }}
-          >
+        <div key={step} className="animate-step-in">
             {step === 0 && (
               <div className="space-y-5">
                 <h3 className="flex items-center gap-2 text-sm font-bold text-ink">
@@ -851,8 +834,7 @@ export default function VolunteerForm() {
                 </div>
               </div>
             )}
-          </motion.div>
-        </AnimatePresence>
+          </div>
 
         <div className="mt-8 flex flex-col-reverse items-center gap-3 border-t-2 border-primary/20 pt-6 sm:flex-row sm:justify-between">
           {step > 0 ? (
@@ -899,7 +881,7 @@ export default function VolunteerForm() {
           )}
         </div>
       </form>
-    </motion.div>
+    </div>
   );
 }
 

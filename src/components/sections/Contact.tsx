@@ -1,19 +1,18 @@
 "use client";
 
 import Container from "@/components/common/Container";
+import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import { site } from "@/data/site";
 import { api } from "@/lib/api";
 import { toast } from "react-toastify";
-import { fadeUp, stagger } from "@/lib/motion";
 import {
   contactSchema,
   contactSubjects,
   type ContactFormValues,
 } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 
 const contactInfo = [
@@ -120,14 +119,8 @@ export default function Contact() {
           description="Volunteer with us, partner on a campaign, or just say hello — we'd love to hear from you."
         />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 gap-8 lg:grid-cols-5"
-        >
-          <motion.div variants={fadeUp} className="space-y-4 lg:col-span-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+          <Reveal variant="fade-left" className="space-y-4 lg:col-span-2">
             <div className="rounded-3xl bg-linear-to-br from-primary to-primary-dark p-8 text-white shadow-2xl shadow-primary/25 sm:p-10">
               <h3 className="text-2xl font-bold">Get in touch</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/85">
@@ -193,10 +186,11 @@ export default function Contact() {
                 );
               })}
             </div>
-          </motion.div>
+          </Reveal>
 
-          <motion.div
-            variants={fadeUp}
+          <Reveal
+            variant="fade-right"
+            delay={150}
             className="rounded-3xl border-2 border-primary/60 bg-white p-6 shadow-xl shadow-ink/5 sm:p-8 lg:col-span-3"
           >
             {isSubmitSuccessful ? (
@@ -367,8 +361,8 @@ export default function Contact() {
                 </div>
               </form>
             )}
-          </motion.div>
-        </motion.div>
+          </Reveal>
+        </div>
       </Container>
     </section>
   );

@@ -1,11 +1,11 @@
 "use client";
 
 import Container from "@/components/common/Container";
+import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import Skeleton from "@/components/common/Skeleton";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { GraduationCap, HeartHandshake } from "lucide-react";
 import Image from "next/image";
 
@@ -73,21 +73,12 @@ export default function VolunteersGrid() {
             </p>
           </div>
         ) : (
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {data.map((member) => (
-              <motion.div
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {data.map((member, i) => (
+              <Reveal
                 key={member.id}
-                variants={{
-                  hidden: { opacity: 0, y: 24 },
-                  show: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.5 }}
+                variant={i % 2 === 0 ? "fade-up" : "zoom"}
+                delay={(i % 3) * 100}
                 className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
               >
                 <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
@@ -122,9 +113,9 @@ export default function VolunteersGrid() {
                     {member.educationLevel ?? "Member"}
                   </p>
                 </div>
-              </motion.div>
+              </Reveal>
             ))}
-          </motion.div>
+          </div>
         )}
       </Container>
     </section>

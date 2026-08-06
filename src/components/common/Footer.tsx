@@ -2,22 +2,25 @@
 
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
+import Reveal from "@/components/common/Reveal";
 import { navItems, site } from "@/data/site";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import VolunteerFooter from "../sections/VolunteerFooter";
-import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
+import {
+  MessengerIcon,
+  WhatsappIcon,
+  YoutubeIcon,
+} from "./SocialIcons";
 
 export default function Footer() {
   const path = usePathname();
-  console.log();
   return (
     <footer className="bg-ink text-white">
       {path !== "/volunteers" && <VolunteerFooter />}
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="sm:col-span-2 lg:col-span-1">
+        <Reveal variant="fade-left" className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
             <span className="relative h-13 w-13 overflow-hidden rounded-lg ring">
               <Image
@@ -51,8 +54,20 @@ export default function Footer() {
               Follow us on Facebook
             </a>
           </Hoverable>
-        </div>
+          <Hoverable className="mt-3">
+            <a
+              href={site.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+            >
+              <YoutubeIcon size={16} />
+              Subscribe on YouTube
+            </a>
+          </Hoverable>
+        </Reveal>
 
+        <Reveal variant="fade-up" delay={120}>
         <div>
           <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
             Quick Links
@@ -70,7 +85,9 @@ export default function Footer() {
             ))}
           </ul>
         </div>
+        </Reveal>
 
+        <Reveal variant="fade-up" delay={240}>
         <div>
           <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
             Get Involved
@@ -120,7 +137,9 @@ export default function Footer() {
             </li>
           </ul>
         </div>
+        </Reveal>
 
+        <Reveal variant="fade-up" delay={360}>
         <div>
           <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
             Contact
@@ -145,27 +164,29 @@ export default function Footer() {
             <li>{site.address}</li>
           </ul>
         </div>
+        </Reveal>
       </Container>
 
       <div className="border-t border-white/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
+        <Reveal distance={12}>
         <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-white/60 sm:flex-row">
           <p>
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
           <p>Built with 💚 for a safe digital society.</p>
         </Container>
+        </Reveal>
       </div>
 
       {/* Developer info  */}
       <div className="relative border-t border-white/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
         <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+          <Reveal
+            variant="blur"
+            distance={16}
+            duration={800}
             className="relative my-8 overflow-hidden rounded-xl bg-white/4 p-2 ring-1 ring-white/10"
           >
             <div className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-primary/20 blur-3xl" />
@@ -197,45 +218,43 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Hoverable>
-                  <motion.a
-                    whileHover={{ y: -3 }}
+                  <a
                     href="https://m.me/rakibahsanahmed"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Chat on Messenger with Rakib"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#0084FF] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#0084FF]/40"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#0084FF] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0084FF]/40"
                   >
                     <MessengerIcon size={16} />
                     Messenger
-                  </motion.a>
+                  </a>
                 </Hoverable>
                 <Hoverable>
-                  <motion.a
-                    whileHover={{ y: -3 }}
+                  <a
                     href="https://wa.me/8801631112475"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Chat on WhatsApp with Rakib"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-shadow hover:shadow-xl hover:shadow-[#25D366]/40"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#25D366]/40"
                   >
                     <WhatsappIcon size={16} />
                     WhatsApp
-                  </motion.a>
+                  </a>
                 </Hoverable>
               </div>
             </div>
 
             <div className="relative mt-2 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-2 text-xs text-white/50 sm:flex-row">
               <p className="inline-flex items-center gap-1.5">
-                <span className="text-secondary">❤</span> Built with Next.js,
-                Tailwind CSS & Framer Motion
+                <span className="text-secondary">❤</span> Built with Next.js &
+                Tailwind CSS
               </p>
               <p className="inline-flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-light" />
                 Available for freelance & open-source work
               </p>
             </div>
-          </motion.div>
+          </Reveal>
         </Container>
       </div>
     </footer>

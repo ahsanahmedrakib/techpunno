@@ -61,7 +61,7 @@ async function generateUniqueSlug(
 
 function mapDoc<T>(doc: Record<string, unknown>): T {
   const mongoId = String(doc._id);
-  const { _id, ...rest } = doc;
+  const { ...rest } = doc;
   const id = rest.id !== undefined ? rest.id : mongoId;
   return { ...rest, id, _id: mongoId } as unknown as T;
 }

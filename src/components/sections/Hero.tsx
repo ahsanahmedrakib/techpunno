@@ -4,8 +4,8 @@ import { heroSlides, type HeroSlide } from "@/data/hero";
 import { site } from "@/data/site";
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
+import Reveal from "@/components/common/Reveal";
 import SkeletonHero from "@/components/common/Skeleton";
-import { motion } from "framer-motion";
 import { useTable } from "@/lib/api";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -50,10 +50,10 @@ export default function Hero() {
                 <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
 
                 <Container className="grid grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:gap-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+                  <Reveal
+                    once
+                    delay={150}
+                    distance={40}
                     className="max-w-xl"
                   >
                     <span
@@ -95,12 +95,14 @@ export default function Hero() {
                         </a>
                       </Hoverable>
                     </div>
-                  </motion.div>
+                  </Reveal>
 
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                  <Reveal
+                    once
+                    variant="flip"
+                    delay={300}
+                    duration={800}
+                    distance={40}
                     className="relative mx-auto hidden h-85 w-85 sm:h-105 sm:w-105 lg:block"
                   >
                     <div
@@ -121,7 +123,7 @@ export default function Hero() {
                     <div className="absolute -right-2 bottom-16 animate-bounce rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-ink shadow-xl [animation-duration:3.5s]">
                       💻 Learn Tech
                     </div>
-                  </motion.div>
+                  </Reveal>
                 </Container>
               </div>
             </SwiperSlide>
@@ -131,13 +133,13 @@ export default function Hero() {
 
       <div className="relative border-t border-ink/5 bg-white">
         <Container className="grid grid-cols-1 divide-y divide-ink/5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          {statCards.map((stat) => (
-            <motion.div
+          {statCards.map((stat, i) => (
+            <Reveal
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              variant="zoom"
+              scale={0.9}
+              delay={i * 120}
+              distance={20}
               className="flex items-center justify-center gap-3 px-4 py-6"
             >
               <span className="text-3xl font-extrabold text-gradient">
@@ -146,11 +148,10 @@ export default function Hero() {
               <span className="text-sm font-medium text-ink-soft">
                 {stat.label}
               </span>
-            </motion.div>
+            </Reveal>
           ))}
         </Container>
       </div>
     </section>
   );
 }
-
