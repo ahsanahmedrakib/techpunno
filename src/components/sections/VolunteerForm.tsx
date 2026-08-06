@@ -73,6 +73,7 @@ export default function VolunteerForm() {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const photoRef = useRef<HTMLInputElement>(null);
 
   const { data: config } = useVolunteerConfig();
@@ -122,23 +123,11 @@ export default function VolunteerForm() {
       toast.error("Please choose an image file.");
       return;
     }
+    setPhotoFile(file);
     const reader = new FileReader();
     reader.onload = (ev) => setPhotoPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("dir", "volunteers");
-    try {
-      const res = await axios.post<{ path?: string }>("/api/upload", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.data.path) {
-        setValue("image", res.data.path, { shouldValidate: true });
-        toast.success("Photo uploaded successfully!");
-      }
-    } catch {
-      toast.error("Photo upload failed. You can continue without a photo.");
-    }
+    toast.info("Photo selected. It will be uploaded on submit.");
   };
 
   const scrollToTop = () => {
@@ -162,8 +151,19 @@ export default function VolunteerForm() {
 
   const onSubmit = async (values: VolunteerFormValues) => {
     try {
+      let image = values.image;
+      if (photoFile) {
+        const fd = new FormData();
+        fd.append("file", photoFile);
+        fd.append("dir", "volunteers");
+        const res = await axios.post<{ path?: string }>("/api/upload", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (res.data.path) image = res.data.path;
+      }
       await api.create("volunteers", {
         ...values,
+        image,
         registrationFee: values.registrationFee || fee,
       });
       setSubmitted(true);
@@ -215,6 +215,7 @@ export default function VolunteerForm() {
             setSubmitted(false);
             setStep(0);
             setPhotoPreview(null);
+            setPhotoFile(null);
           }}
           className="cursor-pointer mt-6 rounded-full bg-primary px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark"
         >
