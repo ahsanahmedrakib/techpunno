@@ -23,6 +23,7 @@ interface RowFormProps {
   onSubmit: (data: Record<string, unknown>) => Promise<void>;
   onCancel: () => void;
   submitLabel?: string;
+  uploadDir?: string;
 }
 
 function toFormValues(
@@ -187,6 +188,7 @@ function ImageUpload({
 
 async function uploadPending(
   registry: Map<string, File>,
+  dir: string,
 ): Promise<Record<string, string>> {
   const entries = Array.from(registry.entries());
   if (entries.length === 0) return {};
@@ -195,7 +197,7 @@ async function uploadPending(
   for (const [fieldName, file] of entries) {
     const fd = new FormData();
     fd.append("file", file);
-    fd.append("dir", "uploads");
+    fd.append("dir", dir);
     try {
       const res = await axios.post<{ path?: string }>("/api/upload", fd, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -214,6 +216,7 @@ export default function RowForm({
   onSubmit,
   onCancel,
   submitLabel = "Save",
+  uploadDir,
 }: RowFormProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     toFormValues(fields, initial),
@@ -230,6 +233,10 @@ export default function RowForm({
     }
     return [{ question: "", options: ["", "", "", ""], correctIndex: 0 }];
   });
+
+  const formFields = fields.filter(
+    (f) => f.type !== "readonly" || !!initial,
+  );
 
   const [prevInitial, setPrevInitial] = useState(initial);
   if (initial !== prevInitial) {
@@ -292,7 +299,10 @@ export default function RowForm({
     if (!validate()) return;
     setSubmitting(true);
     try {
-      const uploaded = await uploadPending(fileRegistry.current);
+      const uploaded = await uploadPending(
+        fileRegistry.current,
+        uploadDir ?? "uploads",
+      );
       const resolved = { ...values };
       for (const [k, v] of Object.entries(uploaded)) {
         resolved[k] = v;
@@ -314,7 +324,7 @@ export default function RowForm({
     <FileRegistryContext.Provider value={fileRegistry}>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {fields.map((field) => (
+          {formFields.map((field) => (
             <div
               key={field.name}
               className={
@@ -435,6 +445,20 @@ export default function RowForm({
                   placeholder={field.placeholder}
                   error={errors[field.name]}
                 />
+              ) : field.type === "date" ? (
+                <div>
+                  <input
+                    type="date"
+                    value={values[field.name] ?? ""}
+                    onChange={(e) => setValue(field.name, e.target.value)}
+                    className={cls(errors[field.name])}
+                  />
+                  {errors[field.name] && (
+                    <p className="mt-1 text-xs font-medium text-secondary">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
               ) : field.type === "number" ? (
                 <div>
                   <input
@@ -473,7 +497,11 @@ export default function RowForm({
               ) : field.type === "readonly" ? (
                 <input
                   type="text"
-                  value={values[field.name] ?? ""}
+                  value={
+                    initial?.[field.name] !== undefined
+                      ? String(initial[field.name])
+                      : ""
+                  }
                   disabled
                   className={`${cls(errors[field.name])} cursor-not-allowed bg-mist/50 opacity-50`}
                 />

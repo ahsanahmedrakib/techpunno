@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { site } from "@/data/site";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -50,18 +51,18 @@ export default function NotFound() {
 
         <Reveal once delay={400}>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="#home"
+            <Link
+              href="/#home"
               className="inline-flex w-full items-center justify-center rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark sm:w-auto"
             >
               Back to Home
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              href="/#contact"
               className="inline-flex w-full items-center justify-center rounded-full border-2 border-ink/10 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary sm:w-auto"
             >
               Contact Us
-            </a>
+            </Link>
           </div>
         </Reveal>
 
@@ -82,3 +83,4 @@ export default function NotFound() {
     </div>
   );
 }
+

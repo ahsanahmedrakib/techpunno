@@ -11,7 +11,7 @@ import {
 import type { TableConfig, TableKey } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Check, Eye, Hourglass, Inbox, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { Check, Eye, Hourglass, Inbox, Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -51,7 +51,7 @@ export default function TableManager({ tableKey, config }: Props) {
   const statusField = config.statusField;
   const statusOptions = config.statusOptions ?? [];
 
-  const { data, isLoading, error, isFetching } = useQuery<
+  const { data, isLoading, error, isFetching, refetch } = useQuery<
     PagedResult<Record<string, unknown>>
   >({
     queryKey: [
@@ -198,20 +198,27 @@ export default function TableManager({ tableKey, config }: Props) {
 
     return (
       <div className="mx-auto max-w-7xl">
-        <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-base font-bold text-ink">{config.label}</h3>
-          <p className="mb-4 text-xs text-ink-soft">
-            {rowId
-              ? "This configuration is saved. Editing it updates the existing record."
-              : "No configuration saved yet. Saving creates the record — afterwards you can only update it."}
-          </p>
-          <RowForm
-            fields={config.fields}
-            initial={row}
-            onSubmit={handleSingleSubmit}
-            onCancel={() => {}}
-            submitLabel={rowId ? "Save Settings" : "Add Settings"}
-          />
+        <div className="overflow-hidden rounded-lg border-2 border-primary/50 bg-white shadow-sm">
+          <div className="flex items-center justify-between bg-linear-to-r from-[#1a3a68] to-primary px-5 py-3.5">
+            <h3 className="text-sm font-bold tracking-wider text-white uppercase">
+              {config.label}
+            </h3>
+          </div>
+          <div className="p-6">
+            <p className="mb-4 text-xs text-ink-soft">
+              {rowId
+                ? "This configuration is saved. Editing it updates the existing record."
+                : "No configuration saved yet. Saving creates the record — afterwards you can only update it."}
+            </p>
+            <RowForm
+              fields={config.fields}
+              initial={row}
+              onSubmit={handleSingleSubmit}
+              onCancel={() => {}}
+              submitLabel={rowId ? "Save Settings" : "Add Settings"}
+              uploadDir={tableKey}
+            />
+          </div>
         </div>
       </div>
     );
@@ -220,22 +227,27 @@ export default function TableManager({ tableKey, config }: Props) {
   return (
     <div className="space-y-5">
       {(view === "create" || view === "edit") && (
-        <div className="rounded-lg border-2 border-primary/50 bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-base font-bold text-ink">
-            {view === "create"
-              ? `New ${config.singular}`
-              : `Edit ${config.singular}`}
-          </h3>
-          <RowForm
-            fields={config.fields}
-            initial={view === "edit" ? (editing ?? undefined) : undefined}
-            onSubmit={view === "create" ? handleCreate : handleUpdate}
-            onCancel={() => {
-              setView("list");
-              setEditing(null);
-            }}
-            submitLabel={view === "create" ? "Create" : "Update"}
-          />
+        <div className="overflow-hidden rounded-lg border-2 border-primary/50 bg-white shadow-sm">
+          <div className="flex items-center justify-between bg-linear-to-r from-[#1a3a68] to-primary px-5 py-3.5">
+            <h3 className="text-sm font-bold tracking-wider text-white uppercase">
+              {view === "create"
+                ? `New ${config.singular}`
+                : `Edit ${config.singular}`}
+            </h3>
+          </div>
+          <div className="p-6">
+            <RowForm
+              fields={config.fields}
+              initial={view === "edit" ? (editing ?? undefined) : undefined}
+              onSubmit={view === "create" ? handleCreate : handleUpdate}
+              onCancel={() => {
+                setView("list");
+                setEditing(null);
+              }}
+              submitLabel={view === "create" ? "Create" : "Update"}
+              uploadDir={tableKey}
+            />
+          </div>
         </div>
       )}
 
@@ -252,6 +264,18 @@ export default function TableManager({ tableKey, config }: Props) {
               />
             </div>
             <div className="flex items-center justify-between gap-3 lg:justify-end">
+              <button
+                type="button"
+                onClick={() => void refetch()}
+                disabled={isFetching}
+                title="Refresh"
+                className="cursor-pointer inline-flex items-center gap-2 rounded-lg border-2 border-primary/30 bg-white px-3 py-2 text-sm font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`}
+                />
+                Refresh
+              </button>
               {statusField && statusOptions.length > 0 && (
                 <select
                   value={statusFilter}

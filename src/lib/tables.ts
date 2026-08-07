@@ -21,6 +21,7 @@ export type FieldType =
   | "image"
   | "list"
   | "readonly"
+  | "date"
   | "questions";
 
 export interface FieldDef {
@@ -676,6 +677,7 @@ export const tables: Record<TableKey, TableConfig> = {
     statusField: "status",
     statusOptions: ["pending", "approved", "rejected"],
     listColumns: [
+      "volunteerId",
       "fullName",
       "institute",
       "membershipType",
@@ -684,6 +686,12 @@ export const tables: Record<TableKey, TableConfig> = {
       "updatedAt",
     ],
     fields: [
+      {
+        name: "volunteerId",
+        label: "Volunteer ID",
+        type: "readonly",
+        list: true,
+      },
       {
         name: "fullName",
         label: "Full Name (পূর্ণ নাম)",
@@ -709,7 +717,7 @@ export const tables: Record<TableKey, TableConfig> = {
       {
         name: "dateOfBirth",
         label: "Date of Birth (জন্ম তারিখ)",
-        type: "text",
+        type: "date",
         required: true,
         placeholder: "e.g. 2005-01-15",
       },

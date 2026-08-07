@@ -71,6 +71,7 @@ export default function Certificate({
   phone = "",
   date,
   embed = false,
+  certificateId,
   certificateUrl,
   config,
 }: CertificateProps) {
@@ -108,7 +109,9 @@ export default function Certificate({
       year: "numeric",
     });
 
-  const displayCertificateId = uniqueIdWithPhoneNumber(phone);
+  const displayCertificateId = certificateId
+    ? String(certificateId)
+    : "TP-" + uniqueIdWithPhoneNumber(phone);
 
   const handleDownloadPDF = async () => {
     const element = certificateRef.current;

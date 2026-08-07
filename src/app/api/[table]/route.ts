@@ -6,6 +6,7 @@ import {
   isTableKey,
   listDocs,
   pagedDocs,
+  HttpError,
   type TableKey,
 } from "@/lib/db";
 
@@ -101,7 +102,8 @@ export async function POST(
     const doc = await createDoc(table, body);
     return NextResponse.json(doc, { status: 201 });
   } catch (error) {
+    const status = error instanceof HttpError ? error.status : 500;
     const message = error instanceof Error ? error.message : "Database error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

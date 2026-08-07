@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomBytes } from "crypto";
 import { getCollection, listDocs, pagedDocs } from "@/lib/db";
+import { uniqueIdWithPhoneNumber } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -12,26 +12,43 @@ function mapDoc<T>(doc: Record<string, unknown>): T {
   return { ...doc, id, _id: mongoId } as unknown as T;
 }
 
-async function generateCertificateId(
+async function nextCertificateIndex(
   coll: Awaited<ReturnType<typeof getCollection>>,
 ): Promise<string> {
-  const year = new Date().getFullYear();
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const code = randomBytes(4).toString("hex").toUpperCase();
-    const certificateId = `TP-${year}-${code}`;
-    const exists = await coll.findOne(
-      { certificateId },
-      { projection: { _id: 1 } },
-    );
-    if (!exists) return certificateId;
+  const counters = coll.db.collection<{ _id: string; seq: number }>("counters");
+  const key = "certificateIndex";
+  const existing = await counters.findOne({ _id: key });
+  if (!existing) {
+    const count = await coll.countDocuments();
+    await counters.insertOne({ _id: key, seq: count });
   }
-  throw new Error("Failed to generate a unique certificate ID");
+  const updated = await counters.findOneAndUpdate(
+    { _id: key },
+    { $inc: { seq: 1 } },
+    { returnDocument: "after" },
+  );
+  return String(updated?.seq ?? 1).padStart(3, "0");
+}
+
+function generateCertificateId(phone: string, index: string): string {
+  const [year, encoded] = uniqueIdWithPhoneNumber(phone).split("-");
+  return `TP-${year}-${index}-${encoded}`;
 }
 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     if (!url.searchParams.has("page")) {
+      const phone = url.searchParams.get("phone");
+      const quizTitle = url.searchParams.get("quizTitle");
+      if (phone && quizTitle) {
+        const coll = await getCollection("certificates");
+        const exists = await coll.findOne(
+          { phone, quizTitle },
+          { projection: { _id: 1 } },
+        );
+        return NextResponse.json({ taken: !!exists });
+      }
       const docs = await listDocs("certificates");
       return NextResponse.json(docs);
     }
@@ -76,7 +93,24 @@ export async function POST(req: NextRequest) {
     }
 
     const coll = await getCollection("certificates");
-    const certificateId = await generateCertificateId(coll);
+
+    const quizTitle = typeof body.quizTitle === "string" ? body.quizTitle : "";
+    const alreadyTaken = await coll.findOne(
+      { phone, quizTitle },
+      { projection: { _id: 1 } },
+    );
+    if (alreadyTaken) {
+      return NextResponse.json(
+        {
+          error:
+            "You have already taken this quiz. Each phone number can take a quiz only once.",
+        },
+        { status: 409 },
+      );
+    }
+
+    const index = await nextCertificateIndex(coll);
+    const certificateId = generateCertificateId(phone, index);
 
     const now = new Date().toISOString();
     const doc: Record<string, unknown> = {

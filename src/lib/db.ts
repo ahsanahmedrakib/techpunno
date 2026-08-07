@@ -1,5 +1,6 @@
 import { Collection, ObjectId } from "mongodb";
 import { getDbName, getMongoClient } from "@/lib/mongodb";
+import { uniqueIdWithPhoneNumber } from "@/lib/utils";
 import {
   tables,
   isTableKey,
@@ -199,6 +200,16 @@ async function resolveIdFilter(
   return { _id: rawId };
 }
 
+export class HttpError extends Error {
+  status: number;
+
+  constructor(message: string, status = 500) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
+  }
+}
+
 function pickFields(
   key: TableKey,
   body: Record<string, unknown>,
@@ -220,6 +231,17 @@ export async function createDoc(
 ): Promise<unknown> {
   const coll = await getCollection(key);
   const doc = pickFields(key, body);
+  if (key === "volunteers" && typeof body.mobile === "string" && body.mobile.trim()) {
+    const mobile = body.mobile.trim();
+    const exists = await coll.findOne({ mobile }, { projection: { _id: 1 } });
+    if (exists) {
+      throw new HttpError(
+        "A volunteer with this mobile number is already registered.",
+        409,
+      );
+    }
+    doc.volunteerId = `TP-VL-${uniqueIdWithPhoneNumber(mobile)}`;
+  }
   const now = new Date().toISOString();
   doc.createdAt = now;
   doc.updatedAt = now;

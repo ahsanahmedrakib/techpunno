@@ -49,6 +49,10 @@ export const api = {
     http.put<T>(`/api/${table}/${id}`, data).then((r) => r.data),
   remove: (table: string, id: string) =>
     http.delete<{ ok: boolean }>(`/api/${table}/${id}`).then((r) => r.data),
+  checkCertificate: (phone: string, quizTitle: string) =>
+    http
+      .get<{ taken: boolean }>("/api/certificates", { params: { phone, quizTitle } })
+      .then((r) => r.data),
 };
 
 export function useTable<T>(

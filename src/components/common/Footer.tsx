@@ -8,11 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import VolunteerFooter from "../sections/VolunteerFooter";
-import {
-  MessengerIcon,
-  WhatsappIcon,
-  YoutubeIcon,
-} from "./SocialIcons";
+import { MessengerIcon, WhatsappIcon, YoutubeIcon } from "./SocialIcons";
 
 export default function Footer() {
   const path = usePathname();
@@ -37,7 +33,7 @@ export default function Footer() {
             {site.description}
           </p>
           <Hoverable className="mt-5">
-            <a
+            <Link
               href={site.facebook}
               target="_blank"
               rel="noopener noreferrer"
@@ -52,10 +48,10 @@ export default function Footer() {
                 <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
               </svg>
               Follow us on Facebook
-            </a>
+            </Link>
           </Hoverable>
           <Hoverable className="mt-3">
-            <a
+            <Link
               href={site.youtube}
               target="_blank"
               rel="noopener noreferrer"
@@ -63,119 +59,119 @@ export default function Footer() {
             >
               <YoutubeIcon size={16} />
               Subscribe on YouTube
-            </a>
+            </Link>
           </Hoverable>
         </Reveal>
 
         <Reveal variant="fade-up" delay={120}>
-        <div>
-          <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
-            Quick Links
-          </h4>
-          <ul className="mt-4 space-y-2.5">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  className="text-sm text-white/80 transition-colors hover:text-primary-light"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
+              Quick Links
+            </h4>
+            <ul className="mt-4 space-y-2.5">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-white/80 transition-colors hover:text-primary-light"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
 
         <Reveal variant="fade-up" delay={240}>
-        <div>
-          <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
-            Get Involved
-          </h4>
-          <ul className="mt-4 space-y-2.5 text-sm text-white/80">
-            <li>
-              <Link
-                href="/volunteers"
-                className="transition-colors hover:text-primary-light"
-              >
-                Become a Volunteer
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/#events"
-                className="transition-colors hover:text-primary-light"
-              >
-                Attend an Event
-              </Link>
-            </li>
-            <li>
-              <a
-                href="#video"
-                className="transition-colors hover:text-primary-light"
-              >
-                Watch & Learn
-              </a>
-            </li>
-            <li>
-              <a
-                href="#blogs"
-                className="transition-colors hover:text-primary-light"
-              >
-                Read Our Blogs
-              </a>
-            </li>
-            <li>
-              <a
-                href={site.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-primary-light"
-              >
-                Partnership
-              </a>
-            </li>
-          </ul>
-        </div>
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
+              Get Involved
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+              <li>
+                <Link
+                  href="/volunteers"
+                  className="transition-colors hover:text-primary-light"
+                >
+                  Become a Volunteer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#events"
+                  className="transition-colors hover:text-primary-light"
+                >
+                  Attend an Event
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#video"
+                  className="transition-colors hover:text-primary-light"
+                >
+                  Watch & Learn
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#blogs"
+                  className="transition-colors hover:text-primary-light"
+                >
+                  Read Our Blogs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={site.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-primary-light"
+                >
+                  Partnership
+                </Link>
+              </li>
+            </ul>
+          </div>
         </Reveal>
 
         <Reveal variant="fade-up" delay={360}>
-        <div>
-          <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
-            Contact
-          </h4>
-          <ul className="mt-4 space-y-2.5 text-sm text-white/80">
-            <li>
-              <a
-                href={`mailto:${site.email}`}
-                className="transition-colors hover:text-primary-light"
-              >
-                {site.email}
-              </a>
-            </li>
-            <li>
-              <a
-                href={`tel:${site.phone.replace(/[^+\d]/g, "")}`}
-                className="transition-colors hover:text-primary-light"
-              >
-                {site.phone}
-              </a>
-            </li>
-            <li>{site.address}</li>
-          </ul>
-        </div>
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white/50">
+              Contact
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+              <li>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="transition-colors hover:text-primary-light"
+                >
+                  {site.email}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`tel:${site.phone.replace(/[^+\d]/g, "")}`}
+                  className="transition-colors hover:text-primary-light"
+                >
+                  {site.phone}
+                </a>
+              </li>
+              <li>{site.address}</li>
+            </ul>
+          </div>
         </Reveal>
       </Container>
 
       <div className="border-t border-white/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent" />
         <Reveal distance={12}>
-        <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-white/60 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
-          </p>
-          <p>Built with 💚 for a safe digital society.</p>
-        </Container>
+          <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-white/60 sm:flex-row">
+            <p>
+              © {new Date().getFullYear()} {site.name}. All rights reserved.
+            </p>
+            <p>Built with 💚 for a safe digital society.</p>
+          </Container>
         </Reveal>
       </div>
 
@@ -260,3 +256,4 @@ export default function Footer() {
     </footer>
   );
 }
+
