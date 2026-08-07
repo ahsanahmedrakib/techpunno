@@ -33,14 +33,14 @@ export default function Hero() {
         pagination={{ clickable: true }}
         loop
         speed={900}
-        className="h-full w-full"
+        className="hero-swiper w-full"
       >
         {slides.map((slide) => {
           const isPrimary = slide.accent === "primary";
           return (
             <SwiperSlide key={slide.id}>
               <div
-                className={`relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden ${
+                className={`relative flex h-full min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-4 ${
                   isPrimary
                     ? "bg-linear-to-br from-primary-tint via-cream to-primary-lighter"
                     : "bg-linear-to-br from-secondary-tint via-cream to-secondary-light"
@@ -49,7 +49,7 @@ export default function Hero() {
                 <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
 
-                <Container className="grid grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:gap-8">
+                <Container className="grid grid-cols-1 items-center gap-12 px-4 py-20 lg:grid-cols-2 lg:gap-8">
                   <Reveal once delay={150} distance={40} className="max-w-xl">
                     <span
                       className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest ${
