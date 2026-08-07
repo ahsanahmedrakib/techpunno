@@ -67,7 +67,7 @@ export async function DELETE(
   if (!isTableKey(table)) {
     return NextResponse.json({ error: "Unknown table" }, { status: 404 });
   }
-  if (tables[table].readOnly) {
+  if (tables[table].readOnly && !tables[table].deletable) {
     return NextResponse.json(
       { error: "This table is read-only" },
       { status: 403 },

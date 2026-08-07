@@ -6,6 +6,7 @@ import {
 } from "@/data/certificate";
 import { site } from "@/data/site";
 import { useCertificateConfig } from "@/hooks/useCertificateConfig";
+import { uniqueIdWithPhoneNumber } from "@/lib/utils";
 import { Download } from "lucide-react";
 import { Lobster } from "next/font/google";
 import Image from "next/image";
@@ -65,12 +66,11 @@ interface CertificateProps {
 }
 
 export default function Certificate({
-  name = "Suraiya Islam Labonno",
+  name = "Ahsan Ahmed Rakib",
   percentage,
   phone = "",
   date,
   embed = false,
-  certificateId,
   certificateUrl,
   config,
 }: CertificateProps) {
@@ -108,19 +108,7 @@ export default function Certificate({
       year: "numeric",
     });
 
-  function generateCertificateId(phone: string): string {
-    const map = "ABCDEFGHIJ";
-
-    const encoded = phone
-      .replace(/\D/g, "")
-      .replace(/[0-9]/g, (digit) => map[Number(digit)]);
-
-    const year = new Date().getFullYear().toString().slice(-2);
-
-    return `${year}-${encoded}`;
-  }
-
-  const displayCertificateId = certificateId || generateCertificateId(phone);
+  const displayCertificateId = uniqueIdWithPhoneNumber(phone);
 
   const handleDownloadPDF = async () => {
     const element = certificateRef.current;

@@ -371,15 +371,28 @@ export default function TableManager({ tableKey, config }: Props) {
                           <td className="px-4 py-3">
                             <div className="flex items-center justify-end gap-2">
                               {config.readOnly ? (
-                                <button
-                                  onClick={() =>
-                                    router.push(`/admin/${tableKey}/${row.id}`)
-                                  }
-                                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
-                                >
-                                  <Eye className="h-3.5 w-3.5" />
-                                  View
-                                </button>
+                                <>
+                                  <button
+                                    onClick={() =>
+                                      router.push(`/admin/${tableKey}/${row.id}`)
+                                    }
+                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                  >
+                                    <Eye className="h-3.5 w-3.5" />
+                                    View
+                                  </button>
+                                  {config.deletable && (
+                                    <button
+                                      onClick={() =>
+                                        setDeletingId(String(row.id))
+                                      }
+                                      className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                      Delete
+                                    </button>
+                                  )}
+                                </>
                               ) : (
                                 <>
                                   {statusField && statusOptions.length > 0 && (

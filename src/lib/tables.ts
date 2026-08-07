@@ -43,6 +43,7 @@ export interface TableConfig {
   listColumns: string[];
   single?: boolean;
   readOnly?: boolean;
+  deletable?: boolean;
   defaultStatus?: string;
   statusField?: string;
   statusOptions?: string[];
@@ -518,6 +519,7 @@ export const tables: Record<TableKey, TableConfig> = {
     label: "Certificates",
     singular: "Certificate",
     readOnly: true,
+    deletable: true,
     listColumns: [
       "certificateId",
       "name",

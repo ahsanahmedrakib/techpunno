@@ -46,3 +46,15 @@ export function formatDate(dateString: string): string {
 
   return `${day} ${month}, ${year}`;
 }
+
+export function uniqueIdWithPhoneNumber(phone: string): string {
+  const map = "ABCDEFGHIJ";
+
+  const encoded = phone
+    .replace(/\D/g, "")
+    .replace(/[0-9]/g, (digit) => map[Number(digit)]);
+
+  const year = new Date().getFullYear().toString().slice(-2);
+
+  return `${year}-${encoded}`;
+}

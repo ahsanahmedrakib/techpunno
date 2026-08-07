@@ -1,10 +1,14 @@
 "use client";
 
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import Certificate from "@/components/common/Certificate";
+import { api } from "@/lib/api";
 import { formatDate, formatDateAndTime } from "@/lib/utils";
-import { ChevronLeft, ExternalLink, Eye, EyeOff, Medal } from "lucide-react";
+import { ChevronLeft, ExternalLink, Eye, EyeOff, Medal, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface CertificateDetailProps {
   row: Record<string, unknown>;
@@ -16,7 +20,10 @@ function percentageColor(percentage: number): string {
 }
 
 export default function CertificateDetail({ row }: CertificateDetailProps) {
+  const router = useRouter();
   const [showCertificate, setShowCertificate] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const certificateId = String(row.certificateId ?? "");
   const name = String(row.name ?? "");
@@ -35,6 +42,20 @@ export default function CertificateDetail({ row }: CertificateDetailProps) {
         "noopener,noreferrer",
       );
     }
+  };
+
+  const handleDelete = async () => {
+    if (!row.id) return;
+    setDeleting(true);
+    try {
+      await api.remove("certificates", String(row.id));
+      toast.success("Certificate deleted");
+      router.replace("/admin/certificates");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete failed");
+      setDeleting(false);
+    }
+    setConfirmDelete(false);
   };
 
   return (
@@ -156,6 +177,15 @@ export default function CertificateDetail({ row }: CertificateDetailProps) {
             <ExternalLink className="h-4 w-4" />
             Open Public Link
           </button>
+          <button
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+            disabled={deleting || !row.id}
+            className="ml-auto cursor-pointer inline-flex items-center gap-2 rounded-xl border-2 border-secondary/40 bg-white px-5 py-2.5 text-sm font-bold text-secondary transition-all hover:border-secondary hover:bg-secondary-light disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Trash2 className="h-4 w-4" />
+            {deleting ? "Deleting..." : "Delete"}
+          </button>
         </div>
       </div>
 
@@ -184,6 +214,14 @@ export default function CertificateDetail({ row }: CertificateDetailProps) {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title="Delete Certificate?"
+        message={`This will permanently delete the certificate for ${name || certificateId || "this recipient"}. This action cannot be undone.`}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </div>
   );
 }
