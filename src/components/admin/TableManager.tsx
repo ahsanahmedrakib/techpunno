@@ -519,7 +519,7 @@ export default function TableManager({ tableKey, config }: Props) {
       <ConfirmDialog
         open={!!deletingId}
         title={`Delete ${config.singular}?`}
-        message="This action cannot be undone. The row will be permanently removed."
+        message="The row will be moved to Deleted Data and hidden from the website. You can restore or permanently delete it later."
         onConfirm={() => deletingId && handleDelete(deletingId)}
         onCancel={() => setDeletingId(null)}
       />

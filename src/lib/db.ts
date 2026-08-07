@@ -75,12 +75,15 @@ export async function getCollection(
   return db.collection<Record<string, unknown>>(key);
 }
 
+const ACTIVE_FILTER = { deletedAt: null };
+const DELETED_FILTER = { deletedAt: { $ne: null } };
+
 export async function listDocs(key: TableKey): Promise<unknown[]> {
   const coll = await getCollection(key);
-  const docs = (await coll.find({}).sort({ _id: 1 }).toArray()) as Record<
-    string,
-    unknown
-  >[];
+  const docs = (await coll
+    .find(ACTIVE_FILTER)
+    .sort({ _id: 1 })
+    .toArray()) as Record<string, unknown>[];
   return docs.map((d) => mapDoc(d));
 }
 
@@ -128,6 +131,7 @@ export async function pagedDocs<T = unknown>(
 ): Promise<PagedResult<T>> {
   const coll = await getCollection(key);
   const filter = buildSearchFilter(key, options.search ?? "");
+  filter.deletedAt = null;
   if (options.filterField && options.filterValue) {
     filter[options.filterField] = options.filterValue;
   }
@@ -149,7 +153,8 @@ export async function pagedDocs<T = unknown>(
 
 export async function getDoc(key: TableKey, rawId: string): Promise<unknown | null> {
   const coll = await getCollection(key);
-  let doc = (await coll.findOne(await resolveIdFilter(key, rawId))) as Record<
+  const baseFilter = { ...(await resolveIdFilter(key, rawId)), deletedAt: null };
+  let doc = (await coll.findOne(baseFilter)) as Record<
     string,
     unknown
   > | null;
@@ -160,13 +165,13 @@ export async function getDoc(key: TableKey, rawId: string): Promise<unknown | nu
         ? numeric
         : null;
     if (asNumber !== null) {
-      doc = (await coll.findOne({ id: asNumber })) as Record<
+      doc = (await coll.findOne({ id: asNumber, deletedAt: null })) as Record<
         string,
         unknown
       > | null;
     }
     if (!doc) {
-      doc = (await coll.findOne({ id: rawId })) as Record<
+      doc = (await coll.findOne({ id: rawId, deletedAt: null })) as Record<
         string,
         unknown
       > | null;
@@ -295,8 +300,55 @@ export async function removeDoc(
 ): Promise<boolean> {
   const coll = await getCollection(key);
   const filter = await resolveIdFilter(key, rawId);
+  const now = new Date().toISOString();
+  const result = await coll.updateOne(filter, {
+    $set: { deletedAt: now, updatedAt: now },
+  });
+  return (result.matchedCount ?? 0) > 0;
+}
+
+export async function restoreDoc(
+  key: TableKey,
+  rawId: string,
+): Promise<boolean> {
+  const coll = await getCollection(key);
+  const filter = await resolveIdFilter(key, rawId);
+  const result = await coll.updateOne(filter, {
+    $set: { deletedAt: null, updatedAt: new Date().toISOString() },
+  });
+  return (result.matchedCount ?? 0) > 0;
+}
+
+export async function permanentRemoveDoc(
+  key: TableKey,
+  rawId: string,
+): Promise<boolean> {
+  const coll = await getCollection(key);
+  const filter = await resolveIdFilter(key, rawId);
   const result = await coll.deleteOne(filter);
   return (result.deletedCount ?? 0) > 0;
+}
+
+export async function getDeletedDoc(
+  key: TableKey,
+  rawId: string,
+): Promise<unknown | null> {
+  const coll = await getCollection(key);
+  const filter = {
+    ...(await resolveIdFilter(key, rawId)),
+    ...DELETED_FILTER,
+  };
+  const doc = (await coll.findOne(filter)) as Record<string, unknown> | null;
+  return doc ? mapDoc(doc) : null;
+}
+
+export async function listDeletedDocs(key: TableKey): Promise<unknown[]> {
+  const coll = await getCollection(key);
+  const docs = (await coll
+    .find(DELETED_FILTER)
+    .sort({ deletedAt: -1 })
+    .toArray()) as Record<string, unknown>[];
+  return docs.map((d) => mapDoc(d));
 }
 
 export async function getDocBySlug(
@@ -304,6 +356,9 @@ export async function getDocBySlug(
   slug: string,
 ): Promise<unknown | null> {
   const coll = await getCollection(key);
-  const doc = (await coll.findOne({ slug })) as Record<string, unknown> | null;
+  const doc = (await coll.findOne({
+    slug,
+    deletedAt: null,
+  })) as Record<string, unknown> | null;
   return doc ? mapDoc(doc) : null;
 }

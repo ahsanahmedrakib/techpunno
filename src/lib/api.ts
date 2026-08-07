@@ -53,6 +53,16 @@ export const api = {
     http
       .get<{ taken: boolean }>("/api/certificates", { params: { phone, quizTitle } })
       .then((r) => r.data),
+  deletedList: <T extends Record<string, unknown>>(table?: string) =>
+    http
+      .get<{ docs: T[]; total: number }>("/api/deleted", {
+        params: table ? { table } : {},
+      })
+      .then((r) => r.data),
+  restoreDeleted: (table: string, id: string) =>
+    http.post<{ ok: boolean }>("/api/deleted", { table, id }).then((r) => r.data),
+  permanentlyDelete: (table: string, id: string) =>
+    http.delete<{ ok: boolean }>("/api/deleted", { data: { table, id } }).then((r) => r.data),
 };
 
 export function useTable<T>(

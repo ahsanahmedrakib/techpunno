@@ -11,7 +11,7 @@ type PageProps = { params: Promise<{ certificateId: string }> };
 
 async function findCertificate(certificateId: string) {
   const coll = await getCollection("certificates");
-  return coll.findOne({ certificateId });
+  return coll.findOne({ certificateId, deletedAt: null });
 }
 
 async function resolveCertificateUrl(certificateId: string): Promise<string> {

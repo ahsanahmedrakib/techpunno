@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
   Calendar,
@@ -16,6 +16,7 @@ import {
   Medal,
   Newspaper,
   Star,
+  Trash2,
   Users,
   Wallet,
   type LucideIcon,
@@ -45,6 +46,11 @@ export default function AdminDashboard() {
       queryKey: ["table", key],
       queryFn: () => api.paged(key, { page: 1, pageSize: 1 }),
     })),
+  });
+
+  const deletedQuery = useQuery({
+    queryKey: ["deleted"],
+    queryFn: () => api.deletedList<Record<string, unknown>>(),
   });
 
   const counts: Record<string, number> = {};
@@ -173,6 +179,31 @@ export default function AdminDashboard() {
                   </Link>
                 );
               })}
+              <Link
+                href="/admin/deleted"
+                className="group rounded-2xl border-2 border-dashed border-secondary/40 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-secondary/70 hover:shadow-md"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-light text-secondary transition-colors group-hover:bg-secondary/10">
+                    <Trash2 className="h-5 w-5" />
+                  </span>
+                  {deletedQuery.data?.total ? (
+                    <span className="rounded-full bg-secondary-light px-2 py-0.5 text-[10px] font-bold text-secondary">
+                      {deletedQuery.data.total}
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold text-ink-soft">
+                      EMPTY
+                    </span>
+                  )}
+                </div>
+                <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-secondary">
+                  Deleted Data
+                </h4>
+                <p className="mt-1 text-xs text-ink-soft">
+                  Restore or permanently delete hidden rows
+                </p>
+              </Link>
         </div>
       </div>
     </div>

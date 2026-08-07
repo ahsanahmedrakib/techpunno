@@ -1,11 +1,11 @@
 "use client";
 
-import { heroSlides, type HeroSlide } from "@/data/hero";
-import { site } from "@/data/site";
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SkeletonHero from "@/components/common/Skeleton";
+import { heroSlides, type HeroSlide } from "@/data/hero";
+import { site } from "@/data/site";
 import { useTable } from "@/lib/api";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -50,12 +50,7 @@ export default function Hero() {
                 <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
 
                 <Container className="grid grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:gap-8">
-                  <Reveal
-                    once
-                    delay={150}
-                    distance={40}
-                    className="max-w-xl"
-                  >
+                  <Reveal once delay={150} distance={40} className="max-w-xl">
                     <span
                       className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest ${
                         isPrimary

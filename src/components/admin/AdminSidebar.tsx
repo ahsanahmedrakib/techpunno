@@ -21,6 +21,7 @@ import {
   Menu,
   Newspaper,
   Star,
+  Trash2,
   Users,
   Wallet,
   type LucideIcon,
@@ -133,6 +134,21 @@ export default function AdminSidebar({
               </Link>
             );
           })}
+
+          <Link
+            href="/admin/deleted"
+            onClick={() => setSidebarOpen(false)}
+            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+              pathname.startsWith("/admin/deleted")
+                ? "bg-primary text-white shadow-md shadow-primary/30"
+                : "text-white/60 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5">
+              <Trash2 className="h-4 w-4" />
+            </span>
+            Deleted Data
+          </Link>
         </nav>
 
         <div className="border-t border-white/10 p-3">
@@ -164,6 +180,7 @@ export default function AdminSidebar({
                 const key = parts[1];
                 if (key === "contacts" && parts.length > 2)
                   return "Contact Detail";
+                if (key === "deleted") return "Deleted Data";
                 if (isTableKey(key)) return tables[key].label;
               }
               return "Admin";

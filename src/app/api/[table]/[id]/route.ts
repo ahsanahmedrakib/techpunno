@@ -6,7 +6,6 @@ import {
   removeDoc,
   updateDoc,
 } from "@/lib/db";
-import { deleteImageFiles } from "@/lib/images";
 
 export const dynamic = "force-dynamic";
 
@@ -74,16 +73,9 @@ export async function DELETE(
     );
   }
   try {
-    const existing = (await getDoc(table, id)) as Record<string, unknown> | null;
     const deleted = await removeDoc(table, id);
     if (!deleted) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-    if (existing) {
-      const imageFields = tables[table].fields
-        .filter((f) => f.type === "image")
-        .map((f) => f.name);
-      await deleteImageFiles(existing, imageFields);
     }
     return NextResponse.json({ ok: true });
   } catch (error) {

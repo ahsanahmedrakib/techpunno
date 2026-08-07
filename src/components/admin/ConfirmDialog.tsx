@@ -6,6 +6,8 @@ interface Props {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmLabel?: string;
+  variant?: "danger" | "primary";
 }
 
 export default function ConfirmDialog({
@@ -14,6 +16,8 @@ export default function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
+  confirmLabel = "Delete",
+  variant = "danger",
 }: Props) {
   if (!open) return null;
 
@@ -56,9 +60,13 @@ export default function ConfirmDialog({
           </button>
           <button
             onClick={onConfirm}
-            className="cursor-pointer rounded-xl bg-secondary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-secondary/20 transition-all hover:bg-secondary-dark"
+            className={`cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all ${
+              variant === "danger"
+                ? "bg-secondary shadow-secondary/20 hover:bg-secondary-dark"
+                : "bg-primary shadow-primary/20 hover:bg-primary-dark"
+            }`}
           >
-            Delete
+            {confirmLabel}
           </button>
         </div>
       </div>
