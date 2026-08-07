@@ -51,6 +51,7 @@ export const volunteerSchema = yup.object({
     .trim()
     .required("Date of Birth is required"),
   gender: yup.string().required("Please select a gender"),
+  occupation: yup.string().required("Please select your occupation"),
   mobile: yup
     .string()
     .trim()
@@ -70,9 +71,20 @@ export const volunteerSchema = yup.object({
     .string()
     .trim()
     .required("Guardian mobile number is required"),
-  institute: yup.string().trim().required("Institution name is required"),
+  institute: yup
+    .string()
+    .trim()
+    .required("Institution or organization name is required"),
   department: yup.string().trim(),
-  educationLevel: yup.string().required("Please select an education level"),
+  designation: yup
+    .string()
+    .trim()
+    .when("occupation", {
+      is: "Job Holder",
+      then: (s) => s.required("Designation / job title is required"),
+      otherwise: (s) => s,
+    }),
+  educationLevel: yup.string().required("Please select your education level"),
   interestAreas: yup
     .array()
     .of(yup.string())

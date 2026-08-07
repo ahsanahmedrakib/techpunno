@@ -238,6 +238,12 @@ export default function RowForm({
     (f) => f.type !== "readonly" || !!initial,
   );
 
+  const isVisible = (field: FieldDef) =>
+    !field.showIf ||
+    Object.entries(field.showIf).every(
+      ([name, expected]) => (values[name] ?? "") === expected,
+    );
+
   const [prevInitial, setPrevInitial] = useState(initial);
   if (initial !== prevInitial) {
     setPrevInitial(initial);
@@ -268,6 +274,7 @@ export default function RowForm({
     const errs: Record<string, string> = {};
     for (const field of fields) {
       if (field.type === "readonly" || !field.required) continue;
+      if (!isVisible(field)) continue;
       if (field.type === "questions") {
         if (questionsData.length === 0 || !questionsData[0]?.question.trim()) {
           errs[field.name] = "At least one question is required";
@@ -324,7 +331,7 @@ export default function RowForm({
     <FileRegistryContext.Provider value={fileRegistry}>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {formFields.map((field) => (
+          {formFields.filter(isVisible).map((field) => (
             <div
               key={field.name}
               className={

@@ -33,6 +33,7 @@ export interface FieldDef {
   placeholder?: string;
   list?: boolean;
   min?: number;
+  showIf?: Record<string, string>;
 }
 
 export interface TableConfig {
@@ -679,6 +680,7 @@ export const tables: Record<TableKey, TableConfig> = {
     listColumns: [
       "volunteerId",
       "fullName",
+      "occupation",
       "institute",
       "membershipType",
       "status",
@@ -730,6 +732,15 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Select gender",
       },
       {
+        name: "occupation",
+        label: "Occupation (পেশা)",
+        type: "select",
+        options: ["Student", "Job Holder", "Other"],
+        required: true,
+        list: true,
+        placeholder: "Select occupation",
+      },
+      {
         name: "mobile",
         label: "Mobile Number (মোবাইল নম্বর)",
         type: "text",
@@ -772,11 +783,18 @@ export const tables: Record<TableKey, TableConfig> = {
       },
       {
         name: "institute",
-        label: "Institution Name (প্রতিষ্ঠানের নাম)",
+        label: "Institution / Organization Name (প্রতিষ্ঠানের নাম)",
         type: "text",
         required: true,
         list: true,
-        placeholder: "e.g. XYZ School & College",
+        placeholder: "e.g. XYZ School & College or company name",
+      },
+      {
+        name: "designation",
+        label: "Designation / Job Title (পদবি)",
+        type: "text",
+        showIf: { occupation: "Job Holder" },
+        placeholder: "e.g. Software Engineer",
       },
       {
         name: "department",

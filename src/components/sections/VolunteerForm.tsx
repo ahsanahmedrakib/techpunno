@@ -40,6 +40,7 @@ const stepFields: (keyof VolunteerFormValues)[][] = [
     "motherName",
     "dateOfBirth",
     "gender",
+    "occupation",
     "mobile",
     "email",
     "whatsapp",
@@ -51,6 +52,7 @@ const stepFields: (keyof VolunteerFormValues)[][] = [
   [
     "institute",
     "department",
+    "designation",
     "educationLevel",
     "interestAreas",
     "membershipType",
@@ -59,6 +61,7 @@ const stepFields: (keyof VolunteerFormValues)[][] = [
 ];
 
 const genderOptions = ["Male", "Female", "Other"];
+const occupationOptions = ["Student", "Job Holder", "Other"];
 const levelOptions = ["School", "College", "University", "Other"];
 const paymentOptions = ["bKash", "Nagad", "Cash"];
 
@@ -94,6 +97,7 @@ export default function VolunteerForm() {
       declaration: false,
       registrationFee: fee,
       gender: "",
+      occupation: "",
       membershipType: "",
       paidBy: "",
     },
@@ -101,6 +105,7 @@ export default function VolunteerForm() {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const watchGender = watch("gender");
+  const watchOccupation = watch("occupation");
   const watchMembershipType = watch("membershipType");
   const watchPaidBy = watch("paidBy");
   const watchEducationLevel = watch("educationLevel");
@@ -341,6 +346,32 @@ export default function VolunteerForm() {
                     </p>
                   )}
                 </div>
+                <div className="sm:col-span-2">
+                  <label className="mb-1.5 block text-sm font-semibold text-ink">
+                    Occupation (পেশা) <span className="text-secondary">*</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {occupationOptions.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() =>
+                          setValue("occupation", opt, {
+                            shouldValidate: true,
+                          })
+                        }
+                        className={`${radioCard(watchOccupation === opt)} sm:flex-1`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                  {fieldError(errors, "occupation") && (
+                    <p className="mt-1.5 text-xs font-medium text-secondary">
+                      {fieldError(errors, "occupation")}
+                    </p>
+                  )}
+                </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
                     Gender (লিঙ্গ) <span className="text-secondary">*</span>
@@ -524,18 +555,28 @@ export default function VolunteerForm() {
                 <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-lighter text-primary">
                   ২
                 </span>
-                শিক্ষাগত তথ্য ও আগ্রহ (Educational Information & Interest)
+                শিক্ষা, পেশা ও আগ্রহ (Education, Profession & Interest)
               </h3>
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
-                    Institution Name (প্রতিষ্ঠানের নাম){" "}
+                    {watchOccupation === "Student"
+                      ? "Institution Name (প্রতিষ্ঠানের নাম)"
+                      : watchOccupation === "Job Holder"
+                        ? "Organization / Company Name (প্রতিষ্ঠানের নাম)"
+                        : "Institution / Organization Name (প্রতিষ্ঠানের নাম)"}{" "}
                     <span className="text-secondary">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. XYZ School & College"
+                    placeholder={
+                      watchOccupation === "Student"
+                        ? "e.g. XYZ School & College"
+                        : watchOccupation === "Job Holder"
+                          ? "e.g. ABC Technologies Ltd."
+                          : "e.g. XYZ School & College or company name"
+                    }
                     {...register("institute")}
                     className={inputCls(fieldError(errors, "institute"))}
                   />
@@ -556,9 +597,30 @@ export default function VolunteerForm() {
                     className={inputCls()}
                   />
                 </div>
+                {watchOccupation === "Job Holder" && (
+                  <div>
+                    <label className="mb-1.5 block text-sm font-semibold text-ink">
+                      Designation / Job Title (পদবি){" "}
+                      <span className="text-secondary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Software Engineer"
+                      {...register("designation")}
+                      className={inputCls(fieldError(errors, "designation"))}
+                    />
+                    {fieldError(errors, "designation") && (
+                      <p className="mt-1.5 text-xs font-medium text-secondary">
+                        {fieldError(errors, "designation")}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
-                    Education Level (শিক্ষার স্তর){" "}
+                    {watchOccupation === "Student"
+                      ? "Education Level (শিক্ষার স্তর)"
+                      : "Highest Education Level (সর্বোচ্চ শিক্ষাগত যোগ্যতা)"}{" "}
                     <span className="text-secondary">*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-2">

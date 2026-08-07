@@ -15,12 +15,12 @@ export default function VolunteerPage() {
       <main>
         <VolunteersGrid />
 
-        <section className="bg-white py-20 lg:py-28" id="registration">
+        <section className="bg-white py-10" id="registration">
           <Container>
             <Reveal
               variant="zoom"
               scale={0.95}
-              className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl bg-linear-to-br from-primary via-primary-dark to-[#06402a] p-10 text-center text-white shadow-2xl shadow-primary/20 sm:p-14"
+              className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary via-primary-dark to-[#06402a] p-4 text-center text-white shadow-2xl shadow-primary/20 sm:p-6"
             >
               <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest">
