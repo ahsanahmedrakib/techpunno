@@ -43,4 +43,15 @@ export const heroSlides: HeroSlide[] = [
     ctaHref: "#contact",
     accent: "primary",
   },
+  {
+    id: "service",
+    kicker: "Our Services",
+    title: "Awareness Campaigns,",
+    highlight: "Workshops & More",
+    description:
+      "From school workshops and community campaigns to digital literacy training and our Cyber Quiz certification program — we make online safety practical and accessible for everyone.",
+    ctaLabel: "Take the Cyber Quiz",
+    ctaHref: "/quiz",
+    accent: "secondary",
+  },
 ];
