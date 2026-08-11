@@ -235,7 +235,9 @@ export default function RowForm({
   });
 
   const formFields = fields.filter(
-    (f) => f.type !== "readonly" || !!initial,
+    (f) =>
+      f.type !== "readonly" ||
+      (!!initial && f.name !== "createdAt" && f.name !== "updatedAt"),
   );
 
   const isVisible = (field: FieldDef) =>

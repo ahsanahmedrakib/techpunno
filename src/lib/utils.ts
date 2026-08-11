@@ -58,3 +58,22 @@ export function uniqueIdWithPhoneNumber(phone: string): string {
 
   return `${year}-${encoded}`;
 }
+
+export function scrollToField(fieldName: string): void {
+  if (typeof document === "undefined") return;
+  const el =
+    document.querySelector<HTMLElement>(`[data-field="${fieldName}"]`) ??
+    document.querySelector<HTMLElement>(`[name="${fieldName}"]`);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  const focusable = el.querySelector<HTMLElement>(
+    "input:not([type='file']):not([type='hidden']), select, textarea, button",
+  );
+  if (focusable) focusable.focus({ preventScroll: true });
+}
+
+export function scrollToFirstError(errors: Record<string, unknown>): void {
+  const keys = Object.keys(errors);
+  if (keys.length === 0) return;
+  scrollToField(keys[0]);
+}

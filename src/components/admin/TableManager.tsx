@@ -12,6 +12,7 @@ import type { TableConfig, TableKey } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Check, Eye, Hourglass, Inbox, Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -50,6 +51,12 @@ export default function TableManager({ tableKey, config }: Props) {
 
   const statusField = config.statusField;
   const statusOptions = config.statusOptions ?? [];
+
+  const imageField = config.fields.find((f) => f.type === "image");
+  const columns =
+    imageField && !config.listColumns.includes(imageField.name)
+      ? [imageField.name, ...config.listColumns]
+      : config.listColumns;
 
   const { data, isLoading, error, isFetching, refetch } = useQuery<
     PagedResult<Record<string, unknown>>
@@ -307,7 +314,7 @@ export default function TableManager({ tableKey, config }: Props) {
 
           {isLoading || isFetching ? (
             <TableSkeleton
-              columns={config.listColumns.map((c) => getField(c)?.label ?? c)}
+              columns={columns.map((c) => getField(c)?.label ?? c)}
               rows={Math.min(pageSize, 10)}
             />
           ) : (
@@ -316,12 +323,14 @@ export default function TableManager({ tableKey, config }: Props) {
                 <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="bg-linear-to-r from-[#1a3a68] to-primary text-white">
-                      {config.listColumns.map((col) => (
+                      {columns.map((col) => (
                         <th
                           key={col}
                           className="px-4 py-3.5 text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase"
                         >
-                          {getField(col)?.label ?? col}
+                          {getField(col)?.type === "image"
+                            ? "Image"
+                            : getField(col)?.label ?? col}
                         </th>
                       ))}
                       <th className="px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
@@ -333,7 +342,7 @@ export default function TableManager({ tableKey, config }: Props) {
                     {rows.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={config.listColumns.length + 1}
+                          colSpan={columns.length + 1}
                           className="px-4 py-16 text-center"
                         >
                           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
@@ -355,9 +364,11 @@ export default function TableManager({ tableKey, config }: Props) {
                           key={String(row.id ?? idx)}
                           className="border-t border-ink/10 transition-colors odd:bg-white even:bg-mist/30 hover:bg-primary-lighter/40"
                         >
-                          {config.listColumns.map((col) => {
+                          {columns.map((col) => {
                             const val = String(cellValue(row, col));
                             const field = getField(col);
+                            const isImage =
+                              field?.type === "image" && val !== "\u2014";
                             const isBadge =
                               field?.type === "select" ||
                               col === "mode" ||
@@ -367,7 +378,16 @@ export default function TableManager({ tableKey, config }: Props) {
                               col === "createdAt" || col === "updatedAt";
                             return (
                               <td key={col} className="px-4 py-3 text-ink">
-                                {isBadge && val !== "\u2014" ? (
+                                {isImage ? (
+                                  <Image
+                                    src={val}
+                                    alt={String(row.title ?? row.name ?? "")}
+                                    width={48}
+                                    height={48}
+                                    unoptimized
+                                    className="h-12 w-12 rounded-lg border-2 border-primary/30 bg-mist object-cover"
+                                  />
+                                ) : isBadge && val !== "\u2014" ? (
                                   <span
                                     className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold ${badgeColor(val)}`}
                                   >

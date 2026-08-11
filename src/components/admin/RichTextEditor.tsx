@@ -2,8 +2,19 @@
 
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import ImageResize from "@mgreminger/quill-image-resize-module";
+import ReactQuillRef from "react-quill-new";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+const Quill = ReactQuillRef.Quill;
+
+let imageResizeRegistered = false;
+
+if (typeof window !== "undefined" && !imageResizeRegistered) {
+  imageResizeRegistered = true;
+  Quill.register("modules/imageResize", ImageResize, true);
+}
 
 const modules = {
   toolbar: [
@@ -16,6 +27,22 @@ const modules = {
     ["link", "image"],
     ["clean"],
   ],
+  imageResize: {
+    modules: ["Resize", "DisplaySize", "AltText"],
+    handleStyles: {
+      backgroundColor: "#0c9b5d",
+      border: "2px solid #ffffff",
+      borderRadius: "50%",
+    },
+    displayStyles: {
+      backgroundColor: "#0b2b1d",
+      color: "#ffffff",
+      fontSize: "12px",
+      borderRadius: "4px",
+    },
+    altTextLabel: "Alt Text:",
+    altTextPlaceholder: "Describe the image...",
+  },
 };
 
 const formats = [
@@ -80,6 +107,14 @@ export default function RichTextEditor({
           min-height: 180px;
           padding: 0.75rem 1rem;
           color: #0b2b1d;
+        }
+        .rich-text-editor .ql-editor img {
+          max-width: 100%;
+          height: auto;
+          cursor: pointer;
+        }
+        .rich-text-editor .ql-editor .image-resize-handle {
+          border: 2px solid #0c9b5d;
         }
         .rich-text-editor .ql-editor.ql-blank::before {
           color: rgba(11, 43, 29, 0.35);

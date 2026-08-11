@@ -2,6 +2,7 @@ export type EventItem = {
   id: string;
   title: string;
   description: string;
+  summary: string;
   date: string;
   month: string;
   year: string;
@@ -19,6 +20,8 @@ export const events: EventItem[] = [
     title: "Cyber Security Awareness Workshop",
     description:
       "Hands-on workshop on phishing, password hygiene and safe browsing for students and young professionals.",
+    summary:
+      "Hands-on phishing, password hygiene and safe browsing workshop.",
     date: "20",
     month: "Aug",
     year: "2026",
@@ -33,6 +36,7 @@ export const events: EventItem[] = [
     title: "Safe Digital Society Webinar",
     description:
       "An open webinar with experts discussing privacy, misinformation and building a safer online community.",
+    summary: "Expert webinar on privacy and misinformation.",
     date: "28",
     month: "Jul",
     year: "2026",
@@ -47,6 +51,7 @@ export const events: EventItem[] = [
     title: "Volunteer Onboarding 2026",
     description:
       "A warm welcome and onboarding session for our newest TechPunno volunteers and their first assignments.",
+    summary: "Welcome and onboarding for new volunteers.",
     date: "15",
     month: "Jul",
     year: "2026",
@@ -61,6 +66,7 @@ export const events: EventItem[] = [
     title: "Digital Literacy Bootcamp",
     description:
       "Weekend bootcamp covering internet basics, online banking safety and using tech responsibly.",
+    summary: "Weekend bootcamp on internet basics and online safety.",
     date: "10",
     month: "Jul",
     year: "2026",
@@ -75,6 +81,7 @@ export const events: EventItem[] = [
     title: "National Cyber Safety Campaign",
     description:
       "A nationwide awareness drive on social media and in schools to promote safe internet habits.",
+    summary: "Nationwide awareness drive for safe internet habits.",
     date: "05",
     month: "Sep",
     year: "2026",
@@ -89,6 +96,7 @@ export const events: EventItem[] = [
     title: "TechPunno Annual Meetup",
     description:
       "Celebrating a year of impact with volunteers, advisors and community partners across the country.",
+    summary: "Celebrating a year of impact with our community.",
     date: "22",
     month: "Nov",
     year: "2026",

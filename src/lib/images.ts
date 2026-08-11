@@ -1,10 +1,4 @@
-import { unlink } from "fs/promises";
-import path from "path";
-
-function localFilePath(publicPath: string): string | null {
-  if (!publicPath.startsWith("/images/")) return null;
-  return path.join(process.cwd(), "public", publicPath);
-}
+import { deleteImage } from "@/lib/storage";
 
 export async function deleteImageFiles(
   doc: Record<string, unknown>,
@@ -13,12 +7,6 @@ export async function deleteImageFiles(
   for (const field of imageFields) {
     const value = doc[field];
     if (typeof value !== "string" || !value) continue;
-    const filePath = localFilePath(value);
-    if (!filePath) continue;
-    try {
-      await unlink(filePath);
-    } catch {
-      // File may already be missing or shared; ignore.
-    }
+    await deleteImage(value);
   }
 }

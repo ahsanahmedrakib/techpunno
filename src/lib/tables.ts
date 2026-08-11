@@ -240,6 +240,19 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Describe the event details",
       },
       {
+        name: "summary",
+        label: "Summary",
+        type: "textarea",
+        required: true,
+        placeholder: "Short summary shown on the event card",
+      },
+      {
+        name: "image",
+        label: "Image path",
+        type: "image",
+        placeholder: "/images/...",
+      },
+      {
         name: "date",
         label: "Day",
         type: "text",

@@ -13,6 +13,7 @@ import {
   type ContactFormValues,
 } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { scrollToFirstError } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 
 const contactInfo = [
@@ -212,7 +213,9 @@ export default function Contact() {
               </div>
             ) : (
               <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit, (errs) =>
+                  scrollToFirstError(errs),
+                )}
                 noValidate
                 className="grid grid-cols-1 gap-5 sm:grid-cols-2"
               >

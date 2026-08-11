@@ -20,7 +20,7 @@ export default function News() {
   const [items, loading] = useTable<NewsItem>("news", newsItems);
   const [primary, secondary, ...rest] = items;
 
-  if (loading && items.length === 0) {
+  if (loading) {
     return (
       <section id="news" className="section-anchor bg-mist py-20 lg:py-28">
         <Container>

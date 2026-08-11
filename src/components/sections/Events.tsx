@@ -50,7 +50,7 @@ export default function Events() {
           ))}
         </Reveal>
 
-        {loading && items.length === 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <SkeletonEventCard />
             <SkeletonEventCard />
@@ -107,7 +107,7 @@ export default function Events() {
                         {event.title}
                       </h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
-                        {event.description}
+                        {event.summary}
                       </p>
                       <div className="mt-5 flex items-center justify-between border-t border-ink/5 pt-4">
                         <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft">

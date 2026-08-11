@@ -10,6 +10,7 @@ import {
 import { useVolunteerConfig } from "@/hooks/useVolunteerConfig";
 import { api } from "@/lib/api";
 import { volunteerSchema, type VolunteerFormValues } from "@/lib/validation";
+import { scrollToFirstError } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import {
@@ -85,6 +86,7 @@ export default function VolunteerForm() {
     register,
     handleSubmit,
     trigger,
+    getFieldState,
     setValue,
     watch,
     reset,
@@ -145,7 +147,10 @@ export default function VolunteerForm() {
     if (ok) {
       setStep((s) => Math.min(s + 1, steps.length - 1));
       scrollToTop();
+      return;
     }
+    const invalid = stepFields[step].find((f) => getFieldState(f).error);
+    if (invalid) scrollToFirstError({ [invalid]: true });
   };
 
   const goBack = () => {
@@ -267,7 +272,10 @@ export default function VolunteerForm() {
         ))}
       </ol>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form
+        onSubmit={handleSubmit(onSubmit, (errs) => scrollToFirstError(errs))}
+        noValidate
+      >
         <div key={step} className="animate-step-in">
           {step === 0 && (
             <div className="space-y-5">
@@ -350,7 +358,7 @@ export default function VolunteerForm() {
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
                     Occupation (পেশা) <span className="text-secondary">*</span>
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2" data-field="occupation">
                     {occupationOptions.map((opt) => (
                       <button
                         key={opt}
@@ -376,7 +384,7 @@ export default function VolunteerForm() {
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
                     Gender (লিঙ্গ) <span className="text-secondary">*</span>
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" data-field="gender">
                     {genderOptions.map((g) => (
                       <button
                         key={g}
@@ -623,7 +631,7 @@ export default function VolunteerForm() {
                       : "Highest Education Level (সর্বোচ্চ শিক্ষাগত যোগ্যতা)"}{" "}
                     <span className="text-secondary">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2" data-field="educationLevel">
                     {levelOptions.map((lvl) => (
                       <button
                         key={lvl}
@@ -651,7 +659,10 @@ export default function VolunteerForm() {
                     Interest Area (আগ্রহের ক্ষেত্র){" "}
                     <span className="text-secondary">*</span>
                   </label>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  <div
+                    className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3"
+                    data-field="interestAreas"
+                  >
                     {volunteerInterestOptions.map((opt) => {
                       const active = watchInterestAreas.includes(opt);
                       return (
@@ -691,7 +702,7 @@ export default function VolunteerForm() {
                     Membership Type (সদস্যপদ ধরন){" "}
                     <span className="text-secondary">*</span>
                   </label>
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" data-field="membershipType">
                     {[
                       {
                         key: "Ambassador",
@@ -810,7 +821,7 @@ export default function VolunteerForm() {
                     Paid By (পেমেন্ট মাধ্যম){" "}
                     <span className="text-secondary">*</span>
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" data-field="paidBy">
                     {paymentOptions.map((opt) => (
                       <button
                         key={opt}
