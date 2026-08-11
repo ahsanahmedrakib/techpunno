@@ -198,14 +198,13 @@ async function uploadPending(
     const fd = new FormData();
     fd.append("file", file);
     fd.append("dir", dir);
-    try {
-      const res = await axios.post<{ path?: string }>("/api/upload", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.data.path) results[fieldName] = res.data.path;
-    } catch {
-      /* skip failed uploads */
+    const res = await axios.post<{ path?: string }>("/api/upload", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (!res.data.path) {
+      throw new Error(`Upload failed for ${file.name}`);
     }
+    results[fieldName] = res.data.path;
   }
   return results;
 }
@@ -316,12 +315,22 @@ export default function RowForm({
       for (const [k, v] of Object.entries(uploaded)) {
         resolved[k] = v;
       }
+      for (const k of Object.keys(resolved)) {
+        if (resolved[k]?.startsWith("__pending:")) {
+          resolved[k] = "";
+        }
+      }
       fileRegistry.current.clear();
       const payload = toPayload(fields, resolved);
       if (questionsField) {
         payload.questions = questionsData;
       }
       await onSubmit(payload);
+    } catch (err) {
+      setSubmitting(false);
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      alert(`Could not save: ${message}`);
     } finally {
       setSubmitting(false);
     }

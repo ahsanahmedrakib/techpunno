@@ -12,8 +12,10 @@ export default function Skeleton({
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className={`animate-pulse rounded-xl bg-mist ${className}`}
-        />
+          className={`relative overflow-hidden rounded-xl bg-ink/10 ${className}`}
+        >
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/50 to-transparent" />
+        </div>
       ))}
     </>
   );
@@ -72,7 +74,7 @@ export function SkeletonBlogCard() {
 export function SkeletonEventCard() {
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm">
-      <div className="relative h-44 shrink-0 bg-mist">
+      <div className="relative h-44 shrink-0 bg-ink/10">
         <Skeleton className="absolute right-4 top-4 h-12 w-16" />
       </div>
       <div className="flex flex-1 flex-col p-6">

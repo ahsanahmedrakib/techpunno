@@ -4,6 +4,7 @@ import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import Skeleton from "@/components/common/Skeleton";
+import { safeImage } from "@/lib/imageUrl";
 import { api, type PagedResult } from "@/lib/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
@@ -159,9 +160,9 @@ export default function VolunteersGrid() {
                 >
                   <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
                   <div className="relative mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 bg-linear-to-br from-primary to-primary-dark shadow-lg shadow-primary/20">
-                    {member.image ? (
+                    {safeImage(member.image) ? (
                       <Image
-                        src={member.image}
+                        src={safeImage(member.image)}
                         alt={member.fullName ?? "Volunteer"}
                         fill
                         sizes="80px"

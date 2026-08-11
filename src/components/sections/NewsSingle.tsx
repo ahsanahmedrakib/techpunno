@@ -4,6 +4,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import { newsItems, type NewsItem } from "@/data/news";
+import { safeImage } from "@/lib/imageUrl";
 import { site } from "@/data/site";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
@@ -45,11 +46,11 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
       </h1>
       </Reveal>
 
-      {image && (
+      {safeImage(image) && (
         <Reveal variant="zoom" scale={0.96} delay={240}>
         <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl shadow-2xl shadow-ink/20">
           <Image
-            src={image}
+            src={safeImage(image)}
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, 768px"

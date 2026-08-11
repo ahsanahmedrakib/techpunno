@@ -3,6 +3,7 @@ import Link from "next/link";
 import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/data/blogs";
+import { safeImage } from "@/lib/imageUrl";
 
 export default function BlogSingle({ item }: { item: BlogPost }) {
   const { title, excerpt, category, author, readTime, date, image } = item;
@@ -46,11 +47,11 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
           </div>
         </Reveal>
 
-        {image && (
+        {safeImage(image) && (
           <Reveal variant="zoom" scale={0.96} delay={240}>
             <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl shadow-2xl shadow-ink/20">
               <Image
-                src={image}
+                src={safeImage(image)}
                 alt={title}
                 fill
                 sizes="(max-width: 768px) 100vw, 768px"

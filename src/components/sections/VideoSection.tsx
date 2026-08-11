@@ -16,7 +16,7 @@ export default function VideoSection() {
   const [current, setCurrent] = useState<Video>(items[0]);
   const activeVideo = items.find((v) => v.id === current.id) ?? items[0];
 
-  if (loading && videosData.length === 0) {
+  if (loading) {
     return (
       <section
         id="video"

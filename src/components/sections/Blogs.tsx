@@ -6,6 +6,7 @@ import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonBlogCard from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
+import { safeImage } from "@/lib/imageUrl";
 import { useTable } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +27,7 @@ export default function Blogs() {
         />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {loading && posts.length === 0 ? (
+          {loading ? (
             <>
               <SkeletonBlogCard />
               <SkeletonBlogCard />
@@ -47,7 +48,7 @@ export default function Blogs() {
                   <Hoverable className="group flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary hover:shadow-2xl hover:shadow-primary/15">
                     <div className="relative h-44 shrink-0 overflow-hidden">
                       <Image
-                        src={post.image || "/images/dummy.jpeg"}
+                        src={safeImage(post.image) || "/images/dummy.jpeg"}
                         alt={post.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"

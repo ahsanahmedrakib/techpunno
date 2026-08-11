@@ -3,6 +3,7 @@
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import type { TeamMember } from "@/data/team";
+import { safeImage } from "@/lib/imageUrl";
 import Image from "next/image";
 
 export default function TeamCard({
@@ -22,9 +23,9 @@ export default function TeamCard({
       <Hoverable className="group h-full rounded-3xl bg-linear-to-br from-primary via-secondary to-primary p-px shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15">
         <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white">
           <div className="relative aspect-4/3 w-full overflow-hidden bg-linear-to-br from-primary to-primary-dark">
-            {member.image ? (
+            {safeImage(member.image) ? (
               <Image
-                src={member.image}
+                src={safeImage(member.image)}
                 alt={member.name}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

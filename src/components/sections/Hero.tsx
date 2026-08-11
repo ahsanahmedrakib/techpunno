@@ -21,7 +21,7 @@ const statCards = [
 export default function Hero() {
   const [slides, loading] = useTable<HeroSlide>("hero", heroSlides);
 
-  if (loading && slides.length === 0) {
+  if (loading) {
     return <SkeletonHero />;
   }
 
