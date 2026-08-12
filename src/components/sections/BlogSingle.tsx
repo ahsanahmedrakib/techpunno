@@ -8,8 +8,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function BlogSingle({ item }: { item: BlogPost }) {
-  const { title, excerpt, category, author, authorImage, readTime, date, externalUrl } =
-    item;
+  const {
+    title,
+    excerpt,
+    category,
+    author,
+    authorImage,
+    readTime,
+    date,
+    externalUrl,
+  } = item;
   const isStatic = blogPosts.some((p) => p.id === item.id);
   const related = isStatic
     ? blogPosts.filter((p) => p.slug !== item.slug).slice(0, 3)
@@ -18,7 +26,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
 
   return (
     <Container className="py-16 lg:py-24">
-      <article className="mx-auto max-w-3xl">
+      <article>
         <Reveal variant="fade-left">
           <Link
             href="/#blogs"
@@ -90,7 +98,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
         {!iframeSrc && (
           <>
             <Reveal delay={240}>
-              <div className="min-w-0 overflow-hidden">
+              <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
                 <div
                   className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl"
                   dangerouslySetInnerHTML={{ __html: excerpt }}

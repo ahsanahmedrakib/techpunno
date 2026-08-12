@@ -62,7 +62,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
 
       {!iframeSrc && content.trim() && (
         <Reveal delay={240}>
-          <div className="min-w-0 overflow-hidden">
+          <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
             <div
               className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl"
               dangerouslySetInnerHTML={{ __html: content }}
