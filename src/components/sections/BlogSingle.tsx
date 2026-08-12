@@ -1,13 +1,14 @@
-import ImageSwiper from "@/components/common/ImageSwiper";
-import Link from "next/link";
 import Container from "@/components/common/Container";
+import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { singleImageList } from "@/lib/imageUrl";
 import { formatDate, safeUrl } from "@/lib/utils";
+import Link from "next/link";
 
 export default function BlogSingle({ item }: { item: BlogPost }) {
-  const { title, excerpt, category, author, readTime, date, externalUrl } = item;
+  const { title, excerpt, category, author, readTime, date, externalUrl } =
+    item;
   const isStatic = blogPosts.some((p) => p.id === item.id);
   const related = isStatic
     ? blogPosts.filter((p) => p.slug !== item.slug).slice(0, 3)
@@ -66,7 +67,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
               <iframe
                 src={iframeSrc}
                 title={title}
-                className="h-[70vh] w-full"
+                className="h-screen w-full"
                 loading="lazy"
                 allowFullScreen
                 sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
@@ -126,3 +127,4 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
     </Container>
   );
 }
+

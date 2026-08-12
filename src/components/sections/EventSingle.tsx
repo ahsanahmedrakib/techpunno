@@ -123,7 +123,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
             <iframe
               src={iframeSrc}
               title={title}
-              className="h-[70vh] w-full"
+              className="h-screen w-full"
               loading="lazy"
               allowFullScreen
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
@@ -151,7 +151,9 @@ export default function EventSingle({ item }: { item: EventItem }) {
                     </span>
                     Event Summary
                   </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-ink">{summary}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-ink">
+                    {summary}
+                  </p>
                 </div>
               </Reveal>
 
@@ -260,7 +262,8 @@ export default function EventSingle({ item }: { item: EventItem }) {
                           <div className="mt-auto flex items-center justify-between border-t border-ink/5 pt-3 text-xs text-ink-soft">
                             <span className="inline-flex items-center gap-1.5">
                               <Calendar className="h-3.5 w-3.5" />
-                              {getDateParts(e.date).day} {getDateParts(e.date).month}{" "}
+                              {getDateParts(e.date).day}{" "}
+                              {getDateParts(e.date).month}{" "}
                               {getDateParts(e.date).year}
                             </span>
                             <span className="inline-flex items-center gap-1.5">

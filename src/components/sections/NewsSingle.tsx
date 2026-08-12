@@ -75,7 +75,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
             <iframe
               src={iframeSrc}
               title={title}
-              className="h-[70vh] w-full"
+              className="h-screen w-full"
               loading="lazy"
               allowFullScreen
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
