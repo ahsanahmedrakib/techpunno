@@ -4,7 +4,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
-import SkeletonEventCard from "@/components/common/Skeleton";
+import { SkeletonEventCard } from "@/components/common/Skeleton";
 import { events, type EventItem } from "@/data/events";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";

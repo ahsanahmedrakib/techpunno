@@ -104,8 +104,11 @@ export default function Contact() {
       await api.create("contacts", values);
       toast.success("Message sent successfully!");
     } catch (error) {
-      console.error("Failed to save contact message:", error);
-      toast.error("Failed to send message. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to send message. Please try again.",
+      );
     }
     reset();
   };

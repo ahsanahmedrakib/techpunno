@@ -5,7 +5,7 @@ import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
-import SkeletonVideoCard from "@/components/common/Skeleton";
+import { SkeletonVideoCard, SkeletonVideoItem } from "@/components/common/Skeleton";
 import { videos, youtubeEmbed, youtubeThumb, type Video } from "@/data/videos";
 import Image from "next/image";
 import { useTable } from "@/lib/api";
@@ -34,9 +34,9 @@ export default function VideoSection() {
               <SkeletonVideoCard />
             </div>
             <div className="space-y-4 lg:col-span-2">
-              <SkeletonVideoCard />
-              <SkeletonVideoCard />
-              <SkeletonVideoCard />
+              <SkeletonVideoItem />
+              <SkeletonVideoItem />
+              <SkeletonVideoItem />
             </div>
           </div>
         </Container>

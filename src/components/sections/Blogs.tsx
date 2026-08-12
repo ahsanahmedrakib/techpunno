@@ -4,7 +4,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
-import SkeletonBlogCard from "@/components/common/Skeleton";
+import { SkeletonBlogCard } from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { firstImage } from "@/lib/imageUrl";
 import { useTable } from "@/lib/api";

@@ -96,10 +96,37 @@ export function SkeletonEventCard() {
 
 export function SkeletonVideoCard() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-sm">
-      <Skeleton className="aspect-video w-full" />
-      <div className="p-4">
-        <Skeleton className="h-5 w-full" />
+    <div>
+      <div className="overflow-hidden rounded-3xl bg-ink shadow-2xl shadow-ink/20 ring-1 ring-ink/10">
+        <div className="relative aspect-video w-full overflow-hidden bg-black/25">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/10 to-transparent" />
+        </div>
+      </div>
+      <div className="mt-5 flex items-start gap-3">
+        <span className="relative mt-1 block h-8 w-8 shrink-0 overflow-hidden rounded-full bg-secondary/30">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/40 to-transparent" />
+        </span>
+        <div className="relative mt-2.5 h-5 max-w-md flex-1 overflow-hidden rounded bg-ink/10">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/40 to-transparent" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonVideoItem() {
+  return (
+    <div className="flex w-full gap-4 rounded-2xl border border-ink/5 bg-white p-3 shadow-sm">
+      <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-ink/10">
+        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/50 to-transparent" />
+      </div>
+      <div className="min-w-0 flex-1 py-1">
+        <div className="relative h-4 w-full overflow-hidden rounded bg-ink/10">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/50 to-transparent" />
+        </div>
+        <div className="relative mt-2.5 h-4 w-2/3 overflow-hidden rounded bg-ink/10">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/50 to-transparent" />
+        </div>
       </div>
     </div>
   );

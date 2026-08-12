@@ -3,7 +3,7 @@
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
-import SkeletonHero from "@/components/common/Skeleton";
+import { SkeletonHero } from "@/components/common/Skeleton";
 import { heroSlides, type HeroSlide } from "@/data/hero";
 import { site } from "@/data/site";
 import { useTable } from "@/lib/api";

@@ -87,8 +87,7 @@ export async function saveImage(
     fs.writeFileSync(filePath, buffer);
 
     return `${relativeDir}/${fileName}`;
-  } catch (error) {
-    console.warn("Filesystem write failed, falling back to DB:", error);
+  } catch {
     return saveImageToDB(base64Data, folderName, id);
   }
 }
@@ -114,8 +113,8 @@ export async function deleteImage(imageUrl: string): Promise<void> {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-  } catch (error) {
-    console.error("Failed to delete image file:", imageUrl, error);
+  } catch {
+    // File may already be missing or shared; ignore.
   }
 }
 

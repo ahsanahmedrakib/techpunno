@@ -3,7 +3,7 @@
 import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
-import SkeletonTeamCard from "@/components/common/Skeleton";
+import { SkeletonTeamCard } from "@/components/common/Skeleton";
 import { coreTeam, type TeamMember } from "@/data/team";
 import { useTable } from "@/lib/api";
 
