@@ -34,6 +34,19 @@ function slugify(text: string): string {
   return base || "untitled";
 }
 
+function isBanglaTitle(text: string): boolean {
+  return /[\u0980-\u09FF]/.test(text.trim());
+}
+
+async function generateSlugIfNeeded(
+  key: TableKey,
+  title: string,
+  excludeId?: string,
+): Promise<string | null> {
+  if (!title.trim() || isBanglaTitle(title)) return null;
+  return generateUniqueSlug(key, slugify(title), excludeId);
+}
+
 function hasSlugField(key: TableKey): boolean {
   return tables[key].fields.some((f) => f.name === "slug");
 }
@@ -271,8 +284,10 @@ export async function createDoc(
   }
   if (hasSlugField(key)) {
     const title = String(doc.title || doc.name || "");
-    const base = slugify(title);
-    doc.slug = await generateUniqueSlug(key, base);
+    const slug = await generateSlugIfNeeded(key, title);
+    if (slug) {
+      doc.slug = slug;
+    }
   }
   const result = await coll.insertOne(doc as never);
   doc._id = result.insertedId;
@@ -289,14 +304,16 @@ export async function updateDoc(
   doc.updatedAt = new Date().toISOString();
   if (hasSlugField(key) && (doc.title || doc.name)) {
     const title = String(doc.title || doc.name || "");
-    const base = slugify(title);
     const filter = await resolveIdFilter(key, rawId);
     const existing = await coll.findOne(filter, { projection: { _id: 1 } });
-    doc.slug = await generateUniqueSlug(
+    const slug = await generateSlugIfNeeded(
       key,
-      base,
+      title,
       existing ? String(existing._id) : undefined,
     );
+    if (slug) {
+      doc.slug = slug;
+    }
   }
   const filter = await resolveIdFilter(key, rawId);
   const result = await coll.findOneAndUpdate(
