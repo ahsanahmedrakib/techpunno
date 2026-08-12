@@ -8,7 +8,6 @@ import {
   ArrowLeft,
   Calendar,
   CheckCircle2,
-  ChevronRight,
   MapPin,
   Monitor,
 } from "lucide-react";
@@ -19,7 +18,6 @@ export default function EventSingle({ item }: { item: EventItem }) {
   const {
     title,
     description,
-    summary,
     date,
     location,
     mode,
@@ -90,6 +88,28 @@ export default function EventSingle({ item }: { item: EventItem }) {
                   <Calendar className="h-4 w-4 text-secondary-light" />
                   {day} {month} {year}
                 </span>
+                <span className="inline-flex items-center gap-2">
+                  <Monitor className="h-4 w-4 text-secondary-light" />
+                  Mode:
+                  <span className="font-semibold text-ink">{mode}</span>
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-secondary-light" />
+                  Status
+                  <span
+                    className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${
+                      isUpcoming
+                        ? "bg-primary-lighter text-primary"
+                        : "bg-mist text-blue-900"
+                    }`}
+                  >
+                    {isUpcoming ? "Register Open" : "Completed"}
+                  </span>
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-secondary-light" />
+                  {day} {month} {year}
+                </span>
               </div>
             </div>
 
@@ -136,95 +156,13 @@ export default function EventSingle({ item }: { item: EventItem }) {
         <>
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
             <Reveal delay={240}>
-              <div
-                className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink"
-                dangerouslySetInnerHTML={{ __html: description }}
-              />
+              <div className="min-w-0 overflow-hidden">
+                <div
+                  className="prose prose-lg max-w-none prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
+              </div>
             </Reveal>
-
-            <aside className="space-y-6">
-              <Reveal delay={300}>
-                <div className="rounded-3xl border-2 border-primary/40 bg-primary-lighter/50 p-7">
-                  <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-primary uppercase">
-                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-white">
-                      <CheckCircle2 className="h-4 w-4" />
-                    </span>
-                    Event Summary
-                  </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-ink">
-                    {summary}
-                  </p>
-                </div>
-              </Reveal>
-
-              <Reveal delay={360}>
-                <div className="rounded-3xl border border-ink/10 bg-white p-7 shadow-sm">
-                  <h2 className="text-sm font-bold tracking-wider text-ink uppercase">
-                    Quick Info
-                  </h2>
-                  <ul className="mt-5 space-y-4 text-sm">
-                    <li className="flex items-center justify-between gap-4">
-                      <span className="inline-flex items-center gap-2 text-ink-soft">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        Location
-                      </span>
-                      <span className="font-semibold text-ink">{location}</span>
-                    </li>
-                    <li className="flex items-center justify-between gap-4">
-                      <span className="inline-flex items-center gap-2 text-ink-soft">
-                        <Calendar className="h-4 w-4 text-primary" />
-                        Date
-                      </span>
-                      <span className="font-semibold text-ink">
-                        {day} {month} {year}
-                      </span>
-                    </li>
-                    <li className="flex items-center justify-between gap-4">
-                      <span className="inline-flex items-center gap-2 text-ink-soft">
-                        <Monitor className="h-4 w-4 text-primary" />
-                        Mode
-                      </span>
-                      <span className="font-semibold text-ink">{mode}</span>
-                    </li>
-                    <li className="flex items-center justify-between gap-4">
-                      <span className="inline-flex items-center gap-2 text-ink-soft">
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                        Status
-                      </span>
-                      <span
-                        className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${
-                          isUpcoming
-                            ? "bg-primary-lighter text-primary"
-                            : "bg-mist text-ink-soft"
-                        }`}
-                      >
-                        {isUpcoming ? "Register Open" : "Completed"}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </Reveal>
-
-              <Reveal delay={420}>
-                <div className="rounded-3xl bg-linear-to-br from-primary to-primary-dark p-7 text-center shadow-xl shadow-primary/25">
-                  <p className="text-lg font-bold text-white">
-                    {isUpcoming ? "Don't miss this event!" : "Missed this one?"}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-white/85">
-                    {isUpcoming
-                      ? "Register now and join the TechPunno community."
-                      : "Explore our other upcoming workshops and campaigns."}
-                  </p>
-                  <Link
-                    href="/#events"
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-primary shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary-lighter"
-                  >
-                    Explore More Events
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </Reveal>
-            </aside>
           </div>
 
           {related.length > 0 && (
@@ -259,7 +197,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
                           <h3 className="text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
                             {e.title}
                           </h3>
-                          <div className="mt-auto flex items-center justify-between border-t border-ink/5 pt-3 text-xs text-ink-soft">
+                          <div className="mt-auto flex items-center justify-between border-t border-ink/5 pt-3 text-xs">
                             <span className="inline-flex items-center gap-1.5">
                               <Calendar className="h-3.5 w-3.5" />
                               {getDateParts(e.date).day}{" "}

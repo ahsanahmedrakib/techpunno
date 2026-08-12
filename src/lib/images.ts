@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { deleteImageFromDB, saveImageToDB } from "./imageStore";
+import { EXTENSION_MAP } from "./imageTypes";
 
 const ALLOWED_FOLDERS = [
   "services",
@@ -18,16 +19,6 @@ const ALLOWED_FOLDERS = [
   "certificateconfig",
   "volunteerconfig",
 ];
-
-const EXTENSION_MAP: Record<string, string> = {
-  jpeg: "jpg",
-  jpg: "jpg",
-  png: "png",
-  gif: "gif",
-  webp: "webp",
-  "svg+xml": "svg",
-  svg: "svg",
-};
 
 function validateFolderName(folderName: string): void {
   if (!ALLOWED_FOLDERS.includes(folderName)) {
@@ -54,9 +45,7 @@ export async function saveImage(
 
   validateFolderName(folderName);
 
-  const matches = base64Data.match(
-    /^data:image\/([A-Za-z-+\/]+);base64,(.+)$/,
-  );
+  const matches = base64Data.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
   if (!matches || matches?.length !== 3) {
     throw new Error("Invalid base64 image data");
   }
@@ -135,3 +124,4 @@ export async function deleteImageFiles(
     }
   }
 }
+

@@ -79,10 +79,12 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
         {!iframeSrc && (
           <>
             <Reveal delay={240}>
-              <div
-                className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink"
-                dangerouslySetInnerHTML={{ __html: excerpt }}
-              />
+              <div className="min-w-0 overflow-hidden">
+                <div
+                  className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl"
+                  dangerouslySetInnerHTML={{ __html: excerpt }}
+                />
+              </div>
             </Reveal>
 
             <Reveal delay={400}>

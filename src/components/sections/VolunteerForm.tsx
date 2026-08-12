@@ -51,7 +51,8 @@ const stepFields: (keyof VolunteerFormValues)[][] = [
     "image",
   ],
   [
-    "institute",
+    "educationalInstitute",
+    "company",
     "department",
     "designation",
     "educationLevel",
@@ -63,7 +64,6 @@ const stepFields: (keyof VolunteerFormValues)[][] = [
 
 const genderOptions = ["Male", "Female", "Other"];
 const occupationOptions = ["Student", "Job Holder", "Other"];
-const levelOptions = ["School", "College", "University", "Other"];
 const paymentOptions = ["bKash", "Nagad", "Cash"];
 
 function fieldError(errors: object, name: string): string | undefined {
@@ -110,7 +110,6 @@ export default function VolunteerForm() {
   const watchOccupation = watch("occupation");
   const watchMembershipType = watch("membershipType");
   const watchPaidBy = watch("paidBy");
-  const watchEducationLevel = watch("educationLevel");
   const watchInterestAreas = watch("interestAreas") ?? [];
   const watchDeclaration = watch("declaration");
 
@@ -569,31 +568,47 @@ export default function VolunteerForm() {
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
-                    {watchOccupation === "Student"
-                      ? "Institution Name (প্রতিষ্ঠানের নাম)"
-                      : watchOccupation === "Job Holder"
-                        ? "Organization / Company Name (প্রতিষ্ঠানের নাম)"
-                        : "Institution / Organization Name (প্রতিষ্ঠানের নাম)"}{" "}
+                    Educational Institute (শিক্ষা প্রতিষ্ঠান){" "}
                     <span className="text-secondary">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder={
-                      watchOccupation === "Student"
-                        ? "e.g. XYZ School & College"
-                        : watchOccupation === "Job Holder"
-                          ? "e.g. ABC Technologies Ltd."
-                          : "e.g. XYZ School & College or company name"
+                      watchOccupation === "Job Holder"
+                        ? "e.g. XYZ School & College / ABC University (highest)"
+                        : "e.g. XYZ School & College / ABC University"
                     }
-                    {...register("institute")}
-                    className={inputCls(fieldError(errors, "institute"))}
+                    {...register("educationalInstitute")}
+                    className={inputCls(fieldError(errors, "educationalInstitute"))}
                   />
-                  {fieldError(errors, "institute") && (
+                  <p className="mt-1.5 text-xs text-ink-soft/70">
+                    Your school / college / university (highest level attended).
+                  </p>
+                  {fieldError(errors, "educationalInstitute") && (
                     <p className="mt-1.5 text-xs font-medium text-secondary">
-                      {fieldError(errors, "institute")}
+                      {fieldError(errors, "educationalInstitute")}
                     </p>
                   )}
                 </div>
+                {watchOccupation === "Job Holder" && (
+                  <div>
+                    <label className="mb-1.5 block text-sm font-semibold text-ink">
+                      Company Name (কোম্পানির নাম){" "}
+                      <span className="text-secondary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. ABC Technologies Ltd."
+                      {...register("company")}
+                      className={inputCls(fieldError(errors, "company"))}
+                    />
+                    {fieldError(errors, "company") && (
+                      <p className="mt-1.5 text-xs font-medium text-secondary">
+                        {fieldError(errors, "company")}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-ink">
                     Department / Section (বিভাগ/শাখা)
@@ -631,22 +646,15 @@ export default function VolunteerForm() {
                       : "Highest Education Level (সর্বোচ্চ শিক্ষাগত যোগ্যতা)"}{" "}
                     <span className="text-secondary">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-2" data-field="educationLevel">
-                    {levelOptions.map((lvl) => (
-                      <button
-                        key={lvl}
-                        type="button"
-                        onClick={() =>
-                          setValue("educationLevel", lvl, {
-                            shouldValidate: true,
-                          })
-                        }
-                        className={radioCard(watchEducationLevel === lvl)}
-                      >
-                        {lvl}
-                      </button>
-                    ))}
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bachelor of Science in CSE"
+                    {...register("educationLevel")}
+                    className={inputCls(fieldError(errors, "educationLevel"))}
+                  />
+                  <p className="mt-1.5 text-xs text-ink-soft/70">
+                    e.g. SSC, HSC, Bachelor&apos;s, Master&apos;s, PhD
+                  </p>
                   {fieldError(errors, "educationLevel") && (
                     <p className="mt-1.5 text-xs font-medium text-secondary">
                       {fieldError(errors, "educationLevel")}

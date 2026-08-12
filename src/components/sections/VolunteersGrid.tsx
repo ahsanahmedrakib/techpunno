@@ -4,11 +4,11 @@ import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import Skeleton from "@/components/common/Skeleton";
-import { safeImage } from "@/lib/imageUrl";
 import { api, type PagedResult } from "@/lib/api";
+import { safeImage } from "@/lib/imageUrl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
-  Building2,
+  BookOpenCheck,
   ChevronLeft,
   ChevronRight,
   GraduationCap,
@@ -16,17 +16,19 @@ import {
   Search,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 interface VolunteerRow {
   id: string;
   fullName?: string;
-  institute?: string;
+  educationalInstitute?: string;
   educationLevel?: string;
   membershipType?: string;
   image?: string;
   status?: string;
   createdAt?: string;
+  volunteerId?: string;
 }
 
 const PAGE_SIZE = 30;
@@ -152,49 +154,58 @@ export default function VolunteersGrid() {
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {docs.map((member, i) => (
-                <Reveal
+                <Link
                   key={member.id}
-                  variant={i % 2 === 0 ? "fade-up" : "zoom"}
-                  delay={(i % 3) * 100}
-                  className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
+                  href={`/volunteers/${member.volunteerId || member.id}`}
+                  className="block h-full"
                 >
-                  <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
-                  <div className="relative mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 bg-linear-to-br from-primary to-primary-dark shadow-lg shadow-primary/20">
-                    {safeImage(member.image) ? (
-                      <Image
-                        src={safeImage(member.image)}
-                        alt={member.fullName ?? "Volunteer"}
-                        fill
-                        sizes="80px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="grid h-full w-full place-items-center text-2xl font-extrabold text-white">
-                        {(member.fullName ?? "V")
-                          .trim()
-                          .charAt(0)
-                          .toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="text-base font-bold text-ink">
-                    {member.fullName}
-                  </h3>
-                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary-lighter px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-                    <HeartHandshake className="h-3 w-3" />
-                    {member.membershipType ?? "Volunteer"}
-                  </span>
-                  <div className="mt-4 space-y-1.5">
-                    <p className="flex items-center justify-center gap-1.5 text-sm font-medium text-ink-soft">
-                      <Building2 className="h-4 w-4 shrink-0 text-primary" />
-                      <span className="truncate">{member.institute}</span>
-                    </p>
-                    <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-ink-soft/70">
-                      <GraduationCap className="h-4 w-4 shrink-0 text-primary" />
-                      {member.educationLevel ?? "Member"}
-                    </p>
-                  </div>
-                </Reveal>
+                  <Reveal
+                    variant={i % 2 === 0 ? "fade-up" : "zoom"}
+                    delay={(i % 3) * 100}
+                    className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
+                  >
+                    <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
+                    <div className="relative mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 bg-linear-to-br from-primary to-primary-dark shadow-lg shadow-primary/20">
+                      {safeImage(member.image) ? (
+                        <Image
+                          src={safeImage(member.image)}
+                          alt={member.fullName ?? "Volunteer"}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="grid h-full w-full place-items-center text-2xl font-extrabold text-white">
+                          {(member.fullName ?? "V")
+                            .trim()
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="text-base font-bold text-ink">
+                      {member.fullName}
+                    </h3>
+                    <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary-lighter px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
+                      <HeartHandshake className="h-3 w-3" />
+                      {member.membershipType ?? "Volunteer"}
+                    </span>
+                    <div className="mt-4 space-y-1.5">
+                      <p className="flex items-center justify-center gap-1.5 text-sm font-medium text-ink-soft">
+                        <BookOpenCheck className="h-4 w-4 shrink-0 text-primary" />
+                        <span className="truncate">
+                          {member.educationLevel}
+                        </span>
+                      </p>
+                      {member?.educationalInstitute && (
+                        <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-ink-soft/70">
+                          <GraduationCap className="h-4 w-4 shrink-0 text-primary" />
+                          {member?.educationalInstitute}
+                        </p>
+                      )}
+                    </div>
+                  </Reveal>
+                </Link>
               ))}
             </div>
 

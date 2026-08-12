@@ -3,6 +3,7 @@
 import type { FieldDef } from "@/lib/tables";
 import axios from "axios";
 import { safeImage } from "@/lib/imageUrl";
+import { isAllowedImageType } from "@/lib/imageTypes";
 import { Camera, X } from "lucide-react";
 import Image from "next/image";
 import RichTextEditor from "./RichTextEditor";
@@ -119,7 +120,12 @@ function ImageUpload({
   }
 
   const handleFile = (file: File) => {
-    if (!file.type.startsWith("image/")) return;
+    if (!isAllowedImageType(file.type)) {
+      toast.error(
+        "Unsupported image type. Allowed: JPG, PNG, WEBP, SVG",
+      );
+      return;
+    }
     setFileName(file.name);
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target?.result as string);
@@ -221,10 +227,16 @@ function ImageUploadMulti({
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const files = Array.from(list).filter((f) => f.type.startsWith("image/"));
-    if (files.length === 0) return;
+    const files = Array.from(list);
+    const allowed = files.filter((f) => isAllowedImageType(f.type));
+    if (allowed.length !== files.length) {
+      toast.error(
+        "Some files were skipped. Allowed types: JPG, PNG, WEBP, SVG",
+      );
+    }
+    if (allowed.length === 0) return;
     const next = [...items];
-    for (const file of files) {
+    for (const file of allowed) {
       const key = `${field.name}::${pendingFileKey++}`;
       registry?.current.set(key, file);
       next.push(`__pending:${key}`);

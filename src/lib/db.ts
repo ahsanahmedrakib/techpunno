@@ -73,7 +73,7 @@ async function generateUniqueSlug(
   }
 }
 
-function mapDoc<T>(doc: Record<string, unknown>): T {
+export function mapDoc<T>(doc: Record<string, unknown>): T {
   const mongoId = String(doc._id);
   const { ...rest } = doc;
   const id = rest.id !== undefined ? rest.id : mongoId;
@@ -258,7 +258,9 @@ export async function createDoc(
         409,
       );
     }
-    doc.volunteerId = `TP-VL-${uniqueIdWithPhoneNumber(mobile)}`;
+    doc.volunteerId = `TP-${
+      body.membershipType === "Ambassador" ? "AM" : "VL"
+    }-${uniqueIdWithPhoneNumber(mobile)}`;
   }
   const now = new Date().toISOString();
   doc.createdAt = now;
