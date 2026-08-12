@@ -203,6 +203,12 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "e.g. John Smith",
       },
       {
+        name: "authorImage",
+        label: "Author image (optional)",
+        type: "image",
+        placeholder: "/images/...",
+      },
+      {
         name: "readTime",
         label: "Read time",
         type: "text",

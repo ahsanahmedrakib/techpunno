@@ -13,9 +13,9 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const statCards = [
-  { value: "500+", label: "Volunteers" },
-  { value: "40+", label: "Events Held" },
-  { value: "25k+", label: "People Reached" },
+  { value: "30+", label: "Volunteers" },
+  { value: "10+", label: "Events Held" },
+  { value: "2.5k+", label: "People Reached" },
 ];
 
 export default function Hero() {

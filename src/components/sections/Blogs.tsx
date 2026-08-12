@@ -6,9 +6,9 @@ import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import { SkeletonBlogCard } from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
+import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
 import { formatDate } from "@/lib/utils";
-import { useTable } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -35,7 +35,7 @@ export default function Blogs() {
               <SkeletonBlogCard />
             </>
           ) : (
-            posts.map((post, index) => (
+            posts?.map((post, index) => (
               <Reveal
                 key={post.id}
                 variant={index % 2 === 0 ? "fade-up" : "zoom"}
@@ -66,7 +66,7 @@ export default function Blogs() {
                         {post.title}
                       </h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
-                        {post.summary || post.excerpt}
+                        {post.summary}
                       </p>
                       <div className="mt-5 flex items-center justify-between border-t border-ink/5 pt-4 text-xs text-ink-soft">
                         <span className="inline-flex items-center gap-2 font-medium">
@@ -90,3 +90,4 @@ export default function Blogs() {
     </section>
   );
 }
+

@@ -2,12 +2,13 @@ import Container from "@/components/common/Container";
 import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/data/blogs";
-import { singleImageList } from "@/lib/imageUrl";
+import { safeImage, singleImageList } from "@/lib/imageUrl";
 import { formatDate, safeUrl } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function BlogSingle({ item }: { item: BlogPost }) {
-  const { title, excerpt, category, author, readTime, date, externalUrl } =
+  const { title, excerpt, category, author, authorImage, readTime, date, externalUrl } =
     item;
   const isStatic = blogPosts.some((p) => p.id === item.id);
   const related = isStatic
@@ -46,9 +47,19 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
 
         <Reveal delay={200}>
           <div className="mt-4 flex items-center gap-2 text-sm text-ink-soft">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
-              {author.charAt(0)}
-            </span>
+            {safeImage(authorImage) ? (
+              <Image
+                src={safeImage(authorImage)}
+                alt={author}
+                width={36}
+                height={36}
+                className="h-9 w-9 rounded-full border-2 border-primary/30 bg-mist object-cover"
+              />
+            ) : (
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
+                {author.charAt(0)}
+              </span>
+            )}
             <span className="font-medium text-ink">{author}</span>
           </div>
         </Reveal>

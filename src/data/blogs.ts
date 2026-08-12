@@ -5,6 +5,7 @@ export type BlogPost = {
   excerpt: string;
   category: string;
   author: string;
+  authorImage?: string;
   readTime: string;
   date: string;
   slug?: string;
