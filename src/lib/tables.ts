@@ -175,11 +175,18 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Enter the blog title",
       },
       {
+        name: "summary",
+        label: "Summary",
+        type: "textarea",
+        required: true,
+        placeholder: "Short summary shown on the blog card",
+      },
+      {
         name: "excerpt",
-        label: "Excerpt",
+        label: "Description",
         type: "richtext",
         required: true,
-        placeholder: "Short summary of the blog post",
+        placeholder: "Full description shown on the single view",
       },
       {
         name: "category",
