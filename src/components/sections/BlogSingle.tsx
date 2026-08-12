@@ -1,12 +1,12 @@
-import Image from "next/image";
+import ImageSwiper from "@/components/common/ImageSwiper";
 import Link from "next/link";
 import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/data/blogs";
-import { safeImage } from "@/lib/imageUrl";
+import { singleImageList } from "@/lib/imageUrl";
 
 export default function BlogSingle({ item }: { item: BlogPost }) {
-  const { title, excerpt, category, author, readTime, date, image } = item;
+  const { title, excerpt, category, author, readTime, date } = item;
   const related = blogPosts.filter((p) => p.slug !== item.slug).slice(0, 3);
 
   return (
@@ -47,17 +47,10 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
           </div>
         </Reveal>
 
-        {safeImage(image) && (
+        {singleImageList(item).length > 0 && (
           <Reveal variant="zoom" scale={0.96} delay={240}>
-            <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl shadow-2xl shadow-ink/20">
-              <Image
-                src={safeImage(image)}
-                alt={title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
-                priority
-              />
+            <div className="mt-8">
+              <ImageSwiper images={singleImageList(item)} alt={title} />
             </div>
           </Reveal>
         )}

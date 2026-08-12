@@ -19,6 +19,7 @@ export type FieldType =
   | "select"
   | "multiselect"
   | "image"
+  | "images"
   | "list"
   | "readonly"
   | "date"
@@ -209,10 +210,16 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "e.g. Jul 15, 2026",
       },
       {
-        name: "image",
-        label: "Image path",
+        name: "cardImage",
+        label: "Card image",
         type: "image",
         placeholder: "/images/...",
+      },
+      {
+        name: "images",
+        label: "Images (multiple)",
+        type: "images",
+        placeholder: "Upload one or more images",
       },
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
@@ -247,10 +254,16 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Short summary shown on the event card",
       },
       {
-        name: "image",
-        label: "Image path",
+        name: "cardImage",
+        label: "Card image",
         type: "image",
         placeholder: "/images/...",
+      },
+      {
+        name: "images",
+        label: "Images (multiple)",
+        type: "images",
+        placeholder: "Upload one or more images",
       },
       {
         name: "date",
@@ -412,10 +425,16 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Select badge type",
       },
       {
-        name: "image",
-        label: "Image path",
+        name: "cardImage",
+        label: "Card image",
         type: "image",
         placeholder: "/images/...",
+      },
+      {
+        name: "images",
+        label: "Images (multiple)",
+        type: "images",
+        placeholder: "Upload one or more images",
       },
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],

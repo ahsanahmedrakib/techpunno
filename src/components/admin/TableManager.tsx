@@ -9,6 +9,7 @@ import {
   type PagedResult,
 } from "@/lib/api";
 import type { TableConfig, TableKey } from "@/lib/tables";
+import { safeImage } from "@/lib/imageUrl";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Check, Eye, Hourglass, Inbox, Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
@@ -52,7 +53,9 @@ export default function TableManager({ tableKey, config }: Props) {
   const statusField = config.statusField;
   const statusOptions = config.statusOptions ?? [];
 
-  const imageField = config.fields.find((f) => f.type === "image");
+  const imageField = config.fields.find(
+  (f) => f.type === "image" || f.type === "images",
+);
   const columns =
     imageField && !config.listColumns.includes(imageField.name)
       ? [imageField.name, ...config.listColumns]
@@ -366,9 +369,17 @@ export default function TableManager({ tableKey, config }: Props) {
                         >
                           {columns.map((col) => {
                             const val = String(cellValue(row, col));
+                            const rawVal = row[col];
                             const field = getField(col);
+                            const isImagesField = field?.type === "images";
+                            const safeSrc = safeImage(
+                              isImagesField && Array.isArray(rawVal)
+                                ? String(rawVal[0] ?? "")
+                                : String(rawVal),
+                            );
                             const isImage =
-                              field?.type === "image" && val !== "\u2014";
+                              (field?.type === "image" || isImagesField) &&
+                              safeSrc !== "";
                             const isBadge =
                               field?.type === "select" ||
                               col === "mode" ||
@@ -380,7 +391,7 @@ export default function TableManager({ tableKey, config }: Props) {
                               <td key={col} className="px-4 py-3 text-ink">
                                 {isImage ? (
                                   <Image
-                                    src={val}
+                                    src={safeSrc}
                                     alt={String(row.title ?? row.name ?? "")}
                                     width={48}
                                     height={48}

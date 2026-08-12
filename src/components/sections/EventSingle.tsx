@@ -1,6 +1,8 @@
 import Container from "@/components/common/Container";
+import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
 import { events, type EventItem } from "@/data/events";
+import { firstImage, singleImageList } from "@/lib/imageUrl";
 import {
   ArrowLeft,
   Calendar,
@@ -24,7 +26,6 @@ export default function EventSingle({ item }: { item: EventItem }) {
     mode,
     category,
     status,
-    // image,
   } = item;
   const isUpcoming = status === "upcoming";
   const related = events.filter((e) => e.slug !== item.slug).slice(0, 3);
@@ -103,21 +104,13 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </header>
       </Reveal>
 
-      {/* {image && (
+      {singleImageList(item).length > 0 && (
         <Reveal variant="zoom" scale={0.97} delay={160}>
-          <div className="relative mt-8 aspect-16/7 w-full overflow-hidden rounded-3xl shadow-2xl shadow-ink/20">
-            <Image
-              src={image}
-              alt={title}
-              fill
-              sizes="(max-width: 768px) 100vw, 1100px"
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
+          <div className="mt-8">
+            <ImageSwiper images={singleImageList(item)} alt={title} />
           </div>
         </Reveal>
-      )} */}
+      )}
 
       <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
         <Reveal delay={240}>
@@ -223,9 +216,9 @@ export default function EventSingle({ item }: { item: EventItem }) {
                 >
                   <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
                     <div className="relative h-36 shrink-0 overflow-hidden bg-mist">
-                      {e.image ? (
+                      {firstImage(e) ? (
                         <Image
-                          src={e.image}
+                          src={firstImage(e)}
                           alt={e.title}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"

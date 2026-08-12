@@ -82,7 +82,7 @@ export async function DELETE(req: NextRequest) {
     }
     if (existing) {
       const imageFields = tables[body.table].fields
-        .filter((f) => f.type === "image")
+        .filter((f) => f.type === "image" || f.type === "images")
         .map((f) => f.name);
       await deleteImageFiles(existing, imageFields);
     }

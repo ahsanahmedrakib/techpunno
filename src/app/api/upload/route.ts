@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadImage } from "@/lib/storage";
+import { saveImage } from "@/lib/images";
 
 export const dynamic = "force-dynamic";
 
@@ -14,12 +14,11 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const path = await uploadImage({
-      buffer,
-      filename: file.name,
-      dir,
-      contentType: file.type,
-    });
+    const mime = file.type || "image/png";
+    const dataUrl = `data:${mime};base64,${buffer.toString("base64")}`;
+    const id = `u_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    const path = await saveImage(dataUrl, dir, id);
     return NextResponse.json({ path });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Upload failed";

@@ -2,7 +2,8 @@
 
 import type { FieldDef } from "@/lib/tables";
 import axios from "axios";
-import { Camera } from "lucide-react";
+import { safeImage } from "@/lib/imageUrl";
+import { Camera, X } from "lucide-react";
 import Image from "next/image";
 import RichTextEditor from "./RichTextEditor";
 import {
@@ -12,10 +13,13 @@ import {
   useState,
 } from "react";
 import QuestionsEditor, { type QuizQuestionData } from "./QuestionsEditor";
+import { toast } from "react-toastify";
 
 const FileRegistryContext = createContext<React.MutableRefObject<
   Map<string, File>
 > | null>(null);
+
+let pendingFileKey = 0;
 
 interface RowFormProps {
   fields: FieldDef[];
@@ -37,6 +41,10 @@ function toFormValues(
     if (field.type === "list" || field.type === "multiselect") {
       if (Array.isArray(val)) values[field.name] = val.join("\n");
       else if (typeof val === "string") values[field.name] = val;
+    } else if (field.type === "images") {
+      if (Array.isArray(val)) values[field.name] = val.join("\n");
+      else if (typeof val === "string" && val) values[field.name] = val;
+      else values[field.name] = "";
     } else if (field.type === "number" && typeof val === "number")
       values[field.name] = String(val);
     else values[field.name] = String(val ?? "");
@@ -59,6 +67,11 @@ function toPayload(
         .split("\n")
         .map((l) => l.trim())
         .filter(Boolean);
+    else if (field.type === "images")
+      payload[field.name] = raw
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l && !l.startsWith("__pending:"));
     else payload[field.name] = raw;
   }
   return payload;
@@ -112,7 +125,7 @@ function ImageUpload({
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
     registry?.current.set(field.name, file);
-    onChange(`__pending:${file.name}`);
+    onChange(`__pending:${field.name}`);
   };
 
   const clear = () => {
@@ -148,7 +161,7 @@ function ImageUpload({
               fill
               sizes="64px"
               className="object-cover"
-              unoptimized={preview.startsWith("data:")}
+              unoptimized
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-ink-soft/30">
@@ -186,6 +199,134 @@ function ImageUpload({
   );
 }
 
+function ImageUploadMulti({
+  field,
+  value,
+  onChange,
+  error,
+}: {
+  field: FieldDef;
+  value: string;
+  onChange: (v: string) => void;
+  error?: string;
+}) {
+  const registry = useContext(FileRegistryContext);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [previews, setPreviews] = useState<Record<string, string>>({});
+
+  const items = (value ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const addFiles = (list: FileList | null) => {
+    if (!list) return;
+    const files = Array.from(list).filter((f) => f.type.startsWith("image/"));
+    if (files.length === 0) return;
+    const next = [...items];
+    for (const file of files) {
+      const key = `${field.name}::${pendingFileKey++}`;
+      registry?.current.set(key, file);
+      next.push(`__pending:${key}`);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setPreviews((prev) => ({ ...prev, [key]: result }));
+      };
+      reader.readAsDataURL(file);
+    }
+    onChange(next.join("\n"));
+  };
+
+  const removeItem = (index: number) => {
+    const item = items[index];
+    const key = item.startsWith("__pending:")
+      ? item.slice("__pending:".length)
+      : "";
+    if (key) registry?.current.delete(key);
+    onChange(items.filter((_, i) => i !== index).join("\n"));
+  };
+
+  return (
+    <div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          addFiles(e.target.files);
+          e.target.value = "";
+        }}
+      />
+
+      <div
+        onClick={() => inputRef.current?.click()}
+        className="group flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-primary/40 bg-cream px-4 py-6 text-sm font-medium text-primary transition-all hover:border-primary hover:bg-primary-lighter"
+      >
+        <Camera className="h-5 w-5" />
+        Click to add images
+      </div>
+
+      {items.length > 0 && (
+        <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+          {items.map((item, i) => {
+            const pendingKey = item.startsWith("__pending:")
+              ? item.slice("__pending:".length)
+              : "";
+            const src = pendingKey
+              ? previews[pendingKey] ?? ""
+              : safeImage(item);
+            return (
+              <div
+                key={`${item}-${i}`}
+                className="group relative aspect-square overflow-hidden rounded-lg border-2 border-primary/30 bg-mist"
+              >
+                {src ? (
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="120px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center p-1 text-center text-[10px] text-ink-soft/40">
+                    No preview
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => removeItem(i)}
+                  className="absolute top-1 right-1 grid h-5 w-5 cursor-pointer place-items-center rounded-full bg-black/60 text-white transition-colors hover:bg-secondary"
+                  aria-label="Remove image"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+                {i === 0 && (
+                  <span className="absolute bottom-1 left-1 rounded-full bg-primary/90 px-2 py-0.5 text-[9px] font-bold text-white">
+                    Card
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <p className="mt-2 text-[11px] text-ink-soft/60">
+        The first image is shown on the card. All images appear in a gallery on
+        the single page.
+      </p>
+      {error && (
+        <p className="mt-1.5 text-xs font-medium text-secondary">{error}</p>
+      )}
+    </div>
+  );
+}
+
 async function uploadPending(
   registry: Map<string, File>,
   dir: string,
@@ -194,7 +335,7 @@ async function uploadPending(
   if (entries.length === 0) return {};
 
   const results: Record<string, string> = {};
-  for (const [fieldName, file] of entries) {
+  for (const [key, file] of entries) {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("dir", dir);
@@ -204,7 +345,7 @@ async function uploadPending(
     if (!res.data.path) {
       throw new Error(`Upload failed for ${file.name}`);
     }
-    results[fieldName] = res.data.path;
+    results[key] = res.data.path;
   }
   return results;
 }
@@ -312,8 +453,12 @@ export default function RowForm({
         uploadDir ?? "uploads",
       );
       const resolved = { ...values };
-      for (const [k, v] of Object.entries(uploaded)) {
-        resolved[k] = v;
+      for (const k of Object.keys(resolved)) {
+        let text = resolved[k] ?? "";
+        for (const [key, path] of Object.entries(uploaded)) {
+          text = text.split(`__pending:${key}`).join(path);
+        }
+        resolved[k] = text;
       }
       for (const k of Object.keys(resolved)) {
         if (resolved[k]?.startsWith("__pending:")) {
@@ -330,7 +475,7 @@ export default function RowForm({
       setSubmitting(false);
       const message =
         err instanceof Error ? err.message : "Something went wrong";
-      alert(`Could not save: ${message}`);
+      toast.error(`Could not save: ${message}`);
     } finally {
       setSubmitting(false);
     }
@@ -351,6 +496,7 @@ export default function RowForm({
                 field.type === "list" ||
                 field.type === "multiselect" ||
                 field.type === "image" ||
+                field.type === "images" ||
                 field.type === "questions"
                   ? "sm:col-span-2"
                   : ""
@@ -525,6 +671,13 @@ export default function RowForm({
                 />
               ) : field.type === "image" ? (
                 <ImageUpload
+                  field={field}
+                  value={values[field.name] ?? ""}
+                  onChange={(v) => setValue(field.name, v)}
+                  error={errors[field.name]}
+                />
+              ) : field.type === "images" ? (
+                <ImageUploadMulti
                   field={field}
                   value={values[field.name] ?? ""}
                   onChange={(v) => setValue(field.name, v)}

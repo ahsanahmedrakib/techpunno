@@ -1,11 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
+import ImageSwiper from "@/components/common/ImageSwiper";
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import { newsItems, type NewsItem } from "@/data/news";
-import { safeImage } from "@/lib/imageUrl";
+import { singleImageList } from "@/lib/imageUrl";
 import { site } from "@/data/site";
+import Link from "next/link";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
   Hot: "bg-secondary text-white",
@@ -14,7 +14,7 @@ const badgeStyles: Record<NewsItem["badge"], string> = {
 };
 
 export default function NewsSingle({ item }: { item: NewsItem }) {
-  const { title, content, date, badge, image } = item;
+  const { title, content, date, badge } = item;
   const related = newsItems.filter((n) => n.slug !== item.slug).slice(0, 2);
 
   return (
@@ -46,17 +46,10 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
       </h1>
       </Reveal>
 
-      {safeImage(image) && (
+      {singleImageList(item).length > 0 && (
         <Reveal variant="zoom" scale={0.96} delay={240}>
-        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl shadow-2xl shadow-ink/20">
-          <Image
-            src={safeImage(image)}
-            alt={title}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            className="object-cover"
-            priority
-          />
+        <div className="mt-8">
+          <ImageSwiper images={singleImageList(item)} alt={title} />
         </div>
         </Reveal>
       )}

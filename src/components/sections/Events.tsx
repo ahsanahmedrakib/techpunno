@@ -7,7 +7,7 @@ import SectionHeading from "@/components/common/SectionHeading";
 import SkeletonEventCard from "@/components/common/Skeleton";
 import { events, type EventItem } from "@/data/events";
 import { useTable } from "@/lib/api";
-import { safeImage } from "@/lib/imageUrl";
+import { firstImage } from "@/lib/imageUrl";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -73,7 +73,7 @@ export default function Events() {
                   <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary hover:shadow-2xl hover:shadow-primary/10">
                     <div className="relative h-44 shrink-0 overflow-hidden">
                       <Image
-                        src={safeImage(event.image) || "/images/dummy.jpeg"}
+                        src={firstImage(event) || "/images/dummy.jpeg"}
                         alt={event.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"

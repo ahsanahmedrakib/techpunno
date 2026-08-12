@@ -8,6 +8,8 @@ export const dynamic = "force-dynamic";
 const MIME: Record<string, string> = {
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
+  jfif: "image/jpeg",
+  jpe: "image/jpeg",
   png: "image/png",
   gif: "image/gif",
   webp: "image/webp",

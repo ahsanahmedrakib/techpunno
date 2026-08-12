@@ -208,7 +208,7 @@ export default function Footer() {
                     Ahsan Ahmed Rakib
                   </h3>
                   <p className="mt-1 text-sm text-white/60">
-                    Full-stack Web Developer · Next.js & Tailwind CSS
+                    Software Engineer
                   </p>
                 </div>
               </div>

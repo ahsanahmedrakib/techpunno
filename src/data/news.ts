@@ -5,7 +5,8 @@ export type NewsItem = {
   content: string;
   date: string;
   badge: "Hot" | "Update" | "Announcement";
-  image?: string;
+  cardImage?: string;
+  images?: string[];
   slug?: string;
 };
 
@@ -19,7 +20,7 @@ export const newsItems: NewsItem[] = [
       "<p>সাইবারসিকিউরিটি গবেষকরা এক নতুন ধরনের Android ম্যালওয়্যার আবিষ্কার করেছেন, যার নাম PromptSpy। এটাই প্রথম পরিচিত Android ম্যালওয়্যার যা সরাসরি Google-এর Gemini জেনারেটিভ AI মডেলকে নিজের কাজের অংশ হিসেবে ব্যবহার করছে।</p><p>PromptSpy হলো একটি অত্যাধুনিক Android ম্যালওয়্যার যা Gemini-কে ফোনের ইউজার ইন্টারফেস (UI)-এর তথ্য বিশ্লেষণ করতে ব্যবহার করে।</p><p><strong>কীভাবে কাজ করে?</strong></p><ul><li>ব্যবহারকারীকে রিক্রুট করতে এটি একটি ফিশিং-ধাঁচের অ্যাপের মাধ্যমে ইনস্টল হতে চায়।</li><li>ইনস্টল হওয়ার পর Gemini-র API-তে UI-এর তথ্য পাঠানো হয়।</li><li>Gemini-AI প্রতিবার UI-এর বিবরণ দেখে নির্দেশ দেয় কোন ফাংশনগুলো চালাতে হবে।</li></ul><p>নিরাপদ থাকতে অজানা উৎস থেকে অ্যাপ ইনস্টল করবেন না এবং Google Play Protect সবসময় চালু রাখুন।</p>",
     date: "Aug 04, 2026",
     badge: "Hot",
-    image: "/images/news/news-1.jpeg",
+    cardImage: "/images/news/news-1.jpeg",
     slug: "notun-android-malware-promptspy-gemini-ai",
   },
   {
@@ -31,7 +32,7 @@ export const newsItems: NewsItem[] = [
       "<p>ফিশিং হলো সাইবার অপরাধীদের সবচেয়ে প্রচলিত কৌশল — ভুয়া ইমেইল, এসএমএস, ফেক ওয়েবসাইট বা অ্যাপের মাধ্যমে ব্যক্তিগত তথ্য চুরি করা হয়।</p><p><strong>কীভাবে ফিশিং চেনা যায়?</strong></p><ul><li>জরুরি টোনে তথ্য চাওয়া হয়।</li><li>লিংকের ঠিকানা সামান্য ভিন্ন হয়।</li><li>ব্যাকরণ বা বানান ভুল থাকে।</li><li>অজানা নম্বর থেকে ওটিপি চাওয়া হয়।</li></ul><p><strong>নিরাপদ থাকার উপায়</strong></p><ul><li>অজানা লিংকে ক্লিক করবেন না।</li><li>ওটিপি বা পাসওয়ার্ড কখনো কারো সাথে শেয়ার করবেন না।</li><li>দুই-ধাপে যাচাই (2FA) সবসময় চালু রাখুন।</li></ul>",
     date: "Aug 03, 2026",
     badge: "Update",
-    image: "/images/news/news-1.jpeg",
+    cardImage: "/images/news/news-1.jpeg",
     slug: "phishing-akromon-theke-bachun",
   },
   {

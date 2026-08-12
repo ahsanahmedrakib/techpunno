@@ -7,7 +7,8 @@ export type BlogPost = {
   readTime: string;
   date: string;
   slug?: string;
-  image?: string;
+  cardImage?: string;
+  images?: string[];
 };
 
 export const blogPosts: BlogPost[] = [

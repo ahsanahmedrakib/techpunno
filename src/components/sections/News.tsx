@@ -7,7 +7,7 @@ import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import Skeleton from "@/components/common/Skeleton";
 import { newsItems, type NewsItem } from "@/data/news";
-import { safeImage } from "@/lib/imageUrl";
+import { firstImage } from "@/lib/imageUrl";
 import Image from "next/image";
 import { useTable } from "@/lib/api";
 
@@ -64,10 +64,10 @@ export default function News() {
                 className="block h-full"
               >
                 <Hoverable className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border-2 border-primary/40 bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 transition-all hover:border-primary sm:p-10">
-                  {safeImage(item!.image) && (
+                  {firstImage(item!) && (
                     <div className="relative -mx-8 -mt-8 mb-6 aspect-video w-[calc(100%+4rem)] shrink-0 overflow-hidden sm:-mx-10 sm:-mt-10 sm:w-[calc(100%+5rem)]">
                       <Image
-                        src={safeImage(item!.image)}
+                        src={firstImage(item!)}
                         alt={item!.title}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
@@ -118,7 +118,7 @@ export default function News() {
                   <Hoverable className="flex h-full flex-col rounded-2xl border-2 border-primary/40 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-white hover:shadow-lg">
                     <div className="relative h-36 shrink-0 overflow-hidden rounded-t-2xl">
                       <Image
-                        src={safeImage(item.image) || "/images/dummy.jpeg"}
+                        src={firstImage(item) || "/images/dummy.jpeg"}
                         alt={item.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"

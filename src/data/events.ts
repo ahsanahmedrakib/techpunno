@@ -11,7 +11,8 @@ export type EventItem = {
   category: string;
   status: "upcoming" | "done";
   slug?: string;
-  image?: string;
+  cardImage?: string;
+  images?: string[];
 };
 
 export const events: EventItem[] = [
