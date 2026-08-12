@@ -2,21 +2,25 @@ import { NextResponse } from "next/server";
 import { getCollection, tableKeys } from "@/lib/db";
 import { tables } from "@/lib/tables";
 
+const SEED_TABLES = new Set(["advisors", "coreteam"]);
+
 function slugify(text: string): string {
-  return text
+  const base = text
     .toString()
-    .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
+    .toLowerCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^\p{L}\p{M}\p{N}-]+/gu, "")
     .replace(/\-\-+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
+  return base || "untitled";
 }
 
 export async function POST() {
   try {
     for (const key of tableKeys) {
+      if (!SEED_TABLES.has(key)) continue;
       const coll = await getCollection(key);
       const count = await coll.countDocuments();
       if (count === 0) {

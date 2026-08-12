@@ -4,8 +4,6 @@ export type EventItem = {
   description: string;
   summary: string;
   date: string;
-  month: string;
-  year: string;
   location: string;
   mode: "Offline" | "Online";
   category: string;
@@ -13,6 +11,7 @@ export type EventItem = {
   slug?: string;
   cardImage?: string;
   images?: string[];
+  externalUrl?: string;
 };
 
 export const events: EventItem[] = [
@@ -23,9 +22,7 @@ export const events: EventItem[] = [
       "Hands-on workshop on phishing, password hygiene and safe browsing for students and young professionals.",
     summary:
       "Hands-on phishing, password hygiene and safe browsing workshop.",
-    date: "20",
-    month: "Aug",
-    year: "2026",
+    date: "2026-08-20",
     location: "Dhaka",
     mode: "Offline",
     category: "Workshop",
@@ -38,9 +35,7 @@ export const events: EventItem[] = [
     description:
       "An open webinar with experts discussing privacy, misinformation and building a safer online community.",
     summary: "Expert webinar on privacy and misinformation.",
-    date: "28",
-    month: "Jul",
-    year: "2026",
+    date: "2026-07-28",
     location: "Online",
     mode: "Online",
     category: "Webinar",
@@ -53,9 +48,7 @@ export const events: EventItem[] = [
     description:
       "A warm welcome and onboarding session for our newest TechPunno volunteers and their first assignments.",
     summary: "Welcome and onboarding for new volunteers.",
-    date: "15",
-    month: "Jul",
-    year: "2026",
+    date: "2026-07-15",
     location: "Dhaka",
     mode: "Offline",
     category: "Community",
@@ -68,9 +61,7 @@ export const events: EventItem[] = [
     description:
       "Weekend bootcamp covering internet basics, online banking safety and using tech responsibly.",
     summary: "Weekend bootcamp on internet basics and online safety.",
-    date: "10",
-    month: "Jul",
-    year: "2026",
+    date: "2026-07-10",
     location: "Dhaka",
     mode: "Offline",
     category: "Bootcamp",
@@ -83,9 +74,7 @@ export const events: EventItem[] = [
     description:
       "A nationwide awareness drive on social media and in schools to promote safe internet habits.",
     summary: "Nationwide awareness drive for safe internet habits.",
-    date: "05",
-    month: "Sep",
-    year: "2026",
+    date: "2026-09-05",
     location: "Nationwide",
     mode: "Offline",
     category: "Campaign",
@@ -98,9 +87,7 @@ export const events: EventItem[] = [
     description:
       "Celebrating a year of impact with volunteers, advisors and community partners across the country.",
     summary: "Celebrating a year of impact with our community.",
-    date: "22",
-    month: "Nov",
-    year: "2026",
+    date: "2026-11-22",
     location: "Dhaka",
     mode: "Offline",
     category: "Meetup",

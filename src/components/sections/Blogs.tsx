@@ -7,6 +7,7 @@ import SectionHeading from "@/components/common/SectionHeading";
 import { SkeletonBlogCard } from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { firstImage } from "@/lib/imageUrl";
+import { formatDate } from "@/lib/utils";
 import { useTable } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,7 +76,7 @@ export default function Blogs() {
                           {post.author}
                         </span>
                         <span className="inline-flex items-center gap-1.5">
-                          {post.readTime} · {post.date}
+                          {post.readTime} · {formatDate(post.date)}
                         </span>
                       </div>
                     </div>

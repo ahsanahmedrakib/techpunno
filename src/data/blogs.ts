@@ -9,6 +9,7 @@ export type BlogPost = {
   slug?: string;
   cardImage?: string;
   images?: string[];
+  externalUrl?: string;
 };
 
 export const blogPosts: BlogPost[] = [
@@ -20,7 +21,7 @@ export const blogPosts: BlogPost[] = [
     category: "Cybersecurity",
     author: "TechPunno Team",
     readTime: "5 min read",
-    date: "Jul 18, 2026",
+    date: "2026-07-18",
     slug: "10-password-rules",
   },
   {
@@ -31,7 +32,7 @@ export const blogPosts: BlogPost[] = [
     category: "Awareness",
     author: "TechPunno Team",
     readTime: "4 min read",
-    date: "Jul 10, 2026",
+    date: "2026-07-10",
     slug: "spotting-phishing-message",
   },
   {
@@ -42,7 +43,7 @@ export const blogPosts: BlogPost[] = [
     category: "Digital Literacy",
     author: "TechPunno Team",
     readTime: "6 min read",
-    date: "Jun 28, 2026",
+    date: "2026-06-28",
     slug: "social-media-privacy-guide",
   },
   {
@@ -53,7 +54,7 @@ export const blogPosts: BlogPost[] = [
     category: "Family Safety",
     author: "TechPunno Team",
     readTime: "7 min read",
-    date: "Jun 15, 2026",
+    date: "2026-06-15",
     slug: "parents-online-safety",
   },
   {
@@ -64,7 +65,7 @@ export const blogPosts: BlogPost[] = [
     category: "Cybersecurity",
     author: "TechPunno Team",
     readTime: "4 min read",
-    date: "Jun 02, 2026",
+    date: "2026-06-02",
     slug: "two-factor-authentication",
   },
   {
@@ -75,7 +76,7 @@ export const blogPosts: BlogPost[] = [
     category: "Community",
     author: "TechPunno Team",
     readTime: "8 min read",
-    date: "May 21, 2026",
+    date: "2026-05-21",
     slug: "techpunno-volunteer-journey",
   },
 ];

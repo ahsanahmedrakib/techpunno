@@ -8,6 +8,7 @@ import Reveal from "@/components/common/Reveal";
 import Skeleton from "@/components/common/Skeleton";
 import { newsItems, type NewsItem } from "@/data/news";
 import { firstImage } from "@/lib/imageUrl";
+import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { useTable } from "@/lib/api";
 
@@ -90,7 +91,7 @@ export default function News() {
                   </div>
                   <div className="mt-8 flex items-center justify-between">
                     <span className="text-sm font-medium text-white/70">
-                      {item!.date}
+                      {formatDate(item!.date)}
                     </span>
                     <span className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5">
                       Read More →
@@ -134,7 +135,7 @@ export default function News() {
                           {item.badge}
                         </span>
                         <span className="text-xs font-medium text-ink-soft">
-                          {item.date}
+                          {formatDate(item.date)}
                         </span>
                       </div>
                       <h3 className="mt-3 text-base font-bold leading-snug text-ink transition-colors hover:text-primary">

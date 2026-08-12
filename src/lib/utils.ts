@@ -47,6 +47,31 @@ export function formatDate(dateString: string): string {
   return `${day} ${month}, ${year}`;
 }
 
+export function getDateParts(dateString: string): {
+  day: string;
+  month: string;
+  year: string;
+} {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    const [year, month, day] = dateString.split("-");
+    return { day: day ?? "", month: month ?? "", year: year ?? "" };
+  }
+  const day = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    timeZone: "Asia/Dhaka",
+  }).format(date);
+  const month = new Intl.DateTimeFormat("en-GB", {
+    month: "short",
+    timeZone: "Asia/Dhaka",
+  }).format(date);
+  const year = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    timeZone: "Asia/Dhaka",
+  }).format(date);
+  return { day, month, year };
+}
+
 export function uniqueIdWithPhoneNumber(phone: string): string {
   const map = "ABCDEFGHIJ";
 
@@ -57,6 +82,13 @@ export function uniqueIdWithPhoneNumber(phone: string): string {
   const year = new Date().getFullYear().toString().slice(-2);
 
   return `${year}-${encoded}`;
+}
+
+export function safeUrl(url?: string | null): string {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return "";
 }
 
 export function scrollToField(fieldName: string): void {

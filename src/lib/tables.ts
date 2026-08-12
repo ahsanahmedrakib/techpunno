@@ -205,14 +205,15 @@ export const tables: Record<TableKey, TableConfig> = {
       {
         name: "date",
         label: "Date",
-        type: "text",
+        type: "date",
         required: true,
-        placeholder: "e.g. Jul 15, 2026",
+        placeholder: "e.g. 2026-07-15",
       },
       {
         name: "cardImage",
         label: "Card image",
         type: "image",
+        required: true,
         placeholder: "/images/...",
       },
       {
@@ -220,6 +221,12 @@ export const tables: Record<TableKey, TableConfig> = {
         label: "Images (multiple)",
         type: "images",
         placeholder: "Upload one or more images",
+      },
+      {
+        name: "externalUrl",
+        label: "External link (iframe)",
+        type: "text",
+        placeholder: "https://example.com/article",
       },
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
@@ -257,6 +264,7 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "cardImage",
         label: "Card image",
         type: "image",
+        required: true,
         placeholder: "/images/...",
       },
       {
@@ -267,24 +275,10 @@ export const tables: Record<TableKey, TableConfig> = {
       },
       {
         name: "date",
-        label: "Day",
-        type: "text",
+        label: "Date",
+        type: "date",
         required: true,
-        placeholder: "e.g. 15",
-      },
-      {
-        name: "month",
-        label: "Month",
-        type: "text",
-        required: true,
-        placeholder: "e.g. January",
-      },
-      {
-        name: "year",
-        label: "Year",
-        type: "text",
-        required: true,
-        placeholder: "e.g. 2026",
+        placeholder: "e.g. 2026-08-20",
       },
       {
         name: "location",
@@ -315,6 +309,12 @@ export const tables: Record<TableKey, TableConfig> = {
         options: ["upcoming", "done"],
         required: true,
         placeholder: "Select status",
+      },
+      {
+        name: "externalUrl",
+        label: "External link (iframe)",
+        type: "text",
+        placeholder: "https://example.com/register",
       },
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
@@ -412,9 +412,9 @@ export const tables: Record<TableKey, TableConfig> = {
       {
         name: "date",
         label: "Date",
-        type: "text",
+        type: "date",
         required: true,
-        placeholder: "e.g. Aug 04, 2026",
+        placeholder: "e.g. 2026-08-04",
       },
       {
         name: "badge",
@@ -428,6 +428,7 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "cardImage",
         label: "Card image",
         type: "image",
+        required: true,
         placeholder: "/images/...",
       },
       {
@@ -435,6 +436,12 @@ export const tables: Record<TableKey, TableConfig> = {
         label: "Images (multiple)",
         type: "images",
         placeholder: "Upload one or more images",
+      },
+      {
+        name: "externalUrl",
+        label: "External link (iframe)",
+        type: "text",
+        placeholder: "https://example.com/news",
       },
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogSingle from "@/components/sections/BlogSingle";
 import { blogPosts, type BlogPost } from "@/data/blogs";
-import { getDocBySlug } from "@/lib/db";
+import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -17,9 +17,15 @@ async function findPost(slug: string): Promise<BlogPost | null> {
     const doc = (await getDocBySlug("blogs", slug)) as BlogPost | null;
     if (doc) return doc;
   } catch {
+    /* fall through */
+  }
+  try {
+    const doc = (await getDoc("blogs", slug)) as BlogPost | null;
+    if (doc) return doc;
+  } catch {
     /* fall through to seed data */
   }
-  return blogPosts.find((p) => p.slug === slug) ?? null;
+  return blogPosts.find((p) => p.slug === slug || p.id === slug) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

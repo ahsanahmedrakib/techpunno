@@ -22,31 +22,31 @@ export {
 };
 
 function slugify(text: string): string {
-  return text
+  const base = text
     .toString()
-    .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
+    .toLowerCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^\p{L}\p{M}\p{N}-]+/gu, "")
     .replace(/\-\-+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
+  return base || "untitled";
 }
 
 function hasSlugField(key: TableKey): boolean {
   return tables[key].fields.some((f) => f.name === "slug");
 }
 
-async function generateUniqueSlug(
-  coll: Collection<Record<string, unknown>>,
-  base: string,
+async function slugExists(
+  key: TableKey,
+  slug: string,
   excludeId?: string,
-): Promise<string> {
-  let slug = base;
-  let counter = 1;
-  while (true) {
+): Promise<boolean> {
+  for (const tableKey of tableKeys) {
+    const coll = await getCollection(tableKey);
     const filter: Record<string, unknown> = { slug };
-    if (excludeId) {
+    if (tableKey === key && excludeId) {
       if (/^[0-9a-fA-F]{24}$/.test(excludeId)) {
         filter._id = { $ne: new ObjectId(excludeId) };
       } else {
@@ -54,7 +54,20 @@ async function generateUniqueSlug(
       }
     }
     const exists = await coll.findOne(filter, { projection: { _id: 1 } });
-    if (!exists) return slug;
+    if (exists) return true;
+  }
+  return false;
+}
+
+async function generateUniqueSlug(
+  key: TableKey,
+  base: string,
+  excludeId?: string,
+): Promise<string> {
+  let slug = base;
+  let counter = 1;
+  while (true) {
+    if (!(await slugExists(key, slug, excludeId))) return slug;
     slug = `${base}-${counter}`;
     counter++;
   }
@@ -257,7 +270,7 @@ export async function createDoc(
   if (hasSlugField(key)) {
     const title = String(doc.title || doc.name || "");
     const base = slugify(title);
-    doc.slug = await generateUniqueSlug(coll, base);
+    doc.slug = await generateUniqueSlug(key, base);
   }
   const result = await coll.insertOne(doc as never);
   doc._id = result.insertedId;
@@ -278,7 +291,7 @@ export async function updateDoc(
     const filter = await resolveIdFilter(key, rawId);
     const existing = await coll.findOne(filter, { projection: { _id: 1 } });
     doc.slug = await generateUniqueSlug(
-      coll,
+      key,
       base,
       existing ? String(existing._id) : undefined,
     );

@@ -5,9 +5,10 @@ import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import { SkeletonEventCard } from "@/components/common/Skeleton";
-import { events, type EventItem } from "@/data/events";
+import { type EventItem } from "@/data/events";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
+import { getDateParts } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,7 +21,7 @@ const filters = [
 
 export default function Events() {
   const [filter, setFilter] = useState<string>("all");
-  const [items, loading] = useTable<EventItem>("events", events);
+  const [items, loading] = useTable<EventItem>("events", []);
 
   const filtered =
     filter === "all" ? items : items.filter((event) => event.status === filter);
@@ -59,13 +60,15 @@ export default function Events() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((event: EventItem, i) => (
-              <Reveal
-                key={event.id}
-                variant={i % 2 === 0 ? "fade-up" : "zoom"}
-                delay={(i % 3) * 120}
-                className="h-full"
-              >
+            {filtered.map((event: EventItem, i) => {
+              const { day, month, year } = getDateParts(event.date);
+              return (
+                <Reveal
+                  key={event.id}
+                  variant={i % 2 === 0 ? "fade-up" : "zoom"}
+                  delay={(i % 3) * 120}
+                  className="h-full"
+                >
                 <Link
                   href={`/events/${event.slug || event.id}`}
                   className="block h-full"
@@ -81,10 +84,10 @@ export default function Events() {
                       />
                       <div className="absolute right-4 top-4 rounded-2xl bg-white/15 px-5 py-2 text-center text-white backdrop-blur-sm">
                         <span className="block text-2xl font-extrabold leading-none">
-                          {event.date}
+                          {day}
                         </span>
                         <span className="block text-xs font-semibold uppercase tracking-widest">
-                          {event.month} {event.year}
+                          {month} {year}
                         </span>
                       </div>
                     </div>
@@ -143,7 +146,8 @@ export default function Events() {
                   </Hoverable>
                 </Link>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         )}
       </Container>

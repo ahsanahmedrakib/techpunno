@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import EventSingle from "@/components/sections/EventSingle";
 import { events, type EventItem } from "@/data/events";
-import { getDocBySlug } from "@/lib/db";
+import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -17,9 +17,15 @@ async function findEvent(slug: string): Promise<EventItem | null> {
     const doc = (await getDocBySlug("events", slug)) as EventItem | null;
     if (doc) return doc;
   } catch {
+    /* fall through */
+  }
+  try {
+    const doc = (await getDoc("events", slug)) as EventItem | null;
+    if (doc) return doc;
+  } catch {
     /* fall through to seed data */
   }
-  return events.find((n) => n.slug === slug) ?? null;
+  return events.find((e) => e.slug === slug || e.id === slug) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
