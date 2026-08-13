@@ -155,10 +155,10 @@ export default function EventSingle({ item }: { item: EventItem }) {
       {!iframeSrc && (
         <>
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
-            <Reveal delay={240}>
+            <Reveal delay={240} className="min-w-0">
               <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
                 <div
-                  className="prose prose-lg max-w-none prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl"
+                  className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
                   dangerouslySetInnerHTML={{ __html: description }}
                 />
               </div>
