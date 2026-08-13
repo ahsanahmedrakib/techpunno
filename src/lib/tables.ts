@@ -47,6 +47,9 @@ export interface TableConfig {
   single?: boolean;
   readOnly?: boolean;
   deletable?: boolean;
+  canCreate?: boolean;
+  createFields?: string[];
+  editableFields?: string[];
   defaultStatus?: string;
   statusField?: string;
   statusOptions?: string[];
@@ -574,6 +577,9 @@ export const tables: Record<TableKey, TableConfig> = {
     singular: "Certificate",
     readOnly: true,
     deletable: true,
+    canCreate: true,
+    createFields: ["name", "phone", "percentage"],
+    editableFields: ["name"],
     listColumns: [
       "certificateId",
       "name",
@@ -592,6 +598,7 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "name",
         label: "Name",
         type: "text",
+        required: true,
         list: true,
         placeholder: "e.g. Jane Doe",
       },
@@ -599,12 +606,15 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "phone",
         label: "Phone",
         type: "text",
+        required: true,
         placeholder: "e.g. 01XXXXXXXXX",
       },
       {
         name: "percentage",
         label: "Percentage",
         type: "number",
+        required: true,
+        min: 80,
         list: true,
         placeholder: "e.g. 90",
       },

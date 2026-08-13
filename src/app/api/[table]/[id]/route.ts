@@ -39,7 +39,7 @@ export async function PUT(
   if (!isTableKey(table)) {
     return NextResponse.json({ error: "Unknown table" }, { status: 404 });
   }
-  if (tables[table].readOnly) {
+  if (tables[table].readOnly && !tables[table].editableFields) {
     return NextResponse.json(
       { error: "This table is read-only" },
       { status: 403 },
@@ -47,7 +47,14 @@ export async function PUT(
   }
   try {
     const body = await req.json();
-    const doc = await updateDoc(table, id, body);
+    let payload = body;
+    if (tables[table].editableFields) {
+      const allowed = new Set(tables[table].editableFields);
+      payload = Object.fromEntries(
+        Object.entries(body).filter(([k]) => allowed.has(k)),
+      );
+    }
+    const doc = await updateDoc(table, id, payload);
     if (!doc) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }

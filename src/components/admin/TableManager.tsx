@@ -61,6 +61,15 @@ export default function TableManager({ tableKey, config }: Props) {
       ? [imageField.name, ...config.listColumns]
       : config.listColumns;
 
+  const formFields =
+    view === "create" && config.createFields
+      ? config.fields.filter((f) => config.createFields!.includes(f.name))
+      : view === "edit" && config.editableFields
+        ? config.fields.filter((f) =>
+            config.editableFields!.includes(f.name),
+          )
+        : config.fields;
+
   const { data, isLoading, error, isFetching, refetch } = useQuery<
     PagedResult<Record<string, unknown>>
   >({
@@ -247,7 +256,7 @@ export default function TableManager({ tableKey, config }: Props) {
           </div>
           <div className="p-6">
             <RowForm
-              fields={config.fields}
+              fields={formFields}
               initial={view === "edit" ? (editing ?? undefined) : undefined}
               onSubmit={view === "create" ? handleCreate : handleUpdate}
               onCancel={() => {
@@ -303,7 +312,7 @@ export default function TableManager({ tableKey, config }: Props) {
                   ))}
                 </select>
               )}
-              {!config.readOnly && (
+              {(!config.readOnly || config.canCreate) && (
                 <button
                   onClick={() => setView("create")}
                   className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg"
@@ -436,6 +445,19 @@ export default function TableManager({ tableKey, config }: Props) {
                                     <Eye className="h-3.5 w-3.5" />
                                     View
                                   </button>
+                                  {config.editableFields &&
+                                    config.editableFields.length > 0 && (
+                                      <button
+                                        onClick={() => {
+                                          setEditing(row);
+                                          setView("edit");
+                                        }}
+                                        className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                      >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                        Edit
+                                      </button>
+                                    )}
                                   {config.deletable && (
                                     <button
                                       onClick={() =>
