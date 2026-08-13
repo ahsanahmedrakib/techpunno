@@ -345,7 +345,7 @@ export default function TableManager({ tableKey, config }: Props) {
                             : getField(col)?.label ?? col}
                         </th>
                       ))}
-                      <th className="px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
+                      <th className="sticky right-0 z-10 bg-[#087a49] px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.4)]">
                         Actions
                       </th>
                     </tr>
@@ -432,18 +432,24 @@ export default function TableManager({ tableKey, config }: Props) {
                               </td>
                             );
                           })}
-                          <td className="px-4 py-3">
-                            <div className="flex items-center justify-end gap-2">
+                          <td
+                            className={`sticky right-0 z-10 px-4 py-3 shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.15)] ${
+                              idx % 2 === 0
+                                ? "bg-white hover:bg-[#f5fcf9]"
+                                : "bg-[#fafbfb] hover:bg-[#f2f9f6]"
+                            }`}
+                          >
+                            <div className="flex items-center justify-end gap-1.5">
                               {config.readOnly ? (
                                 <>
                                   <button
                                     onClick={() =>
                                       router.push(`/admin/${tableKey}/${row.id}`)
                                     }
-                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                    title="View"
+                                    className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-primary/30 bg-white text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
                                   >
-                                    <Eye className="h-3.5 w-3.5" />
-                                    View
+                                    <Eye className="h-4 w-4" />
                                   </button>
                                   {config.editableFields &&
                                     config.editableFields.length > 0 && (
@@ -452,10 +458,10 @@ export default function TableManager({ tableKey, config }: Props) {
                                           setEditing(row);
                                           setView("edit");
                                         }}
-                                        className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                        title="Edit"
+                                        className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-primary/30 bg-white text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
                                       >
-                                        <Pencil className="h-3.5 w-3.5" />
-                                        Edit
+                                        <Pencil className="h-4 w-4" />
                                       </button>
                                     )}
                                   {config.deletable && (
@@ -463,10 +469,10 @@ export default function TableManager({ tableKey, config }: Props) {
                                       onClick={() =>
                                         setDeletingId(String(row.id))
                                       }
-                                      className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
+                                      title="Delete"
+                                      className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-secondary/30 bg-white text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
                                     >
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                      Delete
+                                      <Trash2 className="h-4 w-4" />
                                     </button>
                                   )}
                                 </>
@@ -498,7 +504,7 @@ export default function TableManager({ tableKey, config }: Props) {
                                                 )
                                               }
                                               title={`Mark as ${opt}`}
-                                              className={`cursor-pointer inline-flex items-center gap-1 rounded-lg border-2 px-2.5 py-1.5 text-xs font-medium transition-all ${
+                                              className={`grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 transition-all ${
                                                 isApprove
                                                   ? "border-primary/40 bg-primary-lighter text-primary hover:border-primary/70 hover:bg-primary-lighter/70"
                                                   : isReject
@@ -507,17 +513,12 @@ export default function TableManager({ tableKey, config }: Props) {
                                               }`}
                                             >
                                               {isApprove ? (
-                                                <Check className="h-3.5 w-3.5" />
+                                                <Check className="h-4 w-4" />
                                               ) : isReject ? (
-                                                <X className="h-3.5 w-3.5" />
+                                                <X className="h-4 w-4" />
                                               ) : (
-                                                <Hourglass className="h-3.5 w-3.5" />
+                                                <Hourglass className="h-4 w-4" />
                                               )}
-                                              {isApprove
-                                                ? "Approve"
-                                                : isReject
-                                                  ? "Reject"
-                                                  : "Pending"}
                                             </button>
                                           );
                                         })}
@@ -528,17 +529,17 @@ export default function TableManager({ tableKey, config }: Props) {
                                       setEditing(row);
                                       setView("edit");
                                     }}
-                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-primary/30 bg-white px-3 py-1.5 text-xs font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
+                                    title="Edit"
+                                    className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-primary/30 bg-white text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
                                   >
-                                    <Pencil className="h-3.5 w-3.5" />
-                                    Edit
+                                    <Pencil className="h-4 w-4" />
                                   </button>
                                   <button
                                     onClick={() => setDeletingId(String(row.id))}
-                                    className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border-2 border-secondary/30 bg-white px-3 py-1.5 text-xs font-medium text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
+                                    title="Delete"
+                                    className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-secondary/30 bg-white text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
                                   >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                    Delete
+                                    <Trash2 className="h-4 w-4" />
                                   </button>
                                 </>
                               )}
