@@ -34,7 +34,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
     : [];
 
   return (
-    <Container className="py-12 lg:py-20">
+    <Container className="py-20">
       <Reveal variant="fade-left">
         <Link
           href="/#events"
@@ -85,13 +85,9 @@ export default function EventSingle({ item }: { item: EventItem }) {
                   {location}
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-secondary-light" />
-                  {day} {month} {year}
-                </span>
-                <span className="inline-flex items-center gap-2">
                   <Monitor className="h-4 w-4 text-secondary-light" />
                   Mode:
-                  <span className="font-semibold text-ink">{mode}</span>
+                  <span className="font-semibold text-white">{mode}</span>
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-secondary-light" />
@@ -105,10 +101,6 @@ export default function EventSingle({ item }: { item: EventItem }) {
                   >
                     {isUpcoming ? "Register Open" : "Completed"}
                   </span>
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-secondary-light" />
-                  {day} {month} {year}
                 </span>
               </div>
             </div>
@@ -129,7 +121,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </header>
       </Reveal>
 
-      {!iframeSrc && singleImageList(item).length > 0 && (
+      {singleImageList(item).length > 0 && (
         <Reveal variant="zoom" scale={0.97} delay={160}>
           <div className="mt-8">
             <ImageSwiper images={singleImageList(item)} alt={title} />
@@ -137,8 +129,18 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </Reveal>
       )}
 
+      <Reveal delay={240} className="min-w-0 mt-10">
+        <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+          <div
+            className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        </div>
+      </Reveal>
+
       {iframeSrc && (
         <Reveal delay={240}>
+          <h2 className="mt-4 text-center">Event on Main Site</h2>
           <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
             <iframe
               src={iframeSrc}
@@ -152,72 +154,57 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </Reveal>
       )}
 
-      {!iframeSrc && (
-        <>
-          <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
-            <Reveal delay={240} className="min-w-0">
-              <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
-                <div
-                  className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
-              </div>
-            </Reveal>
-          </div>
-
-          {related.length > 0 && (
-            <Reveal delay={400}>
-              <div className="mt-16">
-                <h2 className="text-2xl font-bold text-ink">Related events</h2>
-                <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {related.map((e) => (
-                    <Link
-                      key={e.id}
-                      href={`/events/${e.slug || e.id}`}
-                      className="group block h-full"
-                    >
-                      <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
-                        <div className="relative h-36 shrink-0 overflow-hidden bg-mist">
-                          {firstImage(e) ? (
-                            <Image
-                              src={firstImage(e)}
-                              alt={e.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dark" />
-                          )}
-                          <span className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary backdrop-blur">
-                            {e.category}
-                          </span>
-                        </div>
-                        <div className="flex flex-1 flex-col p-5">
-                          <h3 className="text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
-                            {e.title}
-                          </h3>
-                          <div className="mt-auto flex items-center justify-between border-t border-ink/5 pt-3 text-xs">
-                            <span className="inline-flex items-center gap-1.5">
-                              <Calendar className="h-3.5 w-3.5" />
-                              {getDateParts(e.date).day}{" "}
-                              {getDateParts(e.date).month}{" "}
-                              {getDateParts(e.date).year}
-                            </span>
-                            <span className="inline-flex items-center gap-1.5">
-                              <MapPin className="h-3.5 w-3.5" />
-                              {e.location}
-                            </span>
-                          </div>
-                        </div>
+      {related.length > 0 && (
+        <Reveal delay={400}>
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-ink">Related events</h2>
+            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((e) => (
+                <Link
+                  key={e.id}
+                  href={`/events/${e.slug || e.id}`}
+                  className="group block h-full"
+                >
+                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+                    <div className="relative h-36 shrink-0 overflow-hidden bg-mist">
+                      {firstImage(e) ? (
+                        <Image
+                          src={firstImage(e)}
+                          alt={e.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dark" />
+                      )}
+                      <span className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary backdrop-blur">
+                        {e.category}
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                        {e.title}
+                      </h3>
+                      <div className="mt-auto flex items-center justify-between border-t border-ink/5 pt-3 text-xs">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {getDateParts(e.date).day}{" "}
+                          {getDateParts(e.date).month}{" "}
+                          {getDateParts(e.date).year}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <MapPin className="h-3.5 w-3.5" />
+                          {e.location}
+                        </span>
                       </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          )}
-        </>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       )}
     </Container>
   );

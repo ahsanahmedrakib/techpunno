@@ -23,7 +23,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
   const iframeSrc = safeUrl(externalUrl);
 
   return (
-    <Container className="py-16 lg:py-24">
+    <Container className="py-20">
       <Reveal variant="fade-left">
         <Link
           href="/#news"
@@ -52,7 +52,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
         </h1>
       </Reveal>
 
-      {!iframeSrc && singleImageList(item).length > 0 && (
+      {singleImageList(item).length > 0 && (
         <Reveal variant="zoom" scale={0.96} delay={240}>
           <div className="mt-8">
             <ImageSwiper images={singleImageList(item)} alt={title} />
@@ -60,9 +60,9 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
         </Reveal>
       )}
 
-      {!iframeSrc && content.trim() && (
+      {content.trim() && (
         <Reveal delay={240}>
-          <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+          <div className="min-w-0 overflow-hidden rounded-2xl border-2 my-4 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
             <div
               className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
               dangerouslySetInnerHTML={{ __html: content }}
@@ -73,6 +73,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
 
       {iframeSrc && (
         <Reveal delay={240}>
+          <h2 className="mt-4 text-center">News on Main Site</h2>
           <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
             <iframe
               src={iframeSrc}
@@ -86,72 +87,68 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
         </Reveal>
       )}
 
-      {!iframeSrc && (
-        <>
-          <Reveal delay={320}>
-            <div className="mt-10 rounded-2xl bg-primary-lighter p-6 text-center sm:p-8">
-              <p className="text-lg font-bold text-ink">
-                Tech Punno এর সাথে থাকুন, নিরাপদ থাকুন।
-              </p>
-              <p className="mt-1 text-sm text-ink-soft">
-                Follow us for the latest cyber awareness tips and updates.
-              </p>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                <Hoverable>
-                  <a
-                    href={site.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-                  >
-                    Follow {site.name}
-                  </a>
-                </Hoverable>
-                <Hoverable>
-                  <Link
-                    href="/#news"
-                    className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
-                  >
-                    More News
-                  </Link>
-                </Hoverable>
-              </div>
-            </div>
-          </Reveal>
+      <Reveal delay={320}>
+        <div className="mt-10 rounded-2xl bg-primary-lighter p-6 text-center sm:p-8">
+          <p className="text-lg font-bold text-ink">
+            Tech Punno এর সাথে থাকুন, নিরাপদ থাকুন।
+          </p>
+          <p className="mt-1 text-sm text-ink-soft">
+            Follow us for the latest cyber awareness tips and updates.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <Hoverable>
+              <a
+                href={site.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+              >
+                Follow {site.name}
+              </a>
+            </Hoverable>
+            <Hoverable>
+              <Link
+                href="/#news"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-ink/10 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+              >
+                More News
+              </Link>
+            </Hoverable>
+          </div>
+        </div>
+      </Reveal>
 
-          {related.length > 0 && (
-            <Reveal delay={400}>
-              <div className="mt-12">
-                <h2 className="text-xl font-bold text-ink">Related news</h2>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {related.map((n) => (
-                    <Link
-                      key={n.id}
-                      href={`/news/${n.slug || n.id}`}
-                      className="block h-full"
-                    >
-                      <Hoverable className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[n.badge]}`}
-                          >
-                            {n.badge}
-                          </span>
-                          <span className="text-xs font-medium text-ink-soft">
-                            {formatDate(n.date)}
-                          </span>
-                        </div>
-                        <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
-                          {n.title}
-                        </h3>
-                      </Hoverable>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          )}
-        </>
+      {related.length > 0 && (
+        <Reveal delay={400}>
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-ink">Related news</h2>
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {related.map((n) => (
+                <Link
+                  key={n.id}
+                  href={`/news/${n.slug || n.id}`}
+                  className="block h-full"
+                >
+                  <Hoverable className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[n.badge]}`}
+                      >
+                        {n.badge}
+                      </span>
+                      <span className="text-xs font-medium text-ink-soft">
+                        {formatDate(n.date)}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                      {n.title}
+                    </h3>
+                  </Hoverable>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       )}
     </Container>
   );

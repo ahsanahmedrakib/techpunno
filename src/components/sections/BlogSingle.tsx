@@ -72,7 +72,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
           </div>
         </Reveal>
 
-        {!iframeSrc && singleImageList(item).length > 0 && (
+        {singleImageList(item).length > 0 && (
           <Reveal variant="zoom" scale={0.96} delay={240}>
             <div className="mt-8">
               <ImageSwiper images={singleImageList(item)} alt={title} />
@@ -80,9 +80,19 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
           </Reveal>
         )}
 
+        <Reveal delay={240}>
+          <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8 my-6">
+            <div
+              className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            />
+          </div>
+        </Reveal>
+
         {iframeSrc && (
           <Reveal delay={240}>
-            <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
+            <h2 className="mt-4 text-center">Blog on Main Site</h2>
+            <div className="my-6 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
               <iframe
                 src={iframeSrc}
                 title={title}
@@ -95,54 +105,41 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
           </Reveal>
         )}
 
-        {!iframeSrc && (
-          <>
-            <Reveal delay={240}>
-              <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
-                <div
-                  className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
-                  dangerouslySetInnerHTML={{ __html: excerpt }}
-                />
-              </div>
-            </Reveal>
+        <Reveal delay={400}>
+          <div className="text-center">
+            <Link
+              href="/#blogs"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+            >
+              Explore More Blogs
+            </Link>
+          </div>
+        </Reveal>
 
-            <Reveal delay={400}>
-              <div className="mt-8 text-center">
-                <Link
-                  href="/#blogs"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
-                >
-                  Explore More Blogs
-                </Link>
+        {related.length > 0 && (
+          <Reveal delay={400}>
+            <div className="mt-12">
+              <h2 className="text-xl font-bold text-ink">Related posts</h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {related.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/blogs/${p.slug || p.id}`}
+                    className="block h-full"
+                  >
+                    <div className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
+                      <span className="rounded-full bg-primary-lighter px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
+                        {p.category}
+                      </span>
+                      <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                        {p.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </Reveal>
-
-            {related.length > 0 && (
-              <Reveal delay={400}>
-                <div className="mt-12">
-                  <h2 className="text-xl font-bold text-ink">Related posts</h2>
-                  <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    {related.map((p) => (
-                      <Link
-                        key={p.id}
-                        href={`/blogs/${p.slug || p.id}`}
-                        className="block h-full"
-                      >
-                        <div className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
-                          <span className="rounded-full bg-primary-lighter px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
-                            {p.category}
-                          </span>
-                          <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">
-                            {p.title}
-                          </h3>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
-            )}
-          </>
+            </div>
+          </Reveal>
         )}
       </article>
     </Container>
