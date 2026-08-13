@@ -263,18 +263,18 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Enter the event title",
       },
       {
-        name: "description",
-        label: "Description",
-        type: "richtext",
-        required: true,
-        placeholder: "Describe the event details",
-      },
-      {
         name: "summary",
         label: "Summary",
         type: "textarea",
         required: true,
         placeholder: "Short summary shown on the event card",
+      },
+      {
+        name: "description",
+        label: "Description",
+        type: "richtext",
+        required: true,
+        placeholder: "Describe the event details",
       },
       {
         name: "cardImage",

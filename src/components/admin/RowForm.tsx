@@ -1,20 +1,15 @@
 "use client";
 
+import { isAllowedImageType } from "@/lib/imageTypes";
+import { safeImage } from "@/lib/imageUrl";
 import type { FieldDef } from "@/lib/tables";
 import axios from "axios";
-import { safeImage } from "@/lib/imageUrl";
-import { isAllowedImageType } from "@/lib/imageTypes";
 import { Camera, X } from "lucide-react";
 import Image from "next/image";
-import RichTextEditor from "./RichTextEditor";
-import {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-} from "react";
-import QuestionsEditor, { type QuizQuestionData } from "./QuestionsEditor";
+import { createContext, useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import QuestionsEditor, { type QuizQuestionData } from "./QuestionsEditor";
+import RichTextEditor from "./RichTextEditor";
 
 const FileRegistryContext = createContext<React.MutableRefObject<
   Map<string, File>
@@ -100,7 +95,7 @@ function ImageUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(() =>
     value && !value.startsWith("__pending:")
-      ? value.split("/").pop() ?? null
+      ? (value.split("/").pop() ?? null)
       : null,
   );
   const [preview, setPreview] = useState<string | null>(() =>
@@ -121,9 +116,7 @@ function ImageUpload({
 
   const handleFile = (file: File) => {
     if (!isAllowedImageType(file.type)) {
-      toast.error(
-        "Unsupported image type. Allowed: JPG, PNG, WEBP, SVG",
-      );
+      toast.error("Unsupported image type. Allowed: JPG, PNG, WEBP, SVG");
       return;
     }
     setFileName(file.name);
@@ -288,7 +281,7 @@ function ImageUploadMulti({
               ? item.slice("__pending:".length)
               : "";
             const src = pendingKey
-              ? previews[pendingKey] ?? ""
+              ? (previews[pendingKey] ?? "")
               : safeImage(item);
             return (
               <div
@@ -328,10 +321,6 @@ function ImageUploadMulti({
         </div>
       )}
 
-      <p className="mt-2 text-[11px] text-ink-soft/60">
-        The first image is shown on the card. All images appear in a gallery on
-        the single page.
-      </p>
       {error && (
         <p className="mt-1.5 text-xs font-medium text-secondary">{error}</p>
       )}

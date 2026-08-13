@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "react-toastify/dist/ReactToastify.css";
 
+@plugin "@tailwindcss/typography";
+
 @layer base {
   @page {
     size: A4 landscape;
