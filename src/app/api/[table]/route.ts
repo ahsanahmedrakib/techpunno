@@ -55,6 +55,43 @@ export async function GET(
     const search = url.searchParams.get("search") ?? "";
     const filterField = url.searchParams.get("filterField") ?? undefined;
     const filterValue = url.searchParams.get("filterValue") ?? undefined;
+    let filters: { field: string; value: string | string[] }[] | undefined;
+    const rawFilters = url.searchParams.get("filters");
+    if (rawFilters) {
+      try {
+        const parsed = JSON.parse(rawFilters) as unknown;
+        if (Array.isArray(parsed)) {
+          filters = (
+            parsed as { field?: string; value?: string | string[] }[]
+          ).filter(
+            (f) => f && f.field && f.value,
+          ) as { field: string; value: string | string[] }[];
+        }
+      } catch {
+        filters = undefined;
+      }
+    }
+
+    let sortLast: { field: string; values: string[] } | undefined;
+    const rawSortLast = url.searchParams.get("sortLast");
+    if (rawSortLast) {
+      try {
+        const parsed = JSON.parse(rawSortLast) as unknown;
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          typeof (parsed as { field?: unknown }).field === "string" &&
+          Array.isArray((parsed as { values?: unknown }).values) &&
+          (parsed as { values: unknown[] }).values.every(
+            (v) => typeof v === "string",
+          )
+        ) {
+          sortLast = parsed as { field: string; values: string[] };
+        }
+      } catch {
+        sortLast = undefined;
+      }
+    }
 
     const result = await pagedDocs(table, {
       page,
@@ -62,6 +99,8 @@ export async function GET(
       search,
       filterField,
       filterValue,
+      filters,
+      sortLast,
     });
     return NextResponse.json(result);
   } catch (error) {

@@ -153,6 +153,8 @@ export async function pagedDocs<T = unknown>(
     search?: string;
     filterField?: string;
     filterValue?: string;
+    filters?: { field: string; value: string | string[] }[];
+    sortLast?: { field: string; values: string[] };
   },
 ): Promise<PagedResult<T>> {
   const coll = await getCollection(key);
@@ -161,13 +163,45 @@ export async function pagedDocs<T = unknown>(
   if (options.filterField && options.filterValue) {
     filter[options.filterField] = options.filterValue;
   }
+  for (const f of options.filters ?? []) {
+    if (f.field && f.value) {
+      if (Array.isArray(f.value)) {
+        filter[f.field] = { $in: f.value };
+      } else {
+        filter[f.field] = f.value;
+      }
+    }
+  }
   const total = await coll.countDocuments(filter);
-  const docs = (await coll
-    .find(filter)
-    .sort({ createdAt: -1, _id: -1 })
-    .skip((options.page - 1) * options.pageSize)
-    .limit(options.pageSize)
-    .toArray()) as Record<string, unknown>[];
+
+  let docs: Record<string, unknown>[];
+  if (options.sortLast) {
+    const { field, values } = options.sortLast;
+    const isLast = values.map((v) => ({ $eq: [`$${field}`, v] }));
+    const pipeline: Record<string, unknown>[] = [
+      { $match: filter },
+      {
+        $addFields: {
+          __sortLast: { $cond: [{ $or: isLast }, 1, 0] },
+        },
+      },
+      { $sort: { __sortLast: 1, createdAt: -1, _id: -1 } },
+      { $skip: (options.page - 1) * options.pageSize },
+      { $limit: options.pageSize },
+    ];
+    docs = (await coll.aggregate(pipeline).toArray()) as Record<
+      string,
+      unknown
+    >[];
+  } else {
+    docs = (await coll
+      .find(filter)
+      .sort({ createdAt: -1, _id: -1 })
+      .skip((options.page - 1) * options.pageSize)
+      .limit(options.pageSize)
+      .toArray()) as Record<string, unknown>[];
+  }
+
   return {
     docs: docs.map((d) => mapDoc<T>(d)),
     total,

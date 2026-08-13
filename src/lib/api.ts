@@ -36,10 +36,27 @@ export const api = {
       search?: string;
       filterField?: string;
       filterValue?: string;
+      filters?: { field: string; value: string | string[] }[];
+      sortLast?: { field: string; values: string[] };
     },
   ) =>
     http
-      .get<PagedResult<T>>(`/api/${table}`, { params })
+      .get<PagedResult<T>>(`/api/${table}`, {
+        params: {
+          page: params.page,
+          pageSize: params.pageSize,
+          search: params.search,
+          filterField: params.filterField,
+          filterValue: params.filterValue,
+          filters:
+            params.filters && params.filters.length > 0
+              ? JSON.stringify(params.filters)
+              : undefined,
+          sortLast: params.sortLast
+            ? JSON.stringify(params.sortLast)
+            : undefined,
+        },
+      })
       .then((r) => r.data),
   get: <T>(table: string, id: string) =>
     http.get<T>(`/api/${table}/${id}`).then((r) => r.data),

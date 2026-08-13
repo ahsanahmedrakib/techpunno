@@ -9,11 +9,14 @@ import { safeImage } from "@/lib/imageUrl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   BookOpenCheck,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   GraduationCap,
   HeartHandshake,
   Search,
+  ShieldCheck,
+  UserX,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +28,7 @@ interface VolunteerRow {
   educationalInstitute?: string;
   educationLevel?: string;
   membershipType?: string;
+  memberPosition?: string;
   image?: string;
   status?: string;
   createdAt?: string;
@@ -54,6 +58,7 @@ function getPageItems(page: number, totalPages: number): (number | string)[] {
 export default function VolunteersGrid() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -62,15 +67,20 @@ export default function VolunteersGrid() {
   }, [search]);
 
   const { data, isFetching, isPlaceholderData } = useQuery({
-    queryKey: ["volunteers", "approved", page, debouncedSearch],
+    queryKey: ["volunteers", "active", page, debouncedSearch, typeFilter],
     placeholderData: keepPreviousData,
     queryFn: async () =>
       api.paged<VolunteerRow>("volunteers", {
         page,
         pageSize: PAGE_SIZE,
         search: debouncedSearch || undefined,
-        filterField: "status",
-        filterValue: "approved",
+        filters: [
+          { field: "status", value: ["approved", "resigned"] },
+          ...(typeFilter
+            ? [{ field: "membershipType", value: typeFilter }]
+            : []),
+        ],
+        sortLast: { field: "status", values: ["resigned"] },
       }),
   });
 
@@ -96,20 +106,38 @@ export default function VolunteersGrid() {
           eyebrow="Our Family"
           title="Meet our"
           accent="volunteers"
-          description="The passionate people building a safer digital society. Every member shown here is verified and approved by our team."
+          description="The passionate people building a safer digital society. Every member shown here is verified by our team."
         />
 
-        <div className="relative mx-auto mb-10 max-w-md">
-          <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-ink-soft/50" />
-          <input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Search by name or institution..."
-            className="w-full rounded-3xl border-2 border-primary/30 bg-white py-3 pr-4 pl-11 text-sm text-ink shadow-sm outline-none transition-all placeholder:text-ink-soft/50 focus:border-primary focus:ring-4 focus:ring-primary/10"
-          />
+        <div className="mx-auto mb-10 flex max-w-2xl flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-ink-soft/50" />
+            <input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search by name or institution..."
+              className="w-full rounded-3xl border-2 border-primary/30 bg-white py-3 pr-4 pl-11 text-sm text-ink shadow-sm outline-none transition-all placeholder:text-ink-soft/50 focus:border-primary focus:ring-4 focus:ring-primary/10"
+            />
+          </div>
+          <div className="relative">
+            <select
+              value={typeFilter}
+              onChange={(e) => {
+                setTypeFilter(e.target.value);
+                setPage(1);
+              }}
+              aria-label="Filter by membership type"
+              className="w-full cursor-pointer appearance-none rounded-3xl border-2 border-primary/30 bg-white py-3 pr-10 pl-4 text-sm font-semibold text-ink shadow-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 sm:w-auto"
+            >
+              <option value="">All Members</option>
+              <option value="Volunteer">Volunteer</option>
+              <option value="Ambassador">Ambassador</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute top-1/2 right-3.5 h-4 w-4 -translate-y-1/2 text-ink-soft/50" />
+          </div>
         </div>
 
         {isFetching && !docs.length ? (
@@ -132,7 +160,7 @@ export default function VolunteersGrid() {
               <HeartHandshake className="h-7 w-7" />
             </div>
             <h3 className="text-lg font-bold text-ink">
-              No approved volunteers yet
+              No active volunteers yet
             </h3>
             <p className="mt-2 text-sm text-ink-soft">
               Once registrations are verified and approved by the team, they
@@ -165,6 +193,18 @@ export default function VolunteersGrid() {
                     className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
                   >
                     <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
+                    {member.membershipType === "Ambassador" && (
+                      <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 rounded-full bg-amber-400/95 px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-amber-950 shadow-md shadow-amber-400/30">
+                        <ShieldCheck className="h-3.5 w-3.5" />
+                        Ambassador
+                      </span>
+                    )}
+                    {member.status === "resigned" && (
+                      <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1 rounded-full bg-secondary/95 px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-white shadow-md shadow-secondary/30">
+                        <UserX className="h-3.5 w-3.5" />
+                        Resigned
+                      </span>
+                    )}
                     <div className="relative mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 bg-linear-to-br from-primary to-primary-dark shadow-lg shadow-primary/20">
                       {safeImage(member.image) ? (
                         <Image
@@ -188,7 +228,10 @@ export default function VolunteersGrid() {
                     </h3>
                     <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary-lighter px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
                       <HeartHandshake className="h-3 w-3" />
-                      {member.membershipType ?? "Volunteer"}
+                      {member.membershipType === "Ambassador" &&
+                      member.memberPosition
+                        ? member?.memberPosition
+                        : member.membershipType}
                     </span>
                     <div className="mt-4 space-y-1.5">
                       <p className="flex items-center justify-center gap-1.5 text-sm font-medium text-ink-soft">

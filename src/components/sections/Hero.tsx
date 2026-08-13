@@ -4,6 +4,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import { SkeletonHero } from "@/components/common/Skeleton";
+import VisitorCounter from "@/components/common/VisitorCounter";
 import { heroSlides, type HeroSlide } from "@/data/hero";
 import { site } from "@/data/site";
 import { useTable } from "@/lib/api";
@@ -127,7 +128,7 @@ export default function Hero() {
       </Swiper>
 
       <div className="relative border-t border-ink/5 bg-white">
-        <Container className="grid grid-cols-1 divide-y divide-ink/5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <Container className="grid grid-cols-2 gap-6 py-6 sm:grid-cols-4">
           {statCards.map((stat, i) => (
             <Reveal
               key={stat.label}
@@ -135,7 +136,7 @@ export default function Hero() {
               scale={0.9}
               delay={i * 120}
               distance={20}
-              className="flex items-center justify-center gap-3 px-4 py-6"
+              className="flex items-center justify-center gap-3 px-4"
             >
               <span className="text-3xl font-extrabold text-gradient">
                 {stat.value}
@@ -145,6 +146,14 @@ export default function Hero() {
               </span>
             </Reveal>
           ))}
+          <Reveal
+            variant="zoom"
+            scale={0.9}
+            delay={statCards.length * 120}
+            distance={20}
+          >
+            <VisitorCounter />
+          </Reveal>
         </Container>
       </div>
     </section>

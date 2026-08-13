@@ -20,8 +20,10 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  RotateCcw,
   Search,
   Trash2,
+  UserX,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -43,6 +45,9 @@ export default function TableManager({ tableKey, config }: Props) {
   const [view, setView] = useState<"list" | "create" | "edit">("list");
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [resigningRow, setResigningRow] =
+    useState<Record<string, unknown> | null>(null);
+  const [resignDate, setResignDate] = useState("");
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -159,6 +164,34 @@ export default function TableManager({ tableKey, config }: Props) {
     }
   };
 
+  const handleResign = async () => {
+    if (!resigningRow || !resignDate) return;
+    try {
+      await updateMutation.mutateAsync({
+        id: String(resigningRow.id),
+        data: { status: "resigned", resignedDate: resignDate },
+      });
+      toast.success(`${config.singular} marked as resigned`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Update failed");
+    }
+    setResigningRow(null);
+    setResignDate("");
+  };
+
+  const handleUnresign = async (id: string) => {
+    if (!statusField) return;
+    try {
+      await updateMutation.mutateAsync({
+        id,
+        data: { status: "approved", resignedDate: "" },
+      });
+      toast.success(`${config.singular} restored as approved`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Update failed");
+    }
+  };
+
   const getField = (name: string) => config.fields.find((f) => f.name === name);
 
   const cellValue = (row: Record<string, unknown>, col: string) => {
@@ -189,6 +222,18 @@ export default function TableManager({ tableKey, config }: Props) {
       return "bg-primary-lighter text-primary border-2 border-primary/40";
     if (val === "rejected")
       return "bg-secondary-light text-secondary border-2 border-secondary/40";
+    if (val === "resigned")
+      return "bg-slate-100 text-slate-600 border-2 border-slate-300";
+    if (val === "Ambassador")
+      return "bg-amber-100 text-amber-800 border-2 border-amber-400";
+    if (val === "Volunteer")
+      return "bg-primary-lighter text-primary border-2 border-primary/40";
+    if (val === "Student")
+      return "bg-blue-50 text-blue-700 border-2 border-blue-300";
+    if (val === "Job Holder")
+      return "bg-purple-50 text-purple-700 border-2 border-purple-300";
+    if (val === "Other")
+      return "bg-mist text-ink-soft border border-ink/15";
     return "bg-mist text-ink-soft border border-ink/15";
   };
 
@@ -494,41 +539,75 @@ export default function TableManager({ tableKey, config }: Props) {
                                   {statusField && statusOptions.length > 0 && (
                                     <>
                                       {statusOptions
-                                        .filter(
-                                          (opt) =>
-                                            String(row[statusField] ?? "") !==
-                                            opt,
-                                        )
+                                        .filter((opt) => {
+                                          const current = String(
+                                            row[statusField] ?? "",
+                                          );
+                                          if (opt === "resigned") return true;
+                                          if (current === "resigned" && opt === "approved") {
+                                            return false;
+                                          }
+                                          return current !== opt;
+                                        })
                                         .map((opt) => {
                                           const isApprove = opt === "approved";
                                           const isReject = opt === "rejected";
+                                          const isResign = opt === "resigned";
+                                          const isCurrentResigned =
+                                            String(row[statusField] ?? "") ===
+                                            "resigned";
                                           return (
                                             <button
                                               key={opt}
                                               onClick={() =>
-                                                handleStatusChange(
-                                                  String(row.id),
-                                                  opt,
-                                                  isApprove
-                                                    ? "Approved"
-                                                    : isReject
-                                                      ? "Rejected"
-                                                      : "Pending",
-                                                )
+                                                isResign
+                                                  ? isCurrentResigned
+                                                    ? handleUnresign(
+                                                        String(row.id),
+                                                      )
+                                                    : (() => {
+                                                        setResigningRow(row);
+                                                        setResignDate("");
+                                                      })()
+                                                  : handleStatusChange(
+                                                      String(row.id),
+                                                      opt,
+                                                      isApprove
+                                                        ? "Approved"
+                                                        : isReject
+                                                          ? "Rejected"
+                                                          : "Pending",
+                                                    )
                                               }
-                                              title={`Mark as ${opt}`}
+                                              title={
+                                                isResign
+                                                  ? isCurrentResigned
+                                                    ? "Un-resign (restore as approved)"
+                                                    : "Mark as resigned"
+                                                  : `Mark as ${opt}`
+                                              }
                                               className={`grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 transition-all ${
                                                 isApprove
                                                   ? "border-primary/40 bg-primary-lighter text-primary hover:border-primary/70 hover:bg-primary-lighter/70"
                                                   : isReject
                                                     ? "border-secondary/40 bg-secondary-light text-secondary hover:border-secondary/70 hover:bg-secondary-light/70"
-                                                    : "border-amber-300 bg-amber-50 text-amber-600 hover:border-amber-400"
+                                                    : isResign
+                                                      ? isCurrentResigned
+                                                        ? "border-primary/50 bg-primary-lighter text-primary hover:border-primary/70 hover:bg-primary-lighter/70"
+                                                        : "border-slate-300 bg-slate-100 text-slate-600 hover:border-slate-400 hover:bg-slate-200/70"
+                                                      : "border-amber-300 bg-amber-50 text-amber-600 hover:border-amber-400"
                                               }`}
                                             >
                                               {isApprove ? (
                                                 <Check className="h-4 w-4" />
                                               ) : isReject ? (
                                                 <X className="h-4 w-4" />
+                                              ) : isResign ? (
+                                                isCurrentResigned ? (
+                                                  <RotateCcw className="h-4 w-4" />
+                                                ) : (
+                                                  <UserX className="h-4 w-4" />
+                                                )
                                               ) : (
                                                 <Hourglass className="h-4 w-4" />
                                               )}
@@ -592,6 +671,61 @@ export default function TableManager({ tableKey, config }: Props) {
         onConfirm={() => deletingId && handleDelete(deletingId)}
         onCancel={() => setDeletingId(null)}
       />
+
+      {resigningRow && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => {
+            setResigningRow(null);
+            setResignDate("");
+          }}
+        >
+          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-sm rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+              <UserX className="h-7 w-7 text-slate-600" />
+            </div>
+            <h3 className="text-lg font-bold text-ink">
+              Mark {config.singular} as resigned?
+            </h3>
+            <p className="mt-2 text-sm text-ink-soft">
+              Select the resignation date for{" "}
+              <span className="font-semibold text-ink">
+                {String(resigningRow.fullName ?? "this volunteer")}
+              </span>
+              . They will stay visible on the website with a &quot;Resigned&quot;
+              badge.
+            </p>
+            <input
+              type="date"
+              value={resignDate}
+              onChange={(e) => setResignDate(e.target.value)}
+              className="mt-4 w-full rounded-xl border-2 border-ink/15 bg-mist px-4 py-2.5 text-sm text-ink outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
+            />
+            <div className="mt-6 flex items-center justify-center gap-3">
+              <button
+                onClick={() => {
+                  setResigningRow(null);
+                  setResignDate("");
+                }}
+                className="cursor-pointer rounded-xl border-2 border-ink/15 bg-white px-5 py-2.5 text-sm font-medium text-ink transition-all hover:bg-mist"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResign}
+                disabled={!resignDate}
+                className="cursor-pointer rounded-xl bg-slate-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Mark Resigned
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

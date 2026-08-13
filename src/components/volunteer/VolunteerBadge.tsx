@@ -10,6 +10,7 @@ import {
   GraduationCap,
   HeartHandshake,
   ShieldCheck,
+  UserX,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -79,6 +80,12 @@ export default function VolunteerBadge({
                     Verified
                   </span>
                 )}
+                {volunteer.status === "resigned" && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-500/80 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+                    <UserX className="h-4 w-4" />
+                    Resigned
+                  </span>
+                )}
               </div>
 
               <p className="mt-5 inline-flex items-center gap-2 rounded-2xl border-2 border-white/25 bg-black/20 px-5 py-2.5 font-mono text-sm font-bold tracking-widest text-white backdrop-blur-sm sm:text-base">
@@ -89,48 +96,34 @@ export default function VolunteerBadge({
 
           <div className="grid grid-cols-1 gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_auto]">
             <div className="space-y-6">
-              {/* <div>
+              <div>
                 <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-ink uppercase">
-                  <User className="h-4 w-4 text-primary" />
-                  Personal Info
+                  <Calendar className="h-4 w-4 text-primary" />
+                  Membership
                 </h2>
                 <dl className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
                   <div>
                     <dt className="text-xs font-medium text-ink-soft/70">
-                      Father&apos;s Name
+                      Joining Date
                     </dt>
                     <dd className="text-sm font-semibold text-ink">
-                      {String(volunteer.fatherName ?? "—")}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-medium text-ink-soft/70">
-                      Mother&apos;s Name
-                    </dt>
-                    <dd className="text-sm font-semibold text-ink">
-                      {String(volunteer.motherName ?? "—")}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-medium text-ink-soft/70">
-                      Date of Birth
-                    </dt>
-                    <dd className="text-sm font-semibold text-ink">
-                      {volunteer.dateOfBirth
-                        ? formatDate(String(volunteer.dateOfBirth))
+                      {volunteer.joiningDate
+                        ? formatDate(String(volunteer.joiningDate))
                         : "—"}
                     </dd>
                   </div>
-                  <div>
-                    <dt className="text-xs font-medium text-ink-soft/70">
-                      Gender
-                    </dt>
-                    <dd className="text-sm font-semibold text-ink">
-                      {String(volunteer.gender ?? "—")}
-                    </dd>
-                  </div>
+                  {volunteer.resignedDate ? (
+                    <div>
+                      <dt className="text-xs font-medium text-ink-soft/70">
+                        Resigned Date
+                      </dt>
+                      <dd className="text-sm font-semibold text-ink">
+                        {formatDate(String(volunteer.resignedDate))}
+                      </dd>
+                    </div>
+                  ) : null}
                 </dl>
-              </div> */}
+              </div>
 
               <div>
                 <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-ink uppercase">
@@ -250,8 +243,8 @@ export default function VolunteerBadge({
               </p>
               <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary-lighter px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
                 <Calendar className="h-3 w-3" />
-                {volunteer.createdAt
-                  ? `Joined ${formatDate(String(volunteer.createdAt))}`
+                {volunteer.joiningDate
+                  ? `Joined ${formatDate(String(volunteer.joiningDate))}`
                   : "TechPunno Family"}
               </p>
             </div>
