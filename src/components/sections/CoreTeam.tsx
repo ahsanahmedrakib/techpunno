@@ -5,10 +5,13 @@ import SectionHeading from "@/components/common/SectionHeading";
 import TeamCard from "@/components/common/TeamCard";
 import { SkeletonTeamCard } from "@/components/common/Skeleton";
 import { coreTeam, type TeamMember } from "@/data/team";
-import { useTable } from "@/lib/api";
+import { useMergedStaticTable } from "@/lib/api";
 
 export default function CoreTeam() {
-  const [members, loading] = useTable<TeamMember>("coreteam", coreTeam);
+  const [members, loading] = useMergedStaticTable<TeamMember>(
+    "coreteam",
+    coreTeam,
+  );
   return (
     <section
       id="team"

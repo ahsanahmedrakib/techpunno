@@ -8,11 +8,22 @@ import {
   useUpdateDoc,
   type PagedResult,
 } from "@/lib/api";
-import type { TableConfig, TableKey } from "@/lib/tables";
 import { safeImage } from "@/lib/imageUrl";
+import type { TableConfig, TableKey } from "@/lib/tables";
 import { formatDateAndTime } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Check, Eye, Hourglass, Inbox, Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
+import {
+  Check,
+  Eye,
+  Hourglass,
+  Inbox,
+  Pencil,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -54,8 +65,8 @@ export default function TableManager({ tableKey, config }: Props) {
   const statusOptions = config.statusOptions ?? [];
 
   const imageField = config.fields.find(
-  (f) => f.type === "image" || f.type === "images",
-);
+    (f) => f.type === "image" || f.type === "images",
+  );
   const columns =
     imageField && !config.listColumns.includes(imageField.name)
       ? [imageField.name, ...config.listColumns]
@@ -65,9 +76,7 @@ export default function TableManager({ tableKey, config }: Props) {
     view === "create" && config.createFields
       ? config.fields.filter((f) => config.createFields!.includes(f.name))
       : view === "edit" && config.editableFields
-        ? config.fields.filter((f) =>
-            config.editableFields!.includes(f.name),
-          )
+        ? config.fields.filter((f) => config.editableFields!.includes(f.name))
         : config.fields;
 
   const { data, isLoading, error, isFetching, refetch } = useQuery<
@@ -342,7 +351,7 @@ export default function TableManager({ tableKey, config }: Props) {
                         >
                           {getField(col)?.type === "image"
                             ? "Image"
-                            : getField(col)?.label ?? col}
+                            : (getField(col)?.label ?? col)}
                         </th>
                       ))}
                       <th className="sticky right-0 z-10 bg-[#087a49] px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.4)]">
@@ -361,7 +370,9 @@ export default function TableManager({ tableKey, config }: Props) {
                             <Inbox className="h-6 w-6" />
                           </div>
                           <p className="text-sm font-medium text-ink-soft">
-                            {search ? "No rows match your search" : "No rows found"}
+                            {search
+                              ? "No rows match your search"
+                              : "No rows found"}
                           </p>
                           <p className="mt-1 text-xs text-ink-soft/60">
                             {search
@@ -397,7 +408,7 @@ export default function TableManager({ tableKey, config }: Props) {
                             const isDate =
                               col === "createdAt" || col === "updatedAt";
                             return (
-                              <td key={col} className="px-4 py-3 text-ink">
+                              <td key={col} className="p-2 text-ink">
                                 {isImage ? (
                                   <Image
                                     src={safeSrc}
@@ -405,7 +416,7 @@ export default function TableManager({ tableKey, config }: Props) {
                                     width={48}
                                     height={48}
                                     unoptimized
-                                    className="h-12 w-12 rounded-lg border-2 border-primary/30 bg-mist object-cover"
+                                    className="h-12 w-12 bg-mist object-cover rounded-full"
                                   />
                                 ) : isBadge && val !== "\u2014" ? (
                                   <span
@@ -444,7 +455,9 @@ export default function TableManager({ tableKey, config }: Props) {
                                 <>
                                   <button
                                     onClick={() =>
-                                      router.push(`/admin/${tableKey}/${row.id}`)
+                                      router.push(
+                                        `/admin/${tableKey}/${row.id}`,
+                                      )
                                     }
                                     title="View"
                                     className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-primary/30 bg-white text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter hover:text-primary"
@@ -535,7 +548,9 @@ export default function TableManager({ tableKey, config }: Props) {
                                     <Pencil className="h-4 w-4" />
                                   </button>
                                   <button
-                                    onClick={() => setDeletingId(String(row.id))}
+                                    onClick={() =>
+                                      setDeletingId(String(row.id))
+                                    }
                                     title="Delete"
                                     className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-secondary/30 bg-white text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
                                   >

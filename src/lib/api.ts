@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -98,6 +98,48 @@ export function useTableQuery<T>(table: string) {
     queryKey: ["table", table],
     queryFn: () => api.list<T>(table),
   });
+}
+
+export function useMergedStaticTable<T extends { id: unknown }>(
+  table: string,
+  staticData: T[],
+): [T[], boolean] {
+  const [fetched, setFetched] = useState<T[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .list<T>(table)
+      .then((result) => {
+        if (!cancelled) setFetched(result);
+      })
+      .catch(() => {
+        if (!cancelled) setFetched([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [table]);
+
+  const merged = useMemo(() => {
+    const map = new Map<string, T>();
+    for (const item of staticData) map.set(String(item.id), item);
+    for (const item of fetched) {
+      const id = (item as { id?: unknown }).id;
+      const key =
+        id !== undefined && id !== null
+          ? String(id)
+          : String((item as { name?: unknown }).name ?? "");
+      if (key) map.set(key, item);
+    }
+    return Array.from(map.values());
+  }, [fetched, staticData]);
+
+  return [merged, loading];
 }
 
 export function useCreateDoc(table: string) {

@@ -1,20 +1,20 @@
 "use client";
 
 import Container from "@/components/common/Container";
+import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
-import Hoverable from "@/components/common/Hoverable";
 import { site } from "@/data/site";
 import { api } from "@/lib/api";
-import { toast } from "react-toastify";
+import { scrollToFirstError } from "@/lib/utils";
 import {
   contactSchema,
   contactSubjects,
   type ContactFormValues,
 } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { scrollToFirstError } from "@/lib/utils";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const contactInfo = [
   {
@@ -78,7 +78,7 @@ const contactInfo = [
   },
   {
     label: "Facebook",
-    value: "techpunnobd2",
+    value: "techpunno",
     href: site.facebook,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -373,4 +373,3 @@ export default function Contact() {
     </section>
   );
 }
-
