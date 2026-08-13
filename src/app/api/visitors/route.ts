@@ -9,6 +9,18 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 interface VisitorDoc {
   _id: string;
   createdAt: string;
+  ip?: string;
+}
+
+function getClientIp(req: NextRequest): string | null {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const first = forwarded.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim() || null;
+  return null;
 }
 
 async function getVisitorsCollection() {
@@ -36,10 +48,19 @@ export async function POST(req: NextRequest) {
     const coll = await getVisitorsCollection();
 
     const existing = req.cookies.get(COOKIE_NAME)?.value;
+    const ip = getClientIp(req);
     let counted = false;
     let visitorId = existing;
 
-    if (!existing) {
+    if (!existing && ip) {
+      const result = await coll.updateOne(
+        { _id: ip },
+        { $setOnInsert: { ip, createdAt: new Date().toISOString() } },
+        { upsert: true },
+      );
+      counted = result.upsertedCount > 0;
+      visitorId = ip;
+    } else if (!existing) {
       visitorId = crypto.randomUUID();
       await coll.insertOne({
         _id: visitorId,
