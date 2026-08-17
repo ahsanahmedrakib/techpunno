@@ -46,10 +46,7 @@ export const volunteerSchema = yup.object({
     .trim()
     .required("Mother's name is required")
     .min(2, "Name must be at least 2 characters"),
-  dateOfBirth: yup
-    .string()
-    .trim()
-    .required("Date of Birth is required"),
+  dateOfBirth: yup.string().trim().required("Date of Birth is required"),
   gender: yup.string().required("Please select a gender"),
   occupation: yup.string().required("Please select your occupation"),
   mobile: yup
@@ -62,10 +59,7 @@ export const volunteerSchema = yup.object({
     ),
   email: yup.string().trim().email("Please enter a valid email address"),
   whatsapp: yup.string().trim(),
-  guardianName: yup
-    .string()
-    .trim()
-    .required("Guardian's name is required"),
+  guardianName: yup.string().trim().required("Guardian's name is required"),
   guardianRelation: yup.string().trim().required("Relation is required"),
   guardianMobile: yup
     .string()
@@ -142,11 +136,11 @@ export const studentRegistrationSchema = yup.object({
       bdMobilePattern,
       "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)",
     ),
-  className: yup.string().required("Please select your class"),
+  className: yup.string().required("Please select your education level"),
   institution: yup
     .string()
     .trim()
-    .required("School/College name is required")
+    .required("School/College/University name is required")
     .min(2, "Institution name must be at least 2 characters"),
 });
 
@@ -177,3 +171,4 @@ export const testimonialSchema = yup.object({
 });
 
 export type TestimonialFormValues = yup.InferType<typeof testimonialSchema>;
+

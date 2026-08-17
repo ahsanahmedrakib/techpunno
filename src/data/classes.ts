@@ -6,4 +6,7 @@ export const studentClassOptions = [
   "Class 10",
   "Class 11",
   "Class 12",
+  "Undergraduate",
+  "Graduate",
 ];
+

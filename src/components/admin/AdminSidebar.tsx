@@ -174,14 +174,15 @@ export default function AdminSidebar({
       </aside>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex items-center gap-4 border-b-2 border-primary/20 bg-white px-6 py-4 shadow-sm lg:px-8">
+        <header className="relative flex items-center gap-4 overflow-hidden border-b-2 border-primary/20 bg-linear-to-r from-[#1a3a68] via-primary to-primary-dark px-6 py-4 shadow-lg shadow-primary/20 lg:px-8">
+          <div className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
           <button
             onClick={() => setSidebarOpen(true)}
-            className="cursor-pointer rounded-xl border border-ink/10 p-2 text-ink transition-colors hover:bg-mist lg:hidden"
+            className="cursor-pointer relative rounded-xl border border-white/25 p-2 text-white transition-colors hover:bg-white/10 lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <h2 className="text-lg font-bold text-ink">
+          <h2 className="relative text-lg font-bold text-white drop-shadow-sm">
             {(() => {
               if (pathname === "/admin") return "Dashboard";
               const parts = pathname.split("/").filter(Boolean);

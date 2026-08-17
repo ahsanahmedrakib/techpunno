@@ -1,7 +1,10 @@
 "use client";
 
 import { studentClassOptions } from "@/data/classes";
-import { studentRegistrationSchema, type StudentRegistrationFormValues } from "@/lib/validation";
+import {
+  studentRegistrationSchema,
+  type StudentRegistrationFormValues,
+} from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -158,7 +161,7 @@ export default function RegistrationForm({
             className={`${inputCls(fieldError(errors, "className"))} appearance-none bg-white pr-10`}
           >
             <option value="" disabled>
-              Select your class
+              Select your education level
             </option>
             {studentClassOptions.map((opt) => (
               <option key={opt} value={opt}>
@@ -174,11 +177,12 @@ export default function RegistrationForm({
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-semibold text-ink">
-            School/College Name <span className="text-secondary">*</span>
+            School/College/University Name{" "}
+            <span className="text-secondary">*</span>
           </label>
           <input
             type="text"
-            placeholder="e.g. XYZ School & College"
+            placeholder="e.g. XYZ School/College/University"
             {...register("institution")}
             className={inputCls(fieldError(errors, "institution"))}
           />
@@ -209,3 +213,4 @@ export default function RegistrationForm({
     </form>
   );
 }
+
