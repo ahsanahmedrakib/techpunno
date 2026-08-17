@@ -23,13 +23,13 @@ export default function Navbar() {
       }`}
     >
       <nav>
-        <Container className="flex h-18 items-center justify-between gap-4">
+        <Container className="flex h-18 items-center justify-between gap-2">
           <Link
             href="/"
-            className="animate-slide-link flex items-center gap-3"
+            className="animate-slide-link flex items-center gap-2"
             style={{ animationDelay: "120ms" }}
           >
-            <span className="relative h-15 w-15 overflow-hidden rounded-xl">
+            <span className="relative h-13 w-20 sm:h-15 sm:w-15 overflow-hidden">
               <Image
                 src={site.logo}
                 alt={`${site.name} logo`}

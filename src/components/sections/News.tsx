@@ -1,16 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import Container from "@/components/common/Container";
-import SectionHeading from "@/components/common/SectionHeading";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
+import SectionHeading from "@/components/common/SectionHeading";
 import Skeleton from "@/components/common/Skeleton";
 import { newsItems, type NewsItem } from "@/data/news";
+import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
-import { useTable } from "@/lib/api";
+import Link from "next/link";
+import { useMemo } from "react";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
   Hot: "bg-secondary text-white",
@@ -20,7 +21,28 @@ const badgeStyles: Record<NewsItem["badge"], string> = {
 
 export default function News() {
   const [items, loading] = useTable<NewsItem>("news", newsItems);
-  const [primary, secondary, ...rest] = items;
+
+  const { primary, secondary, rest } = useMemo(() => {
+    const sorted = [...items].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+    const featured = sorted.filter((i) => String(i.featured) === "true");
+    const chosen: NewsItem[] = [];
+    for (const item of featured) {
+      if (chosen.length >= 2) break;
+      chosen.push(item);
+    }
+    for (const item of sorted) {
+      if (chosen.length >= 2) break;
+      if (!chosen.includes(item)) chosen.push(item);
+    }
+    const chosenIds = new Set(chosen.map((c) => c.id));
+    return {
+      primary: chosen[0],
+      secondary: chosen[1],
+      rest: sorted.filter((i) => !chosenIds.has(i.id)),
+    };
+  }, [items]);
 
   if (loading) {
     return (
@@ -52,55 +74,57 @@ export default function News() {
         />
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {[primary, secondary].filter(Boolean).map((item, i) => (
-            <Reveal
-              key={item!.id}
-              variant="zoom"
-              scale={0.95}
-              delay={i * 120}
-              className="h-full"
-            >
-              <Link
-                href={`/news/${item!.slug || item!.id}`}
-                className="block h-full"
+          {[primary, secondary]
+            .filter((item): item is NewsItem => Boolean(item))
+            .map((item, i) => (
+              <Reveal
+                key={item.id}
+                variant="zoom"
+                scale={0.95}
+                delay={i * 120}
+                className="h-full"
               >
-                <Hoverable className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border-2 border-primary/40 bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark p-8 text-white shadow-2xl shadow-ink/30 transition-all hover:border-primary sm:p-10">
-                  {firstImage(item!) && (
-                    <div className="relative -mx-8 -mt-8 mb-6 aspect-video w-[calc(100%+4rem)] shrink-0 overflow-hidden sm:-mx-10 sm:-mt-10 sm:w-[calc(100%+5rem)]">
-                      <Image
-                        src={firstImage(item!)}
-                        alt={item!.title}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-[#0f3a28] to-transparent" />
+                <Link
+                  href={`/news/${item.slug || item.id}`}
+                  className="block h-full"
+                >
+                  <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark text-white shadow-2xl shadow-ink/30 transition-all hover:border-primary">
+                    {firstImage(item) && (
+                      <div className="relative aspect-video w-full shrink-0 overflow-hidden">
+                        <Image
+                          src={firstImage(item)}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-[#0f3a28] to-transparent" />
+                      </div>
+                    )}
+                    <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/30 blur-3xl" />
+                    <div className="relative flex flex-1 flex-col p-8 sm:p-10">
+                      <span className="inline-flex self-start rounded-full bg-secondary px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white">
+                        {item.badge}
+                      </span>
+                      <h3 className="mt-5 text-left text-2xl font-bold leading-snug sm:text-3xl">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 text-left text-sm leading-relaxed text-white/80 sm:text-base">
+                        {item.summary}
+                      </p>
+                      <div className="mt-auto flex items-center justify-between pt-8">
+                        <span className="text-sm font-medium text-white/70">
+                          {formatDate(item.date)}
+                        </span>
+                        <span className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5">
+                          Read More →
+                        </span>
+                      </div>
                     </div>
-                  )}
-                  <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/30 blur-3xl" />
-                  <div>
-                    <span className="inline-flex rounded-full bg-secondary px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white">
-                      {item!.badge}
-                    </span>
-                    <h3 className="mt-5 text-2xl font-bold leading-snug sm:text-3xl">
-                      {item!.title}
-                    </h3>
-                    <p className="mt-4 text-sm leading-relaxed text-white/80 sm:text-base">
-                      {item!.summary}
-                    </p>
-                  </div>
-                  <div className="mt-8 flex items-center justify-between">
-                    <span className="text-sm font-medium text-white/70">
-                      {formatDate(item!.date)}
-                    </span>
-                    <span className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5">
-                      Read More →
-                    </span>
-                  </div>
-                </Hoverable>
-              </Link>
-            </Reveal>
-          ))}
+                  </Hoverable>
+                </Link>
+              </Reveal>
+            ))}
         </div>
 
         {rest.length > 0 && (
@@ -158,3 +182,4 @@ export default function News() {
     </section>
   );
 }
+

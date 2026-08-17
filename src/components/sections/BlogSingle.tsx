@@ -4,6 +4,7 @@ import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/data/blogs";
 import { safeImage, singleImageList } from "@/lib/imageUrl";
 import { formatDate, safeUrl } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -32,7 +33,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
             href="/#blogs"
             className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
           >
-            ← Back to Blogs
+            <ArrowLeft size={15} /> Back to Blogs
           </Link>
         </Reveal>
 
@@ -83,7 +84,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
         <Reveal delay={240}>
           <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8 my-6">
             <div
-                  className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
+              className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
               dangerouslySetInnerHTML={{ __html: excerpt }}
             />
           </div>

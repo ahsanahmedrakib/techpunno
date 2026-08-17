@@ -4,6 +4,7 @@ import Container from "@/components/common/Container";
 import { safeImage } from "@/lib/imageUrl";
 import { formatDate } from "@/lib/utils";
 import {
+  ArrowLeft,
   BadgeCheck,
   BookOpenCheck,
   Calendar,
@@ -36,7 +37,8 @@ export default function VolunteerBadge({
           href="/volunteers"
           className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
         >
-          ← Back to Volunteers
+          <ArrowLeft size={15} />
+          Back to Volunteers
         </Link>
 
         <div className="mt-8 overflow-hidden rounded-3xl border-2 border-primary/30 bg-white shadow-2xl shadow-primary/10">

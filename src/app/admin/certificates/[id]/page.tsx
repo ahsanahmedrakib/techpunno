@@ -4,6 +4,7 @@ import CertificateDetail from "@/components/admin/CertificateDetail";
 import Loading from "@/components/common/Loading";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -37,7 +38,7 @@ export default function CertificateDetailPage() {
           href="/admin/certificates"
           className="inline-flex items-center gap-1.5 rounded-xl border-2 border-primary/30 bg-white px-4 py-2 text-sm font-medium text-ink transition-all hover:border-primary/60 hover:bg-primary-lighter/50 hover:text-primary shadow-sm"
         >
-          ← Back to certificates
+          <ArrowLeft size={15} /> Back to certificates
         </Link>
       </div>
     );

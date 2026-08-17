@@ -18,15 +18,15 @@ export const site = {
 export type NavItem = { label: string; href: string };
 
 export const navItems: NavItem[] = [
-  { label: "Videos", href: "/#video" },
+  // { label: "Videos", href: "/#video" },
   { label: "Courses", href: "/#courses" },
   { label: "Events", href: "/#events" },
   { label: "Blogs", href: "/#blogs" },
   { label: "News", href: "/#news" },
   { label: "Advisors", href: "/#advisors" },
-  { label: "Core Team", href: "/#team" },
+  // { label: "Core Team", href: "/#team" },
   { label: "Volunteers", href: "/volunteers" },
   { label: "Quiz", href: "/quiz" },
-  { label: "Testimonials", href: "/#testimonials" },
-  { label: "Contact", href: "/#contact" },
+  // { label: "Testimonials", href: "/#testimonials" },
+  // { label: "Contact", href: "/#contact" },
 ];

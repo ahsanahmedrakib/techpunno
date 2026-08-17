@@ -240,7 +240,7 @@ export async function getDoc(key: TableKey, rawId: string): Promise<unknown | nu
   return doc ? mapDoc(doc) : null;
 }
 
-async function resolveIdFilter(
+export async function resolveIdFilter(
   key: TableKey,
   rawId: string,
 ): Promise<Record<string, unknown>> {

@@ -412,7 +412,7 @@ export const tables: Record<TableKey, TableConfig> = {
     key: "news",
     label: "News",
     singular: "News",
-    listColumns: ["title", "badge", "slug", "createdAt", "updatedAt"],
+    listColumns: ["title", "badge", "featured", "slug", "createdAt", "updatedAt"],
     fields: [
       {
         name: "title",
@@ -450,6 +450,14 @@ export const tables: Record<TableKey, TableConfig> = {
         options: ["Hot", "Update", "Announcement"],
         required: true,
         placeholder: "Select badge type",
+      },
+      {
+        name: "featured",
+        label: "Featured",
+        type: "select",
+        options: ["true", "false"],
+        list: true,
+        placeholder: "Show in the two big featured cards on the homepage",
       },
       {
         name: "cardImage",

@@ -6,6 +6,7 @@ import { newsItems, type NewsItem } from "@/data/news";
 import { site } from "@/data/site";
 import { singleImageList } from "@/lib/imageUrl";
 import { formatDate, safeUrl } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 const badgeStyles: Record<NewsItem["badge"], string> = {
@@ -29,7 +30,8 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
           href="/#news"
           className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
         >
-          ← Back to News
+          <ArrowLeft size={15} />
+          Back to News
         </Link>
       </Reveal>
 

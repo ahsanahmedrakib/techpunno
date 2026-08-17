@@ -9,6 +9,7 @@ export type NewsItem = {
   images?: string[];
   externalUrl?: string;
   slug?: string;
+  featured?: boolean;
 };
 
 export const newsItems: NewsItem[] = [
@@ -23,6 +24,7 @@ export const newsItems: NewsItem[] = [
     badge: "Hot",
     cardImage: "/images/news/news-1.jpeg",
     slug: "notun-android-malware-promptspy-gemini-ai",
+    featured: true,
   },
   {
     id: "n0b",
@@ -35,6 +37,7 @@ export const newsItems: NewsItem[] = [
     badge: "Update",
     cardImage: "/images/news/news-1.jpeg",
     slug: "phishing-akromon-theke-bachun",
+    featured: true,
   },
   {
     id: "n1",

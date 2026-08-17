@@ -22,6 +22,7 @@ import {
   RefreshCw,
   RotateCcw,
   Search,
+  Star,
   Trash2,
   UserX,
   X,
@@ -194,6 +195,34 @@ export default function TableManager({ tableKey, config }: Props) {
 
   const getField = (name: string) => config.fields.find((f) => f.name === name);
 
+  const handleFeaturedToggle = async (
+    row: Record<string, unknown>,
+  ) => {
+    const id = String(row.id);
+    const isFeatured = String(row.featured) === "true";
+    try {
+      const res = await fetch("/api/news/feature", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, featured: !isFeatured }),
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        throw new Error(data.error || "Failed to update featured status");
+      }
+      toast.success(
+        isFeatured
+          ? "Removed from featured"
+          : "Marked as featured",
+      );
+      void refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Update failed");
+    }
+  };
+
   const cellValue = (row: Record<string, unknown>, col: string) => {
     const val = row[col];
     if (val === null || val === undefined) return "\u2014";
@@ -233,6 +262,10 @@ export default function TableManager({ tableKey, config }: Props) {
     if (val === "Job Holder")
       return "bg-purple-50 text-purple-700 border-2 border-purple-300";
     if (val === "Other")
+      return "bg-mist text-ink-soft border border-ink/15";
+    if (val === "true")
+      return "bg-amber-100 text-amber-800 border-2 border-amber-400";
+    if (val === "false")
       return "bg-mist text-ink-soft border border-ink/15";
     return "bg-mist text-ink-soft border border-ink/15";
   };
@@ -615,6 +648,25 @@ export default function TableManager({ tableKey, config }: Props) {
                                           );
                                         })}
                                     </>
+                                  )}
+                                  {tableKey === "news" && (
+                                    <button
+                                      onClick={() => handleFeaturedToggle(row)}
+                                      title={
+                                        String(row.featured) === "true"
+                                          ? "Remove from featured"
+                                          : "Mark as featured"
+                                      }
+                                      className={`grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 transition-all ${
+                                        String(row.featured) === "true"
+                                          ? "border-amber-400 bg-amber-100 text-amber-600 hover:border-amber-500 hover:bg-amber-200"
+                                          : "border-ink/20 bg-white text-ink-soft/60 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-500"
+                                      }`}
+                                    >
+                                      <Star
+                                        className={`h-4 w-4 ${String(row.featured) === "true" ? "fill-amber-500 text-amber-500" : ""}`}
+                                      />
+                                    </button>
                                   )}
                                   <button
                                     onClick={() => {

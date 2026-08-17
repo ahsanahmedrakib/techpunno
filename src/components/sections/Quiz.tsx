@@ -5,7 +5,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { quizSets, type QuizSet } from "@/data/quiz";
 import { api } from "@/lib/api";
-import { toast } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -13,6 +13,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import { toast } from "react-toastify";
 
 type Step = "select" | "form" | "quiz" | "result";
 
@@ -283,7 +284,7 @@ export default function Quiz() {
                 onClick={() => transitionTo("select")}
                 className="mt-4 text-sm font-semibold text-primary hover:underline"
               >
-                ← Choose a different quiz
+                <ArrowLeft size={15} /> Choose a different quiz
               </button>
 
               <form
