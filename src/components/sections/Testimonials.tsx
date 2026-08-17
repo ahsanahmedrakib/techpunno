@@ -90,17 +90,30 @@ export default function Testimonials() {
                 delay={(i % 3) * 120}
                 className="h-full"
               >
-                <div className="relative flex h-full flex-col rounded-3xl border-2 border-primary/20 bg-cream p-6 transition-all hover:-translate-y-1 hover:border-primary hover:shadow-xl hover:shadow-primary/10">
-                  <span className="absolute top-5 right-5 text-primary/20">
-                    <MessageSquareQuote className="h-8 w-8" />
-                  </span>
-                  <Stars value={t.rating} />
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-ink-soft">
-                    &ldquo;{t.message}&rdquo;
-                  </p>
-                  <div className="mt-5 border-t border-primary/15 pt-4">
-                    <p className="text-sm font-bold text-ink">{t.name}</p>
-                    <p className="mt-0.5 text-xs text-ink-soft">{t.institution}</p>
+                <div className="group relative h-full rounded-3xl bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40 p-px shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/20">
+                  <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-cream p-6">
+                    <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:bg-secondary/20" />
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-secondary to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <span className="absolute top-5 right-5 text-primary/15">
+                      <MessageSquareQuote className="h-9 w-9" />
+                    </span>
+                    <Stars value={t.rating} />
+                    <p className="mt-4 flex-1 text-sm leading-relaxed text-ink-soft">
+                      &ldquo;{t.message}&rdquo;
+                    </p>
+                    <div className="mt-5 flex items-center gap-3 border-t border-primary/15 pt-4">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-linear-to-br from-primary to-secondary text-sm font-bold text-white">
+                        {t.name.charAt(0)}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-ink">
+                          {t.name}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-ink-soft">
+                          {t.institution}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Reveal>

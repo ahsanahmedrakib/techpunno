@@ -5,7 +5,7 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import { quizSets, type QuizSet } from "@/data/quiz";
 import { api } from "@/lib/api";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ListChecks, Timer, Trophy } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -242,24 +242,31 @@ export default function Quiz() {
                         key={idx}
                         type="button"
                         onClick={() => selectQuizSet(set)}
-                        className="cursor-pointer w-full rounded-3xl border-2 border-primary/40 bg-white p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-lg"
+                        className="group relative w-full rounded-3xl bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40 p-px text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
                       >
-                        <h3 className="text-lg font-bold text-ink">
-                          {set.title}
-                        </h3>
-                        <p className="mt-1 text-sm text-ink-soft">
-                          {set.description}
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-soft">
-                          <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                            ⏱ {set.durationSeconds / 60} min
-                          </span>
-                          <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                            📊 Pass: {PASSING_SCORE}%
-                          </span>
-                          <span className="rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
-                            📝 {set.questions?.length} questions
-                          </span>
+                        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-white p-6">
+                          <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:bg-secondary/20" />
+                          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-secondary to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                          <h3 className="text-lg font-bold text-ink transition-colors group-hover:text-primary">
+                            {set.title}
+                          </h3>
+                          <p className="mt-1 text-sm text-ink-soft">
+                            {set.description}
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-soft">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-lighter px-3 py-1 font-semibold text-primary">
+                              <Timer className="h-3.5 w-3.5" />
+                              {set.durationSeconds / 60} min
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 font-semibold text-amber-600">
+                              <Trophy className="h-3.5 w-3.5" />
+                              Pass: {PASSING_SCORE}%
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-light px-3 py-1 font-semibold text-secondary">
+                              <ListChecks className="h-3.5 w-3.5" />
+                              {set.questions?.length} questions
+                            </span>
+                          </div>
                         </div>
                       </button>
                     ))}

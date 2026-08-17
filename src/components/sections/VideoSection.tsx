@@ -85,38 +85,48 @@ export default function VideoSection() {
             {items.map((video) => {
               const active = video.id === activeVideo.id;
               return (
-                <Hoverable key={video.id}>
+                <Hoverable key={video.id} className="h-full">
                 <button
                   type="button"
                   onClick={() => setCurrent(video)}
-                  className={`group flex w-full gap-4 rounded-2xl border p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 ${
+                  className={`group relative w-full rounded-2xl p-px text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/15 ${
                     active
-                      ? "border-primary/40 bg-primary-tint shadow-lg shadow-primary/10"
-                      : "border-ink/5 bg-white hover:border-primary/30"
+                      ? "bg-linear-to-br from-primary via-secondary to-primary"
+                      : "bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40"
                   }`}
                 >
-                  <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-ink/10">
-                    <Image
-                      src={youtubeThumb(video.url)}
-                      alt={video.title}
-                      fill
-                      sizes="128px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    {!active && (
-                      <span className="absolute inset-0 grid place-items-center bg-black/30 text-lg text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                        ▶
+                  <div
+                    className={`flex w-full gap-4 rounded-[calc(1rem-1px)] p-3 transition-colors ${
+                      active ? "bg-primary-tint" : "bg-white"
+                    }`}
+                  >
+                    <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-ink/10">
+                      <Image
+                        src={youtubeThumb(video.url)}
+                        alt={video.title}
+                        fill
+                        sizes="128px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <span
+                        className={`absolute inset-0 grid place-items-center bg-black/30 text-white transition-opacity duration-300 ${
+                          active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}
+                      >
+                        <span className="grid h-8 w-8 place-items-center rounded-full bg-white/90 text-primary shadow-md">
+                          ▶
+                        </span>
                       </span>
-                    )}
-                  </div>
-                  <div className="min-w-0 py-1">
-                    <h4 className="line-clamp-2 text-sm font-semibold text-ink transition-colors group-hover:text-primary">
-                      {video.title}
-                    </h4>
-                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-ink-soft">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      TechPunno Channel
-                    </span>
+                    </div>
+                    <div className="min-w-0 py-1">
+                      <h4 className="line-clamp-2 text-sm font-semibold text-ink transition-colors group-hover:text-primary">
+                        {video.title}
+                      </h4>
+                      <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-ink-soft">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        TechPunno Channel
+                      </span>
+                    </div>
                   </div>
                 </button>
                 </Hoverable>

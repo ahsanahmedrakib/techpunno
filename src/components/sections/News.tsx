@@ -140,37 +140,53 @@ export default function News() {
                   href={`/news/${item.slug || item.id}`}
                   className="block h-full"
                 >
-                  <Hoverable className="flex h-full flex-col rounded-2xl border-2 border-primary/40 bg-cream transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-white hover:shadow-lg">
-                    <div className="relative h-36 shrink-0 overflow-hidden rounded-t-2xl">
-                      <Image
-                        src={firstImage(item) || "/images/dummy.jpeg"}
-                        alt={item.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
-                    </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[item.badge]}`}
-                        >
-                          {item.badge}
-                        </span>
-                        <span className="text-xs font-medium text-ink-soft">
-                          {formatDate(item.date)}
+                  <Hoverable className="group relative h-full rounded-3xl bg-linear-to-br from-primary/50 via-primary/10 to-secondary/50 p-px shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/20">
+                    <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-white">
+                      <div className="pointer-events-none absolute -right-10 -top-10 z-0 h-28 w-28 rounded-full bg-primary/10 blur-2xl transition-all duration-500 group-hover:bg-secondary/20" />
+                      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1 bg-linear-to-r from-primary via-secondary to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="relative h-36 shrink-0 overflow-hidden">
+                        <Image
+                          src={firstImage(item) || "/images/dummy.jpeg"}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-white/40 via-transparent to-black/10" />
+                      </div>
+                      <div className="relative flex flex-1 flex-col p-5">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[item.badge]}`}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                item.badge === "Hot"
+                                  ? "bg-white"
+                                  : item.badge === "Update"
+                                    ? "bg-primary"
+                                    : "bg-ink/40"
+                              }`}
+                            />
+                            {item.badge}
+                          </span>
+                          <span className="text-xs font-medium text-ink-soft">
+                            {formatDate(item.date)}
+                          </span>
+                        </div>
+                        <h3 className="mt-3 text-base font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                          {item.title}
+                        </h3>
+                        <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-soft">
+                          {item.summary}
+                        </p>
+                        <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                          Learn more
+                          <span className="transition-transform duration-300 group-hover:translate-x-1">
+                            →
+                          </span>
                         </span>
                       </div>
-                      <h3 className="mt-3 text-base font-bold leading-snug text-ink transition-colors hover:text-primary">
-                        {item.title}
-                      </h3>
-                      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-soft">
-                        {item.summary}
-                      </p>
-                      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                        Learn more →
-                      </span>
                     </div>
                   </Hoverable>
                 </Link>
