@@ -309,6 +309,42 @@ export async function createDoc(
       body.membershipType === "Ambassador" ? "AM" : "VL"
     }-${uniqueIdWithPhoneNumber(mobile)}`;
   }
+  if (
+    (key === "eventregistrations" || key === "eventparticipants") &&
+    typeof body.mobile === "string" &&
+    body.mobile.trim()
+  ) {
+    const mobile = body.mobile.trim();
+    const eventId = body.eventId ? String(body.eventId) : "";
+    const exists = await coll.findOne(
+      { mobile, ...(eventId ? { eventId } : {}) },
+      { projection: { _id: 1 } },
+    );
+    if (exists) {
+      throw new HttpError(
+        "A registration with this mobile number already exists for this event.",
+        409,
+      );
+    }
+  }
+  if (
+    key === "courseregistrations" &&
+    typeof body.mobile === "string" &&
+    body.mobile.trim()
+  ) {
+    const mobile = body.mobile.trim();
+    const courseId = body.courseId ? String(body.courseId) : "";
+    const exists = await coll.findOne(
+      { mobile, ...(courseId ? { courseId } : {}) },
+      { projection: { _id: 1 } },
+    );
+    if (exists) {
+      throw new HttpError(
+        "A registration with this mobile number already exists for this course.",
+        409,
+      );
+    }
+  }
   const now = new Date().toISOString();
   doc.createdAt = now;
   doc.updatedAt = now;

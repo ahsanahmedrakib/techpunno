@@ -10,6 +10,7 @@ import {
   Database,
   FileText,
   Folder,
+  GraduationCap,
   HeartHandshake,
   Home,
   Mail,
@@ -38,6 +39,11 @@ const icons: Record<TableKey, LucideIcon> = {
   certificateconfig: BadgeCheck,
   volunteers: HeartHandshake,
   volunteerconfig: Wallet,
+  eventregistrations: ClipboardList,
+  eventparticipants: Users,
+  testimonials: Star,
+  courses: GraduationCap,
+  courseregistrations: ClipboardList,
 };
 
 export default function AdminDashboard() {
@@ -143,12 +149,15 @@ export default function AdminDashboard() {
                   <div className="mt-2 h-3 w-1/2 animate-pulse rounded-full bg-mist" />
                 </div>
               ))
-            : tableKeys.map((key) => {
-                const col = tables[key];
-                const count = counts[key] ?? 0;
-                const src = sources[key] ?? "db";
-                const Icon = icons[key];
-                return (
+            : tableKeys
+                .map((key) => ({ key, label: tables[key].label }))
+                .sort((a, b) => a.label.localeCompare(b.label))
+                .map(({ key }) => {
+                  const col = tables[key];
+                  const count = counts[key] ?? 0;
+                  const src = sources[key] ?? "db";
+                  const Icon = icons[key];
+                  return (
                   <Link
                     key={key}
                     href={`/admin/${key}`}

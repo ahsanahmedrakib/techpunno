@@ -1,6 +1,7 @@
 import Container from "@/components/common/Container";
 import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
+import EventEnroll from "@/components/sections/EventEnroll";
 import { events, type EventItem } from "@/data/events";
 import { firstImage, singleImageList } from "@/lib/imageUrl";
 import { getDateParts, safeUrl } from "@/lib/utils";
@@ -154,11 +155,38 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </Reveal>
       )}
 
+      <Reveal delay={320}>
+        <div
+          id="register-participate"
+          className="mt-12 scroll-mt-28 overflow-hidden rounded-3xl border-2 border-primary/40 bg-white p-8 text-center shadow-2xl shadow-primary/10 sm:p-12"
+        >
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+            {isUpcoming
+              ? mode === "Offline"
+                ? "Seats are limited"
+                : "Join from anywhere"
+              : "Event completed"}
+          </p>
+          <h2 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
+            {isUpcoming ? "Register for this event" : "Registration has ended"}
+          </h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-ink-soft">
+            {isUpcoming
+              ? "Already registered? Confirm your participation with your mobile number to be added as an official participant."
+              : "Thank you for your interest in this event. Registration and participation for this event have now closed."}
+          </p>
+          {isUpcoming && (
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <EventEnroll event={item} />
+            </div>
+          )}
+        </div>
+      </Reveal>
+
       {related.length > 0 && (
         <Reveal delay={400}>
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-ink">Related events</h2>
-            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <h2 className="text-2xl font-bold text-ink">Related events</h2>            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((e) => (
                 <Link
                   key={e.id}

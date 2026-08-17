@@ -6,11 +6,14 @@ import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import { SkeletonEventCard } from "@/components/common/Skeleton";
 import { type EventItem } from "@/data/events";
+import EventParticipants from "@/components/sections/EventParticipants";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
 import { getDateParts } from "@/lib/utils";
+import { CalendarCheck, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const filters = [
@@ -20,12 +23,17 @@ const filters = [
 ];
 
 export default function Events() {
+  const router = useRouter();
   const [filter, setFilter] = useState<string>("all");
   const [items, loading] = useTable<EventItem>("events", []);
 
   const filtered = [...(filter === "all" ? items : items.filter((event) => event.status === filter))].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
+
+  const goToRegister = (event: EventItem, action: "register" | "participate") => {
+    router.push(`/events/${event.slug || event.id}?action=${action}#register-participate`);
+  };
 
   return (
     <section id="events" className="section-anchor bg-cream py-20 lg:py-28">
@@ -143,6 +151,32 @@ export default function Events() {
                             : "Completed"}
                         </span>
                       </div>
+                      {event.status === "upcoming" && (
+                        <div className="mt-4 flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              goToRegister(event, "register");
+                            }}
+                            className="cursor-pointer inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark"
+                          >
+                            <CalendarCheck className="h-4 w-4" />
+                            Register
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              goToRegister(event, "participate");
+                            }}
+                            className="cursor-pointer inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border-2 border-primary/40 bg-white px-2.5 py-2 text-xs font-semibold text-primary transition-all hover:bg-primary-lighter"
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            Participate
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </Hoverable>
                 </Link>
@@ -151,6 +185,10 @@ export default function Events() {
             })}
           </div>
         )}
+      </Container>
+
+      <Container>
+        <EventParticipants />
       </Container>
     </section>
   );

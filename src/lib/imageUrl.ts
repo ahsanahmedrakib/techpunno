@@ -17,11 +17,12 @@ export function safeImages(src?: string | string[] | null): string[] {
 
 interface ImageFields {
   cardImage?: string;
+  image?: string;
   images?: string[] | string;
 }
 
 export function firstImage(item?: ImageFields | null): string {
-  return safeImage(item?.cardImage);
+  return safeImage(item?.cardImage) || safeImage(item?.image);
 }
 
 export function singleImageList(item?: ImageFields | null): string[] {

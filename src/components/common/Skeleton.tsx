@@ -131,3 +131,26 @@ export function SkeletonVideoItem() {
     </div>
   );
 }
+
+export function SkeletonCourseCard() {
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm">
+      <div className="relative h-44 shrink-0 bg-ink/10">
+        <Skeleton className="absolute left-4 top-4 h-6 w-20 rounded-full" />
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <Skeleton className="mb-2 h-5 w-3/4" />
+        <Skeleton className="mb-2 h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+        <div className="mt-4 space-y-2">
+          <Skeleton className="h-3.5 w-2/3" />
+          <Skeleton className="h-3.5 w-1/2" />
+        </div>
+        <div className="mt-5 flex items-center gap-2 border-t border-ink/5 pt-4">
+          <Skeleton className="h-9 w-full rounded-lg" />
+          <Skeleton className="h-9 w-full rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}

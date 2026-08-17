@@ -13,6 +13,7 @@ import {
   Clapperboard,
   ClipboardList,
   FileText,
+  GraduationCap,
   HeartHandshake,
   Home,
   LayoutDashboard,
@@ -45,6 +46,11 @@ const tableIcons: Record<TableKey, LucideIcon> = {
   certificateconfig: BadgeCheck,
   volunteers: HeartHandshake,
   volunteerconfig: Wallet,
+  eventregistrations: ClipboardList,
+  eventparticipants: Users,
+  testimonials: Star,
+  courses: GraduationCap,
+  courseregistrations: ClipboardList,
 };
 
 export default function AdminSidebar({
@@ -107,33 +113,36 @@ export default function AdminSidebar({
             </p>
           </div>
 
-          {tableKeys.map((key) => {
-            const col = tables[key];
-            const href = `/admin/${key}`;
-            const active = pathname.startsWith(href);
-            const Icon = tableIcons[key];
-            return (
-              <Link
-                key={key}
-                href={href}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                  active
-                    ? "bg-primary text-white shadow-md shadow-primary/30"
-                    : "text-white/60 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg ${
-                    active ? "bg-white/20" : "bg-white/5"
+          {tableKeys
+            .map((key) => ({ key, label: tables[key].label }))
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map(({ key }) => {
+              const col = tables[key];
+              const href = `/admin/${key}`;
+              const active = pathname.startsWith(href);
+              const Icon = tableIcons[key];
+              return (
+                <Link
+                  key={key}
+                  href={href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                    active
+                      ? "bg-primary text-white shadow-md shadow-primary/30"
+                      : "text-white/60 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                </span>
-                {col.label}
-              </Link>
-            );
-          })}
+                  <span
+                    className={`flex h-7 w-7 items-center justify-center rounded-lg ${
+                      active ? "bg-white/20" : "bg-white/5"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {col.label}
+                </Link>
+              );
+            })}
 
           <Link
             href="/admin/deleted"

@@ -115,3 +115,65 @@ export const volunteerSchema = yup.object({
 });
 
 export type VolunteerFormValues = yup.InferType<typeof volunteerSchema>;
+
+const bdMobilePattern = /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
+
+export const studentRegistrationSchema = yup.object({
+  fullName: yup
+    .string()
+    .trim()
+    .required("Full name is required")
+    .min(2, "Name must be at least 2 characters"),
+  fatherName: yup
+    .string()
+    .trim()
+    .required("Father's name is required")
+    .min(2, "Name must be at least 2 characters"),
+  motherName: yup
+    .string()
+    .trim()
+    .required("Mother's name is required")
+    .min(2, "Name must be at least 2 characters"),
+  mobile: yup
+    .string()
+    .trim()
+    .required("Mobile number is required")
+    .matches(
+      bdMobilePattern,
+      "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)",
+    ),
+  className: yup.string().required("Please select your class"),
+  institution: yup
+    .string()
+    .trim()
+    .required("School/College name is required")
+    .min(2, "Institution name must be at least 2 characters"),
+});
+
+export type StudentRegistrationFormValues = yup.InferType<
+  typeof studentRegistrationSchema
+>;
+
+export const testimonialSchema = yup.object({
+  name: yup
+    .string()
+    .trim()
+    .required("Name is required")
+    .min(2, "Name must be at least 2 characters"),
+  institution: yup
+    .string()
+    .trim()
+    .required("Educational institution is required")
+    .min(2, "Institution name must be at least 2 characters"),
+  message: yup
+    .string()
+    .trim()
+    .required("Review is required")
+    .min(10, "Review must be at least 10 characters"),
+  rating: yup
+    .number()
+    .min(1, "Please select a rating")
+    .max(5, "Rating cannot exceed 5"),
+});
+
+export type TestimonialFormValues = yup.InferType<typeof testimonialSchema>;
