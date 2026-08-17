@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function ImageSwiper({
   images,
@@ -64,10 +64,10 @@ export default function ImageSwiper({
         .image-gallery .swiper-button-prev,
         .image-gallery .swiper-button-next {
           color: #ffffff;
-          background: rgba(11, 43, 29, 0.45);
+          /* background: rgba(11, 43, 29, 0.45); */
           width: 40px;
           height: 40px;
-          border-radius: 9999px;
+          /* border-radius: 9999px; */
         }
         .image-gallery .swiper-button-prev::after,
         .image-gallery .swiper-button-next::after {
@@ -89,3 +89,4 @@ export default function ImageSwiper({
     </div>
   );
 }
+

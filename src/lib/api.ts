@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -89,15 +89,16 @@ export function useTable<T>(
   const [data, setData] = useState<T[]>(fallback);
   const [loading, setLoading] = useState(true);
 
+  const fallbackRef = useRef(fallback);
   useEffect(() => {
     let cancelled = false;
     api
       .list<T>(table)
       .then((result) => {
-        if (!cancelled) setData(result.length > 0 ? result : fallback);
+        if (!cancelled) setData(result.length > 0 ? result : fallbackRef.current);
       })
       .catch(() => {
-        if (!cancelled) setData(fallback);
+        if (!cancelled) setData(fallbackRef.current);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -105,7 +106,7 @@ export function useTable<T>(
     return () => {
       cancelled = true;
     };
-  }, [table, fallback]);
+  }, [table]);
 
   return [data, loading];
 }

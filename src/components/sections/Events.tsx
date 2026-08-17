@@ -23,8 +23,9 @@ export default function Events() {
   const [filter, setFilter] = useState<string>("all");
   const [items, loading] = useTable<EventItem>("events", []);
 
-  const filtered =
-    filter === "all" ? items : items.filter((event) => event.status === filter);
+  const filtered = [...(filter === "all" ? items : items.filter((event) => event.status === filter))].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 
   return (
     <section id="events" className="section-anchor bg-cream py-20 lg:py-28">
