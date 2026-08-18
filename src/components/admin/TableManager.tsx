@@ -7,6 +7,7 @@ import {
   useDeleteDoc,
   useUpdateDoc,
   type PagedResult,
+  type UserRole,
 } from "@/lib/api";
 import { safeImage } from "@/lib/imageUrl";
 import type { TableConfig, TableKey } from "@/lib/tables";
@@ -39,9 +40,10 @@ import TableSkeleton from "./TableSkeleton";
 interface Props {
   tableKey: TableKey;
   config: TableConfig;
+  role?: UserRole;
 }
 
-export default function TableManager({ tableKey, config }: Props) {
+export default function TableManager({ tableKey, config, role }: Props) {
   const router = useRouter();
   const [view, setView] = useState<"list" | "create" | "edit">("list");
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
@@ -49,6 +51,8 @@ export default function TableManager({ tableKey, config }: Props) {
   const [resigningRow, setResigningRow] =
     useState<Record<string, unknown> | null>(null);
   const [resignDate, setResignDate] = useState("");
+
+  const canDelete = role !== "editor";
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -555,7 +559,7 @@ export default function TableManager({ tableKey, config }: Props) {
                                         <Pencil className="h-4 w-4" />
                                       </button>
                                     )}
-                                  {config.deletable && (
+                                  {config.deletable && canDelete && (
                                     <button
                                       onClick={() =>
                                         setDeletingId(String(row.id))
@@ -678,15 +682,17 @@ export default function TableManager({ tableKey, config }: Props) {
                                   >
                                     <Pencil className="h-4 w-4" />
                                   </button>
-                                  <button
-                                    onClick={() =>
-                                      setDeletingId(String(row.id))
-                                    }
-                                    title="Delete"
-                                    className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-secondary/30 bg-white text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </button>
+                                  {canDelete && (
+                                    <button
+                                      onClick={() =>
+                                        setDeletingId(String(row.id))
+                                      }
+                                      title="Delete"
+                                      className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg border-2 border-secondary/30 bg-white text-secondary transition-all hover:border-secondary/50 hover:bg-secondary-light"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </button>
+                                  )}
                                 </>
                               )}
                             </div>

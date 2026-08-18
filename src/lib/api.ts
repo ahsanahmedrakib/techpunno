@@ -2,13 +2,58 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    admin?: boolean;
+    _retried?: boolean;
+  }
+}
+
 const http = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+let refreshPromise: Promise<boolean> | null = null;
+function refreshOnce(): Promise<boolean> {
+  if (!refreshPromise) {
+    refreshPromise = fetch("/api/auth/refresh", { method: "POST" })
+      .then((r) => r.ok)
+      .catch(() => false)
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
+
+function redirectToLogin() {
+  if (typeof window !== "undefined") {
+    window.location.href = "/admin/login";
+  }
+}
+
+http.interceptors.request.use((config) => {
+  config.headers.set("x-request-mode", config.admin ? "admin" : "public");
+  return config;
+});
+
 http.interceptors.response.use(
-  (res) => res,
-  (err) => {
+  async (res) => {
+    const cfg = res.config;
+    if (cfg.admin && !cfg._retried && res.headers["x-auth-mode"] === "public") {
+      cfg._retried = true;
+      if (await refreshOnce()) return http.request(cfg);
+      redirectToLogin();
+    }
+    return res;
+  },
+  async (err) => {
+    const cfg = err.config;
+    if (cfg?.admin && !cfg._retried && err.response?.status === 401) {
+      cfg._retried = true;
+      if (await refreshOnce()) return http.request(cfg);
+      redirectToLogin();
+    }
     const message =
       err.response?.data?.error ||
       err.message ||
@@ -25,6 +70,28 @@ export interface PagedResult<T> {
   totalPages: number;
 }
 
+export type UserRole = "superadmin" | "admin" | "editor";
+
+export interface UserDoc {
+  id: string;
+  username: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditDoc {
+  id: string;
+  action: string;
+  actor: string;
+  actorRole: UserRole;
+  table: string;
+  recordId?: string;
+  summary: string;
+  changes?: Record<string, unknown>;
+  createdAt: string;
+}
+
 export const api = {
   list: <T>(table: string) =>
     http.get<T[]>(`/api/${table}`).then((r) => r.data),
@@ -38,34 +105,42 @@ export const api = {
       filterValue?: string;
       filters?: { field: string; value: string | string[] }[];
       sortLast?: { field: string; values: string[] };
+      public?: boolean;
     },
-  ) =>
-    http
+  ) => {
+    const { public: isPublic, ...query } = params;
+    return http
       .get<PagedResult<T>>(`/api/${table}`, {
+        admin: !isPublic,
         params: {
-          page: params.page,
-          pageSize: params.pageSize,
-          search: params.search,
-          filterField: params.filterField,
-          filterValue: params.filterValue,
+          page: query.page,
+          pageSize: query.pageSize,
+          search: query.search,
+          filterField: query.filterField,
+          filterValue: query.filterValue,
           filters:
-            params.filters && params.filters.length > 0
-              ? JSON.stringify(params.filters)
+            query.filters && query.filters.length > 0
+              ? JSON.stringify(query.filters)
               : undefined,
-          sortLast: params.sortLast
-            ? JSON.stringify(params.sortLast)
+          sortLast: query.sortLast
+            ? JSON.stringify(query.sortLast)
             : undefined,
         },
       })
-      .then((r) => r.data),
+      .then((r) => r.data);
+  },
   get: <T>(table: string, id: string) =>
-    http.get<T>(`/api/${table}/${id}`).then((r) => r.data),
+    http.get<T>(`/api/${table}/${id}`, { admin: true }).then((r) => r.data),
   create: <T>(table: string, data: unknown) =>
-    http.post<T>(`/api/${table}`, data).then((r) => r.data),
+    http.post<T>(`/api/${table}`, data, { admin: true }).then((r) => r.data),
   update: <T>(table: string, id: string, data: unknown) =>
-    http.put<T>(`/api/${table}/${id}`, data).then((r) => r.data),
+    http
+      .put<T>(`/api/${table}/${id}`, data, { admin: true })
+      .then((r) => r.data),
   remove: (table: string, id: string) =>
-    http.delete<{ ok: boolean }>(`/api/${table}/${id}`).then((r) => r.data),
+    http
+      .delete<{ ok: boolean }>(`/api/${table}/${id}`, { admin: true })
+      .then((r) => r.data),
   checkCertificate: (phone: string, quizTitle: string) =>
     http
       .get<{ taken: boolean }>("/api/certificates", { params: { phone, quizTitle } })
@@ -73,13 +148,64 @@ export const api = {
   deletedList: <T extends Record<string, unknown>>(table?: string) =>
     http
       .get<{ docs: T[]; total: number }>("/api/deleted", {
+        admin: true,
         params: table ? { table } : {},
       })
       .then((r) => r.data),
   restoreDeleted: (table: string, id: string) =>
-    http.post<{ ok: boolean }>("/api/deleted", { table, id }).then((r) => r.data),
+    http
+      .post<{ ok: boolean }>("/api/deleted", { table, id }, { admin: true })
+      .then((r) => r.data),
   permanentlyDelete: (table: string, id: string) =>
-    http.delete<{ ok: boolean }>("/api/deleted", { data: { table, id } }).then((r) => r.data),
+    http
+      .delete<{ ok: boolean }>("/api/deleted", {
+        admin: true,
+        data: { table, id },
+      })
+      .then((r) => r.data),
+  authMe: () =>
+    http
+      .get<{ username: string; role: UserRole }>("/api/auth/me", {
+        admin: true,
+      })
+      .then((r) => r.data),
+  logout: () => http.post("/api/auth/logout").then((r) => r.data),
+  listUsers: () =>
+    http.get<UserDoc[]>("/api/users", { admin: true }).then((r) => r.data),
+  createUser: (data: { username: string; password: string; role: UserRole }) =>
+    http.post<UserDoc>("/api/users", data, { admin: true }).then((r) => r.data),
+  updateUser: (
+    id: string,
+    data: { username?: string; password?: string; role?: UserRole },
+  ) =>
+    http
+      .put<UserDoc>(`/api/users/${id}`, data, { admin: true })
+      .then((r) => r.data),
+  deleteUser: (id: string) =>
+    http
+      .delete<{ ok: boolean }>(`/api/users/${id}`, { admin: true })
+      .then((r) => r.data),
+  audit: (params: {
+    page?: number;
+    pageSize?: number;
+    table?: string;
+    action?: string;
+    actor?: string;
+    search?: string;
+  }) =>
+    http
+      .get<PagedResult<AuditDoc>>("/api/audit", {
+        admin: true,
+        params: {
+          page: params.page,
+          pageSize: params.pageSize,
+          table: params.table,
+          action: params.action,
+          actor: params.actor,
+          search: params.search,
+        },
+      })
+      .then((r) => r.data),
 };
 
 export function useTable<T>(
@@ -182,5 +308,12 @@ export function useDeleteDoc(table: string) {
   return useMutation({
     mutationFn: (id: string) => api.remove(table, id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["table", table] }),
+  });
+}
+
+export function useAuthMe() {
+  return useQuery({
+    queryKey: ["auth-me"],
+    queryFn: () => api.authMe(),
   });
 }

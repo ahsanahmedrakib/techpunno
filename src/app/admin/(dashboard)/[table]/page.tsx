@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { tables, isTableKey, type TableKey } from "@/lib/tables";
 import TableManager from "@/components/admin/TableManager";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,13 @@ export default async function TablePage({
   }
 
   const config = tables[table as TableKey];
+  const user = await requireAdmin();
 
-  return <TableManager tableKey={table as TableKey} config={config} />;
+  return (
+    <TableManager
+      tableKey={table as TableKey}
+      config={config}
+      role={user.role}
+    />
+  );
 }

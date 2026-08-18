@@ -1,6 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import { getDbName, getMongoClient } from "@/lib/mongodb";
 import { uniqueIdWithPhoneNumber } from "@/lib/utils";
+import { events } from "@/data/events";
 import {
   tables,
   isTableKey,
@@ -91,6 +92,18 @@ export function mapDoc<T>(doc: Record<string, unknown>): T {
   const { ...rest } = doc;
   const id = rest.id !== undefined ? rest.id : mongoId;
   return { ...rest, id, _id: mongoId } as unknown as T;
+}
+
+export function projectDoc(
+  key: TableKey,
+  doc: Record<string, unknown>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const field of tables[key].publicFields ?? []) {
+    if (doc[field] !== undefined) out[field] = doc[field];
+  }
+  if (doc.id !== undefined) out.id = doc.id;
+  return out;
 }
 
 export async function getCollection(
@@ -290,6 +303,16 @@ function pickFields(
   return picked;
 }
 
+async function eventExists(eventId: string): Promise<boolean> {
+  try {
+    const doc = await getDoc("events", eventId);
+    if (doc) return true;
+  } catch {
+    /* fall through */
+  }
+  return events.some((e) => String(e.id) === eventId || e.slug === eventId);
+}
+
 export async function createDoc(
   key: TableKey,
   body: Record<string, unknown>,
@@ -342,6 +365,15 @@ export async function createDoc(
       throw new HttpError(
         "A registration with this mobile number already exists for this course.",
         409,
+      );
+    }
+  }
+  if (key === "eventparticipants") {
+    const eventId = body.eventId ? String(body.eventId).trim() : "";
+    if (!eventId || !(await eventExists(eventId))) {
+      throw new HttpError(
+        "Participants must be linked to a valid event. Choose the event they participated in.",
+        400,
       );
     }
   }

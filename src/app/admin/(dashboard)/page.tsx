@@ -16,13 +16,14 @@ import {
   Mail,
   Medal,
   Newspaper,
+  ScrollText,
   Star,
   Trash2,
   Users,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, useAuthMe } from "@/lib/api";
 import { tables, tableKeys, type TableKey } from "@/lib/tables";
 
 const icons: Record<TableKey, LucideIcon> = {
@@ -58,6 +59,16 @@ export default function AdminDashboard() {
     queryKey: ["deleted"],
     queryFn: () => api.deletedList<Record<string, unknown>>(),
   });
+
+  const usersQuery = useQuery({
+    queryKey: ["users"],
+    queryFn: () => api.listUsers(),
+  });
+
+  const meQuery = useAuthMe();
+  const role = meQuery.data?.role;
+  const canManageUsers = role === "superadmin" || role === "admin";
+  const canManageDeleted = role === "superadmin" || role === "admin";
 
   const counts: Record<string, number> = {};
   const sources: Record<string, "db" | "error"> = {};
@@ -188,31 +199,78 @@ export default function AdminDashboard() {
                   </Link>
                 );
               })}
-              <Link
-                href="/admin/deleted"
-                className="group rounded-2xl border-2 border-dashed border-secondary/40 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-secondary/70 hover:shadow-md"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-light text-secondary transition-colors group-hover:bg-secondary/10">
-                    <Trash2 className="h-5 w-5" />
-                  </span>
-                  {deletedQuery.data?.total ? (
-                    <span className="rounded-full bg-secondary-light px-2 py-0.5 text-[10px] font-bold text-secondary">
-                      {deletedQuery.data.total}
+              {canManageUsers && (
+                <Link
+                  href="/admin/users"
+                  className="group rounded-2xl border-2 border-dashed border-primary/40 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/70 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-lighter text-primary transition-colors group-hover:bg-primary/10">
+                      <Users className="h-5 w-5" />
                     </span>
-                  ) : (
-                    <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold text-ink-soft">
-                      EMPTY
+                    <span className="rounded-full bg-primary-lighter px-2 py-0.5 text-[10px] font-bold text-primary">
+                      {usersQuery.data?.length ?? "…"} account
+                      {usersQuery.data?.length !== 1 ? "s" : ""}
                     </span>
-                  )}
-                </div>
-                <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-secondary">
-                  Deleted Data
-                </h4>
-                <p className="mt-1 text-xs text-ink-soft">
-                  Restore or permanently delete hidden rows
-                </p>
-              </Link>
+                  </div>
+                  <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-primary">
+                    Users
+                  </h4>
+                  <p className="mt-1 text-xs text-ink-soft">
+                    Add admins &amp; editors, update passwords, manage roles
+                  </p>
+                </Link>
+              )}
+
+              {canManageUsers && (
+                <Link
+                  href="/admin/audit"
+                  className="group rounded-2xl border-2 border-dashed border-primary/40 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/70 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-lighter text-primary transition-colors group-hover:bg-primary/10">
+                      <ScrollText className="h-5 w-5" />
+                    </span>
+                    <span className="rounded-full bg-primary-lighter px-2 py-0.5 text-[10px] font-bold text-primary">
+                      ACTIVITY
+                    </span>
+                  </div>
+                  <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-primary">
+                    Audit Log
+                  </h4>
+                  <p className="mt-1 text-xs text-ink-soft">
+                    Who created, updated, deleted or approved records
+                  </p>
+                </Link>
+              )}
+
+              {canManageDeleted && (
+                <Link
+                  href="/admin/deleted"
+                  className="group rounded-2xl border-2 border-dashed border-secondary/40 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-secondary/70 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-light text-secondary transition-colors group-hover:bg-secondary/10">
+                      <Trash2 className="h-5 w-5" />
+                    </span>
+                    {deletedQuery.data?.total ? (
+                      <span className="rounded-full bg-secondary-light px-2 py-0.5 text-[10px] font-bold text-secondary">
+                        {deletedQuery.data.total}
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold text-ink-soft">
+                        EMPTY
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="mt-3 text-base font-bold text-ink transition-colors group-hover:text-secondary">
+                    Deleted Data
+                  </h4>
+                  <p className="mt-1 text-xs text-ink-soft">
+                    Restore or permanently delete hidden rows
+                  </p>
+                </Link>
+              )}
         </div>
       </div>
     </div>

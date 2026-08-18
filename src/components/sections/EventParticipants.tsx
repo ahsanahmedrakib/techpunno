@@ -1,19 +1,31 @@
 "use client";
 
-import { eventParticipants, type EventParticipantItem } from "@/data/eventParticipants";
+import {
+  eventParticipants,
+  type EventParticipantItem,
+} from "@/data/eventParticipants";
 import { useTable } from "@/lib/api";
-import { GraduationCap, Phone, School, Search, Users } from "lucide-react";
+import {
+  CalendarDays,
+  GraduationCap,
+  School,
+  Search,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
 
 export default function EventParticipants() {
-  const [items] = useTable<EventParticipantItem>("eventparticipants", eventParticipants);
+  const [items] = useTable<EventParticipantItem>(
+    "eventparticipants",
+    eventParticipants,
+  );
   const [query, setQuery] = useState("");
 
   const approved = items.filter((p) => p.status === "approved");
   const filtered = approved.filter((p) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
-    return [p.fullName, p.mobile, p.institution, p.className, p.eventTitle]
+    return [p.fullName, p.institution, p.className, p.eventTitle]
       .join(" ")
       .toLowerCase()
       .includes(q);
@@ -33,7 +45,7 @@ export default function EventParticipants() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, phone or institution..."
+          placeholder="Search by name or institution..."
           className="w-full rounded-full border-2 border-primary/20 bg-white py-3 pr-4 pl-11 text-sm text-ink shadow-sm outline-none transition-all placeholder:text-ink-soft/50 focus:border-primary focus:ring-4 focus:ring-primary/10"
         />
       </div>
@@ -57,7 +69,9 @@ export default function EventParticipants() {
                 <Users className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-ink">{p.fullName}</p>
+                <p className="truncate text-sm font-bold text-ink">
+                  {p.fullName}
+                </p>
                 <p className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-soft">
                   <GraduationCap className="h-3.5 w-3.5" />
                   {p.className}
@@ -66,10 +80,12 @@ export default function EventParticipants() {
                   <School className="h-3.5 w-3.5" />
                   <span className="truncate">{p.institution}</span>
                 </p>
-                <p className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-soft/80">
-                  <Phone className="h-3.5 w-3.5" />
-                  {p.mobile}
-                </p>
+                {p.eventTitle && (
+                  <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary-lighter px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                    <CalendarDays className="h-3 w-3" />
+                    <span>{p.eventTitle}</span>
+                  </p>
+                )}
               </div>
             </div>
           ))}

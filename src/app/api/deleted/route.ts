@@ -10,10 +10,19 @@ import {
   restoreDoc,
 } from "@/lib/db";
 import { deleteImageFiles } from "@/lib/images";
+import {
+  getAuthUserFromRequest,
+  unauthorized,
+  forbidden,
+} from "@/lib/auth/guard";
+import { logAudit, actorOf, recordLabel } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  const admin = await getAuthUserFromRequest(req);
+  if (!admin) return unauthorized();
+  if (admin.role === "editor") return forbidden();
   try {
     const tableParam = new URL(req.url).searchParams.get("table") ?? "";
     const keys: TableKey[] =
@@ -38,6 +47,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const admin = await getAuthUserFromRequest(req);
+  if (!admin) return unauthorized();
+  if (admin.role === "editor") return forbidden();
   try {
     const body = (await req.json()) as { table?: string; id?: string };
     if (!body.table || !isTableKey(body.table) || !body.id) {
@@ -53,6 +65,23 @@ export async function POST(req: NextRequest) {
     if (!restored) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
+    const a = actorOf(admin);
+    if (a) {
+      const existing = (await getDeletedDoc(body.table, body.id)) as Record<
+        string,
+        unknown
+      > | null;
+      const label = existing ? recordLabel(existing) : "";
+      await logAudit({
+        ...a,
+        action: "restore",
+        table: body.table,
+        recordId: body.id,
+        summary: `Restored ${tables[body.table].singular.toLowerCase()}${
+          label ? ` "${label}"` : ""
+        }`,
+      });
+    }
     return NextResponse.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";
@@ -61,6 +90,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const admin = await getAuthUserFromRequest(req);
+  if (!admin) return unauthorized();
+  if (admin.role === "editor") return forbidden();
   try {
     const body = (await req.json()) as { table?: string; id?: string };
     if (!body.table || !isTableKey(body.table) || !body.id) {
@@ -85,6 +117,19 @@ export async function DELETE(req: NextRequest) {
         .filter((f) => f.type === "image" || f.type === "images")
         .map((f) => f.name);
       await deleteImageFiles(existing, imageFields);
+    }
+    const a = actorOf(admin);
+    if (a) {
+      const label = existing ? recordLabel(existing) : "";
+      await logAudit({
+        ...a,
+        action: "permanent_delete",
+        table: body.table,
+        recordId: body.id,
+        summary: `Permanently deleted ${tables[body.table].singular.toLowerCase()}${
+          label ? ` "${label}"` : ""
+        }`,
+      });
     }
     return NextResponse.json({ ok: true });
   } catch (error) {

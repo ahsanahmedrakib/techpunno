@@ -74,6 +74,7 @@ export default function VolunteersGrid() {
         page,
         pageSize: PAGE_SIZE,
         search: debouncedSearch || undefined,
+        public: true,
         filters: [
           { field: "status", value: ["approved", "resigned"] },
           ...(typeFilter

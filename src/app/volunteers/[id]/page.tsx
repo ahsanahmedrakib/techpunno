@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import VolunteerBadge from "@/components/volunteer/VolunteerBadge";
-import { getCollection, mapDoc } from "@/lib/db";
+import { getCollection, mapDoc, projectDoc } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +14,9 @@ async function findVolunteer(id: string): Promise<Record<string, unknown> | null
     $or: [{ volunteerId: id }, { id }],
     deletedAt: null,
   });
-  return doc
-    ? mapDoc<Record<string, unknown>>(doc as Record<string, unknown>)
-    : null;
+  if (!doc) return null;
+  const mapped = mapDoc<Record<string, unknown>>(doc as Record<string, unknown>);
+  return projectDoc("volunteers", mapped);
 }
 
 async function resolveVolunteerUrl(id: string): Promise<string> {

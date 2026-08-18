@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCollection, tableKeys } from "@/lib/db";
 import { tables } from "@/lib/tables";
+import { getAuthUserFromRequest, unauthorized } from "@/lib/auth/guard";
 
 const SEED_TABLES = new Set(["advisors", "coreteam"]);
 
@@ -17,7 +18,9 @@ function slugify(text: string): string {
   return base || "untitled";
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const admin = await getAuthUserFromRequest(req);
+  if (!admin) return unauthorized();
   try {
     for (const key of tableKeys) {
       if (!SEED_TABLES.has(key)) continue;
@@ -58,7 +61,9 @@ export async function POST() {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
+  const admin = await getAuthUserFromRequest(req);
+  if (!admin) return unauthorized();
   try {
     for (const key of tableKeys) {
       const coll = await getCollection(key);

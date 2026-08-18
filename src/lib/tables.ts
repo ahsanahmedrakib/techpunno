@@ -54,6 +54,8 @@ export interface TableConfig {
   readOnly?: boolean;
   deletable?: boolean;
   canCreate?: boolean;
+  publicFields?: string[];
+  publicCreate?: boolean;
   createFields?: string[];
   editableFields?: string[];
   defaultStatus?: string;
@@ -127,6 +129,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: advisors,
+    publicFields: ["name", "role", "bio", "initials", "image", "slug"],
   },
   coreteam: {
     key: "coreteam",
@@ -173,6 +176,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: coreTeam,
+    publicFields: ["name", "role", "bio", "initials", "image", "slug"],
   },
   blogs: {
     key: "blogs",
@@ -258,6 +262,20 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: blogPosts,
+    publicFields: [
+      "title",
+      "summary",
+      "excerpt",
+      "category",
+      "author",
+      "authorImage",
+      "readTime",
+      "date",
+      "cardImage",
+      "images",
+      "externalUrl",
+      "slug",
+    ],
   },
   events: {
     key: "events",
@@ -346,6 +364,20 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: events,
+    publicFields: [
+      "title",
+      "summary",
+      "description",
+      "cardImage",
+      "images",
+      "date",
+      "location",
+      "mode",
+      "category",
+      "status",
+      "externalUrl",
+      "slug",
+    ],
   },
   hero: {
     key: "hero",
@@ -407,6 +439,16 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: heroSlides,
+    publicFields: [
+      "kicker",
+      "title",
+      "highlight",
+      "description",
+      "ctaLabel",
+      "ctaHref",
+      "accent",
+      "slug",
+    ],
   },
   news: {
     key: "news",
@@ -481,6 +523,18 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: newsItems,
+    publicFields: [
+      "title",
+      "summary",
+      "content",
+      "date",
+      "badge",
+      "featured",
+      "cardImage",
+      "images",
+      "externalUrl",
+      "slug",
+    ],
   },
   videos: {
     key: "videos",
@@ -506,6 +560,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: videos,
+    publicFields: ["title", "url", "slug"],
   },
   quizsets: {
     key: "quizsets",
@@ -544,6 +599,13 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: quizSets,
+    publicFields: [
+      "title",
+      "description",
+      "durationSeconds",
+      "questions",
+      "slug",
+    ],
   },
   contacts: {
     key: "contacts",
@@ -589,6 +651,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [],
+    publicCreate: true,
   },
   certificates: {
     key: "certificates",
@@ -661,6 +724,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [],
+    publicCreate: true,
   },
   certificateconfig: {
     key: "certificateconfig",
@@ -978,6 +1042,21 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [],
+    publicFields: [
+      "fullName",
+      "educationalInstitute",
+      "educationLevel",
+      "membershipType",
+      "memberPosition",
+      "image",
+      "status",
+      "volunteerId",
+      "joiningDate",
+      "resignedDate",
+      "company",
+      "department",
+      "designation",
+    ],
   },
   volunteerconfig: {
     key: "volunteerconfig",
@@ -1012,6 +1091,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: [defaultVolunteerConfig as unknown as Record<string, unknown>],
+    publicFields: ["bkashNumber", "bkashQr", "registrationFee"],
   },
   eventregistrations: {
     key: "eventregistrations",
@@ -1104,6 +1184,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: eventRegistrations,
+    publicCreate: true,
   },
   eventparticipants: {
     key: "eventparticipants",
@@ -1196,6 +1277,14 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: eventParticipants,
+    publicFields: [
+      "fullName",
+      "className",
+      "institution",
+      "eventId",
+      "eventTitle",
+      "status",
+    ],
   },
   testimonials: {
     key: "testimonials",
@@ -1249,6 +1338,8 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: testimonials,
+    publicFields: ["name", "institution", "message", "rating", "status"],
+    publicCreate: true,
   },
   courses: {
     key: "courses",
@@ -1325,6 +1416,18 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "slug", label: "Slug", type: "readonly", list: true },
     ],
     seed: courses,
+    publicFields: [
+      "title",
+      "summary",
+      "description",
+      "category",
+      "duration",
+      "schedule",
+      "fees",
+      "image",
+      "status",
+      "slug",
+    ],
   },
   courseregistrations: {
     key: "courseregistrations",
@@ -1417,6 +1520,7 @@ export const tables: Record<TableKey, TableConfig> = {
       { name: "updatedAt", label: "Updated", type: "readonly", list: true },
     ],
     seed: courseRegistrations,
+    publicCreate: true,
   },
 };
 
