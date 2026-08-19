@@ -46,8 +46,8 @@ export default function Events() {
 
         <Reveal className="mb-10 flex flex-wrap items-center justify-center gap-2">
           {filters.map((f) => (
+            <Hoverable key={f.key}>
             <button
-              key={f.key}
               onClick={() => setFilter(f.key)}
               className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
                 filter === f.key
@@ -57,6 +57,7 @@ export default function Events() {
             >
               {f.label}
             </button>
+            </Hoverable>
           ))}
         </Reveal>
 

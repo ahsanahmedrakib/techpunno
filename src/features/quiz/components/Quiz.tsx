@@ -238,8 +238,8 @@ export default function Quiz() {
                       </div>
                     ))
                   : quizSetsList.map((set, idx) => (
+                      <Hoverable key={idx} className="w-full">
                       <button
-                        key={idx}
                         type="button"
                         onClick={() => selectQuizSet(set)}
                         className="group relative w-full rounded-3xl bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40 p-px text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
@@ -269,6 +269,7 @@ export default function Quiz() {
                           </div>
                         </div>
                       </button>
+                      </Hoverable>
                     ))}
               </div>
             </div>

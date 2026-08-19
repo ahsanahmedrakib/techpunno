@@ -113,11 +113,14 @@ body {
 @media (hover: none) {
   [data-hoverable] {
     -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease;
   }
 
   [data-hoverable][data-tapped="true"] {
-    transform: translateY(-2px);
-    transition: transform 150ms ease;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 14px 30px -14px rgb(26 58 104 / 0.28);
   }
 }
 

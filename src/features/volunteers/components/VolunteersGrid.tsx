@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/common/Container";
+import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import Skeleton from "@/components/common/Skeleton";
@@ -188,6 +189,7 @@ export default function VolunteersGrid() {
                   href={`/volunteers/${member.volunteerId || member.id}`}
                   className="block h-full"
                 >
+                  <Hoverable className="h-full">
                   <Reveal
                     variant={i % 2 === 0 ? "fade-up" : "zoom"}
                     delay={(i % 3) * 100}
@@ -249,6 +251,7 @@ export default function VolunteersGrid() {
                       )}
                     </div>
                   </Reveal>
+                  </Hoverable>
                 </Link>
               ))}
             </div>
