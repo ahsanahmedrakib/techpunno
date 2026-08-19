@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decryptCredentials } from "@/lib/auth/credentials";
 import { verifyAdminCredentials } from "@/lib/auth/admin";
+import { markLastLogin } from "@/lib/auth/users";
 import { createAccessToken, createRefreshToken } from "@/lib/auth/tokens";
 import { createSession } from "@/lib/auth/session";
 import { setAuthCookies } from "@/lib/auth/cookies";
@@ -37,6 +38,8 @@ export async function POST(req: NextRequest) {
 
   const user = await verifyAdminCredentials(username, password);
   if (!user) return unauthorized();
+
+  await markLastLogin(username);
 
   const jti = crypto.randomUUID();
   const [access, refresh] = await Promise.all([

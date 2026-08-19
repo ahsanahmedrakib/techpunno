@@ -368,7 +368,7 @@ export default function RowForm({
   const fileRegistry = useRef<Map<string, File>>(new Map());
 
   const [relationOptions, setRelationOptions] = useState<
-    Record<string, { value: string; label: string }[]>
+    Record<string, { value: string; label: string; store?: string }[]>
   >({});
   const [relationValues, setRelationValues] = useState<Record<string, string>>(
     {},
@@ -398,7 +398,7 @@ export default function RowForm({
           /* fall back to seed data only */
         }
         const seen = new Set<string>();
-        const opts: { value: string; label: string }[] = [];
+        const opts: { value: string; label: string; store?: string }[] = [];
         for (const d of sourceDocs) {
           const value = String(d[rel.valueField] ?? d.id ?? "");
           const label = (rel.labelFields ?? [rel.labelField])
@@ -414,7 +414,11 @@ export default function RowForm({
             continue;
           }
           seen.add(value);
-          opts.push({ value, label });
+          const store =
+            rel.storeField && d[rel.storeField] !== undefined
+              ? String(d[rel.storeField])
+              : undefined;
+          opts.push({ value, label, store });
         }
         const currentValue = String(
           initial?.[rel.syncField ?? ""] ?? initial?.[field.name] ?? "",
@@ -747,7 +751,10 @@ export default function RowForm({
                         ...prev,
                         [field.name]: value,
                       }));
-                      setValue(field.name, opt ? opt.label : "");
+                      setValue(
+                        field.name,
+                        opt ? (opt.store ?? opt.label) : "",
+                      );
                       if (field.relation?.syncField) {
                         setValue(
                           field.relation.syncField,

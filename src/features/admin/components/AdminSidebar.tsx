@@ -1,11 +1,7 @@
 "use client";
 
 import { site } from "@/features/shared/data/site";
-import {
-  tableKeys,
-  tables,
-  type TableKey,
-} from "@/lib/tables";
+import { tableKeys, tables, type TableKey } from "@/lib/tables";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -149,6 +145,23 @@ export default function AdminSidebar({
             </Link>
           )}
 
+          {canViewAudit && (
+            <Link
+              href="/admin/audit"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                pathname.startsWith("/admin/audit")
+                  ? "bg-primary text-white shadow-md shadow-primary/30"
+                  : "text-white/60 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-sm">
+                <ScrollText className="h-4 w-4" />
+              </span>
+              Audit Log
+            </Link>
+          )}
+
           <div className="pt-4 pb-1 px-3">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/25">
               Tables
@@ -185,23 +198,6 @@ export default function AdminSidebar({
                 </Link>
               );
             })}
-
-          {canViewAudit && (
-            <Link
-              href="/admin/audit"
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                pathname.startsWith("/admin/audit")
-                  ? "bg-primary text-white shadow-md shadow-primary/30"
-                  : "text-white/60 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-sm">
-                <ScrollText className="h-4 w-4" />
-              </span>
-              Audit Log
-            </Link>
-          )}
 
           {canManageDeleted && (
             <Link

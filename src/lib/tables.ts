@@ -40,6 +40,8 @@ export interface RelationDef {
   filterField?: string;
   filterValue?: string;
   syncField?: string;
+  /** Field of the related doc whose value is stored on this field (instead of the label). */
+  storeField?: string;
 }
 
 export interface FieldDef {
@@ -579,7 +581,7 @@ export const tables: Record<TableKey, TableConfig> = {
     key: "quizsets",
     label: "Quiz Sets",
     singular: "Quiz Set",
-    listColumns: ["title", "slug", "createdAt", "updatedAt"],
+    listColumns: ["title", "date", "slug", "createdAt", "updatedAt"],
     fields: [
       {
         name: "title",
@@ -588,6 +590,13 @@ export const tables: Record<TableKey, TableConfig> = {
         required: true,
         list: true,
         placeholder: "Enter the quiz set title",
+      },
+      {
+        name: "date",
+        label: "Date",
+        type: "text",
+        list: true,
+        placeholder: "e.g. 15 February 2026",
       },
       {
         name: "description",
@@ -614,6 +623,7 @@ export const tables: Record<TableKey, TableConfig> = {
     seed: quizSets,
     publicFields: [
       "title",
+      "date",
       "description",
       "durationSeconds",
       "questions",
@@ -673,7 +683,7 @@ export const tables: Record<TableKey, TableConfig> = {
     readOnly: true,
     deletable: true,
     canCreate: true,
-    createFields: ["name", "phone", "percentage"],
+    createFields: ["name", "phone", "percentage", "quizTitle"],
     editableFields: ["name"],
     listColumns: [
       "certificateId",
@@ -722,10 +732,17 @@ export const tables: Record<TableKey, TableConfig> = {
       },
       {
         name: "quizTitle",
-        label: "Quiz Title",
-        type: "text",
+        label: "Quiz",
+        type: "relation",
+        required: true,
         list: true,
-        placeholder: "e.g. Cyber Security Basics",
+        relation: {
+          table: "quizsets",
+          valueField: "title",
+          storeField: "title",
+          labelField: "title",
+          labelFields: ["title", "date"],
+        },
       },
       {
         name: "date",
@@ -767,13 +784,6 @@ export const tables: Record<TableKey, TableConfig> = {
         type: "text",
         required: true,
         placeholder: "e.g. This is to certify that",
-      },
-      {
-        name: "quizTitle",
-        label: "Quiz title",
-        type: "text",
-        required: true,
-        placeholder: "e.g. TechPunno Cyber Awareness Quiz",
       },
       {
         name: "wishText",

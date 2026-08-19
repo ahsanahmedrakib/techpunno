@@ -40,7 +40,7 @@ export default function TeamCard({
           </div>
           <div className="flex flex-1 flex-col items-center px-6 py-6 text-center">
             <h3 className="text-lg font-bold text-ink">{member.name}</h3>
-            <span className="mt-2 rounded-full bg-linear-to-r from-primary to-secondary px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+            <span className="mt-2 rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
               {member.role}
             </span>
             <p className="mt-3 text-sm leading-relaxed text-ink-soft">

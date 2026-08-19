@@ -5,6 +5,7 @@ import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import { testimonials, type TestimonialItem } from "@/features/home/data/testimonials";
 import { api, useTable } from "@/lib/api";
+import { avatarColor } from "@/lib/utils";
 import { testimonialSchema, type TestimonialFormValues } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Check, Loader2, MessageSquareQuote, PenLine, Star } from "lucide-react";
@@ -102,7 +103,7 @@ export default function Testimonials() {
                       &ldquo;{t.message}&rdquo;
                     </p>
                     <div className="mt-5 flex items-center gap-3 border-t border-primary/15 pt-4">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-linear-to-br from-primary to-secondary text-sm font-bold text-white">
+                      <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold text-white ${avatarColor(t.name)}`}>
                         {t.name.charAt(0)}
                       </span>
                       <div className="min-w-0">

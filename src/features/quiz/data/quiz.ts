@@ -9,6 +9,7 @@ export type QuizSet = {
   description: string;
   durationSeconds: number;
   questions: QuizQuestion[];
+  date?: string;
 };
 
 export const quizSets: QuizSet[] = [
@@ -16,6 +17,7 @@ export const quizSets: QuizSet[] = [
     title: "Cyber Security Basics",
     description: "Test your knowledge on passwords, phishing, and authentication.",
     durationSeconds: 10 * 60,
+    date: "15 February 2026",
     questions: [
       {
         question: "শক্তিশালী পাসওয়ার্ডের সবচেয়ে গুরুত্বপূর্ণ বৈশিষ্ট্য কোনটি?",
@@ -53,6 +55,7 @@ export const quizSets: QuizSet[] = [
     title: "Digital Literacy",
     description: "Questions about VPNs, personal information, and online safety.",
     durationSeconds: 8 * 60,
+    date: "10 March 2026",
     questions: [
       {
         question: "What does VPN stand for?",
@@ -97,6 +100,7 @@ export const quizSets: QuizSet[] = [
     title: "Advanced Security",
     description: "Deepfakes, social media safety, and network security concepts.",
     durationSeconds: 12 * 60,
+    date: "5 April 2026",
     questions: [
       {
         question: '"Deepfake" কী?',

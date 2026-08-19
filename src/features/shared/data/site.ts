@@ -10,8 +10,8 @@ export const site = {
   whatsapp: "https://wa.me/8801XXXXXXXXXX",
   youtube: "https://www.youtube.com/@TechPunno",
   email: "techpunno@gmail.com",
-  phone: "+880 1XXX-XXXXXX",
-  address: "Dhaka, Bangladesh",
+  phone: "+8801619878054",
+  address: "Gopalganj, Bangladesh",
   logo: "/logo.png",
 };
 

@@ -337,7 +337,14 @@ export default function UsersManager() {
 
           {isLoading ? (
             <TableSkeleton
-              columns={["Username", "Role", "Created", "Actions"]}
+              columns={[
+                "Username",
+                "Role",
+                "Last Login",
+                "Created",
+                "Updated",
+                "Actions",
+              ]}
               rows={5}
             />
           ) : (
@@ -353,7 +360,13 @@ export default function UsersManager() {
                         Role
                       </th>
                       <th className="px-4 py-3.5 text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
+                        Last Login
+                      </th>
+                      <th className="px-4 py-3.5 text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
                         Created
+                      </th>
+                      <th className="px-4 py-3.5 text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
+                        Updated
                       </th>
                       <th className="px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase">
                         Actions
@@ -363,7 +376,7 @@ export default function UsersManager() {
                   <tbody>
                     {users.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-4 py-16 text-center">
+                        <td colSpan={6} className="px-4 py-16 text-center">
                           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mist text-ink-soft/30">
                             <Inbox className="h-6 w-6" />
                           </div>
@@ -410,7 +423,15 @@ export default function UsersManager() {
                               </span>
                             </td>
                             <td className="px-4 py-3 font-medium whitespace-nowrap text-ink-soft">
+                              {user.lastLoginAt
+                                ? formatDateAndTime(user.lastLoginAt)
+                                : "Never"}
+                            </td>
+                            <td className="px-4 py-3 font-medium whitespace-nowrap text-ink-soft">
                               {formatDateAndTime(user.createdAt)}
+                            </td>
+                            <td className="px-4 py-3 font-medium whitespace-nowrap text-ink-soft">
+                              {formatDateAndTime(user.updatedAt)}
                             </td>
                             <td className="px-4 py-3">
                               <div className="flex items-center justify-end gap-1.5">

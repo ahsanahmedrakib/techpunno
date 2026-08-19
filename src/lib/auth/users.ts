@@ -18,6 +18,7 @@ export interface UserRecord {
   role: UserRole;
   createdAt: string;
   updatedAt: string;
+  lastLoginAt: string | null;
   deletedAt: string | null;
 }
 
@@ -93,6 +94,7 @@ export async function ensureSuperAdmin(): Promise<void> {
       role: "superadmin",
       createdAt: now,
       updatedAt: now,
+      lastLoginAt: null,
       deletedAt: null,
     } as never);
   } catch {
@@ -108,6 +110,14 @@ export async function verifyUserCredentials(
   if (!user) return null;
   const ok = await bcrypt.compare(password, user.passwordHash);
   return ok ? user : null;
+}
+
+export async function markLastLogin(
+  username: string,
+  time: string = new Date().toISOString(),
+): Promise<void> {
+  const coll = await collection();
+  await coll.updateOne({ username }, { $set: { lastLoginAt: time } });
 }
 
 export async function createUser(input: {
@@ -140,6 +150,7 @@ export async function createUser(input: {
     role: input.role,
     createdAt: now,
     updatedAt: now,
+    lastLoginAt: null,
     deletedAt: null,
   };
   try {

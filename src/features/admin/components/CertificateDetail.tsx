@@ -210,6 +210,7 @@ export default function CertificateDetail({ row }: CertificateDetailProps) {
                   ? `${window.location.origin}/certificate/${certificateId}`
                   : undefined
               }
+              quizTitle={quizTitle}
             />
           </div>
         </div>

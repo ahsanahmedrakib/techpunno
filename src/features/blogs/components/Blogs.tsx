@@ -8,7 +8,7 @@ import { SkeletonBlogCard } from "@/components/common/Skeleton";
 import { blogPosts, type BlogPost } from "@/features/blogs/data/blogs";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
-import { formatDate } from "@/lib/utils";
+import { avatarColor, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -74,7 +74,7 @@ export default function Blogs() {
                         </p>
                         <div className="mt-5 flex items-center justify-between border-t border-ink/10 pt-4 text-xs text-ink-soft">
                           <span className="inline-flex items-center gap-2 font-medium">
-                            <span className="grid h-7 w-7 place-items-center rounded-full bg-linear-to-br from-primary to-secondary text-[10px] font-bold text-white">
+                            <span className={`grid h-7 w-7 place-items-center rounded-full text-[10px] font-bold text-white ${avatarColor(post.author)}`}>
                               {post.author.charAt(0)}
                             </span>
                             {post.author}

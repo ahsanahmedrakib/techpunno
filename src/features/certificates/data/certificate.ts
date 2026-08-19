@@ -2,7 +2,6 @@ export interface CertificateConfig {
   eventTitle: string;
   eventSubtitle: string;
   certifyText: string;
-  quizTitle: string;
   wishText: string;
   signatoryName: string;
   signatoryRole: string;
@@ -16,7 +15,6 @@ export const defaultCertificateConfig: CertificateConfig = {
   eventTitle: "Cyber Smart Girls Initiative 2026",
   eventSubtitle: "Cyber Quiz Competition",
   certifyText: "This is to certify that",
-  quizTitle: "TechPunno Cyber Awareness Quiz",
   wishText: "We wish {name} all the best for future success.",
   signatoryName: "Mehedi Hasan",
   signatoryRole: "Founder",

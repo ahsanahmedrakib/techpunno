@@ -523,6 +523,7 @@ export default function Quiz() {
                     percentage={percentage}
                     phone={phone}
                     certificateId={issuedCertificateId || undefined}
+                    quizTitle={selectedSet?.title ?? ""}
                   />
                 </div>
               )}

@@ -62,6 +62,7 @@ interface CertificateProps {
   embed?: boolean;
   certificateId?: string;
   certificateUrl?: string;
+  quizTitle?: string;
   config?: CertificateConfig;
 }
 
@@ -73,6 +74,7 @@ export default function Certificate({
   embed = false,
   certificateId,
   certificateUrl,
+  quizTitle = "TechPunno Cyber Awareness Quiz",
   config,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -248,7 +250,7 @@ export default function Certificate({
             <p className="mx-auto max-w-3xl font-sans text-base leading-relaxed text-gray-700">
               for successfully completing the{" "}
               <span className="font-semibold text-gray-900">
-                {cfg.quizTitle}
+                {quizTitle}
               </span>
               {percentage !== undefined && (
                 <>

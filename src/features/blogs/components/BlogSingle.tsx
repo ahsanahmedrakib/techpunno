@@ -3,7 +3,7 @@ import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
 import { blogPosts, type BlogPost } from "@/features/blogs/data/blogs";
 import { safeImage, singleImageList } from "@/lib/imageUrl";
-import { formatDate, safeUrl } from "@/lib/utils";
+import { avatarColor, formatDate, safeUrl } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,7 +65,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
                 className="h-9 w-9 rounded-full border-2 border-primary/30 bg-mist object-cover"
               />
             ) : (
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
+              <span className={`grid h-9 w-9 place-items-center rounded-full text-xs font-bold text-white ${avatarColor(author)}`}>
                 {author.charAt(0)}
               </span>
             )}

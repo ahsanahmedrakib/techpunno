@@ -65,6 +65,7 @@ export default async function CertificatePage({ params }: PageProps) {
         date={cert.date ? String(cert.date) : undefined}
         certificateId={String(cert.certificateId)}
         certificateUrl={certificateUrl}
+        quizTitle={String(cert.quizTitle ?? "")}
         config={config}
       />
     </main>

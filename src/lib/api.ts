@@ -78,6 +78,7 @@ export interface UserDoc {
   role: UserRole;
   createdAt: string;
   updatedAt: string;
+  lastLoginAt: string | null;
 }
 
 export interface AuditDoc {
