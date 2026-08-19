@@ -2,7 +2,7 @@ import Container from "@/components/common/Container";
 import ImageSwiper from "@/components/common/ImageSwiper";
 import Reveal from "@/components/common/Reveal";
 import EventEnroll from "@/components/sections/EventEnroll";
-import EventParticipantsList from "@/components/sections/EventParticipantsList";
+import EventRosterTable from "@/components/sections/EventRosterTable";
 import { events, type EventItem } from "@/data/events";
 import { firstImage, singleImageList } from "@/lib/imageUrl";
 import { getDateParts, safeUrl } from "@/lib/utils";
@@ -184,7 +184,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
         </div>
       </Reveal>
 
-      <EventParticipantsList eventId={item.id} />
+      <EventRosterTable eventId={item.id} />
 
       {related.length > 0 && (
         <Reveal delay={400}>

@@ -6,7 +6,6 @@ import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
 import { SkeletonEventCard } from "@/components/common/Skeleton";
 import { type EventItem } from "@/data/events";
-import EventParticipants from "@/components/sections/EventParticipants";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
 import { getDateParts } from "@/lib/utils";
@@ -191,10 +190,6 @@ export default function Events() {
             })}
           </div>
         )}
-      </Container>
-
-      <Container>
-        <EventParticipants />
       </Container>
     </section>
   );

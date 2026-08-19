@@ -97,6 +97,18 @@ export const api = {
     http.get<T[]>(`/api/${table}`).then((r) => r.data),
   listAdmin: <T>(table: string) =>
     http.get<T[]>(`/api/${table}`, { admin: true }).then((r) => r.data),
+  eventRoster: (eventId: string) =>
+    http
+      .get<
+        {
+          fullName: string;
+          className: string;
+          institution: string;
+          registered: boolean;
+          participated: boolean;
+        }[]
+      >("/api/event-roster", { params: { eventId } })
+      .then((r) => r.data),
   paged: <T>(
     table: string,
     params: {
