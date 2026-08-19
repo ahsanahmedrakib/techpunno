@@ -78,11 +78,7 @@ export default function EventEnroll({
   }, [mode]);
 
   const handleRegister = async (values: StudentRegistrationFormValues) => {
-    await api.create("eventregistrations", {
-      ...values,
-      eventId: event.id,
-      eventTitle: event.title,
-    });
+    await api.create("eventregistrations", values);
   };
 
   const handleParticipate = async (e: React.FormEvent) => {
@@ -186,6 +182,8 @@ export default function EventEnroll({
                     title="Register for this event"
                     subtitle="Fill in your details to register. Your registration will be reviewed by our team."
                     submitLabel="Submit Registration"
+                    showEventSelect
+                    defaultEventId={String(event.id)}
                     onSubmit={handleRegister}
                   />
                 ) : phoneSubmitted ? (

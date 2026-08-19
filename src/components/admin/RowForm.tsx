@@ -1,12 +1,13 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { isAllowedImageType } from "@/lib/imageTypes";
 import { safeImage } from "@/lib/imageUrl";
-import type { FieldDef } from "@/lib/tables";
+import { tables, type FieldDef, type TableKey } from "@/lib/tables";
 import axios from "axios";
 import { Camera, X } from "lucide-react";
 import Image from "next/image";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import QuestionsEditor, { type QuizQuestionData } from "./QuestionsEditor";
 import RichTextEditor from "./RichTextEditor";
@@ -366,6 +367,78 @@ export default function RowForm({
   const [submitting, setSubmitting] = useState(false);
   const fileRegistry = useRef<Map<string, File>>(new Map());
 
+  const [relationOptions, setRelationOptions] = useState<
+    Record<string, { value: string; label: string }[]>
+  >({});
+  const [relationValues, setRelationValues] = useState<Record<string, string>>(
+    {},
+  );
+
+  const relationLoadKey =
+    JSON.stringify(fields) + "|" + JSON.stringify(initial ?? {});
+
+  useEffect(() => {
+    const relationFields = fields.filter(
+      (f) => f.type === "relation" && f.relation,
+    );
+    if (relationFields.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      for (const field of relationFields) {
+        const rel = field.relation!;
+        const seedDocs = (tables[rel.table as TableKey]?.seed ??
+          []) as Record<string, unknown>[];
+        let sourceDocs = seedDocs;
+        try {
+          const dbDocs = await api.listAdmin<Record<string, unknown>>(
+            rel.table,
+          );
+          sourceDocs = [...seedDocs, ...dbDocs];
+        } catch {
+          /* fall back to seed data only */
+        }
+        const seen = new Set<string>();
+        const opts: { value: string; label: string }[] = [];
+        for (const d of sourceDocs) {
+          const value = String(d[rel.valueField] ?? d.id ?? "");
+          const label = (rel.labelFields ?? [rel.labelField])
+            .map((f) => String(d[f] ?? ""))
+            .filter(Boolean)
+            .join(" - ");
+          if (!value || !label || seen.has(value)) continue;
+          if (
+            rel.filterField &&
+            rel.filterValue &&
+            String(d[rel.filterField]) === rel.filterValue
+          ) {
+            continue;
+          }
+          seen.add(value);
+          opts.push({ value, label });
+        }
+        const currentValue = String(
+          initial?.[rel.syncField ?? ""] ?? initial?.[field.name] ?? "",
+        );
+        const currentLabel = String(initial?.[field.name] ?? "");
+        if (currentValue && currentLabel && !seen.has(currentValue)) {
+          opts.unshift({ value: currentValue, label: currentLabel });
+          seen.add(currentValue);
+        }
+        if (cancelled) return;
+        setRelationOptions((prev) => ({ ...prev, [field.name]: opts }));
+        if (currentValue && seen.has(currentValue)) {
+          setRelationValues((prev) =>
+            prev[field.name] ? prev : { ...prev, [field.name]: currentValue },
+          );
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [relationLoadKey]);
+
   const questionsField = fields.find((f) => f.type === "questions");
   const [questionsData, setQuestionsData] = useState<QuizQuestionData[]>(() => {
     const initialQ = initial?.questions;
@@ -377,8 +450,9 @@ export default function RowForm({
 
   const formFields = fields.filter(
     (f) =>
-      f.type !== "readonly" ||
-      (!!initial && f.name !== "createdAt" && f.name !== "updatedAt"),
+      !f.hidden &&
+      (f.type !== "readonly" ||
+        (!!initial && f.name !== "createdAt" && f.name !== "updatedAt")),
   );
 
   const isVisible = (field: FieldDef) =>
@@ -392,6 +466,7 @@ export default function RowForm({
     setPrevInitial(initial);
     setValues(toFormValues(fields, initial));
     setErrors({});
+    setRelationValues({});
     const initialQ = initial?.questions;
     if (Array.isArray(initialQ) && initialQ.length > 0) {
       setQuestionsData(initialQ as QuizQuestionData[]);
@@ -650,6 +725,42 @@ export default function RowForm({
                     {field.options?.map((opt) => (
                       <option key={opt} value={opt}>
                         {opt}
+                      </option>
+                    ))}
+                  </select>
+                  {errors[field.name] && (
+                    <p className="mt-1 text-xs font-medium text-secondary">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ) : field.type === "relation" ? (
+                <div>
+                  <select
+                    value={relationValues[field.name] ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const opt = relationOptions[field.name]?.find(
+                        (o) => o.value === value,
+                      );
+                      setRelationValues((prev) => ({
+                        ...prev,
+                        [field.name]: value,
+                      }));
+                      setValue(field.name, opt ? opt.label : "");
+                      if (field.relation?.syncField) {
+                        setValue(
+                          field.relation.syncField,
+                          opt ? opt.value : "",
+                        );
+                      }
+                    }}
+                    className={`${cls(errors[field.name])} appearance-none bg-[url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%226%22%20viewBox%3D%220%200%2010%206%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1%201L5%205L9%201%22%20stroke%3D%22%230c9b5d%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E")] bg-size-[10px] bg-position-[right_12px_center] bg-no-repeat pr-10`}
+                  >
+                    <option value="">Select...</option>
+                    {relationOptions[field.name]?.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
                       </option>
                     ))}
                   </select>

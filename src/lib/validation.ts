@@ -113,6 +113,8 @@ export type VolunteerFormValues = yup.InferType<typeof volunteerSchema>;
 const bdMobilePattern = /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
 
 export const studentRegistrationSchema = yup.object({
+  eventId: yup.string(),
+  eventTitle: yup.string(),
   fullName: yup
     .string()
     .trim()

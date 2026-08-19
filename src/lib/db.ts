@@ -303,14 +303,25 @@ function pickFields(
   return picked;
 }
 
-async function eventExists(eventId: string): Promise<boolean> {
+async function resolveEvent(
+  eventId: string,
+): Promise<{ id: string; title: string } | null> {
   try {
     const doc = await getDoc("events", eventId);
-    if (doc) return true;
+    if (doc) {
+      const d = doc as Record<string, unknown>;
+      return {
+        id: String(d.id ?? eventId),
+        title: String(d.title ?? ""),
+      };
+    }
   } catch {
     /* fall through */
   }
-  return events.some((e) => String(e.id) === eventId || e.slug === eventId);
+  const seed = events.find(
+    (e) => String(e.id) === eventId || e.slug === eventId,
+  );
+  return seed ? { id: String(seed.id), title: seed.title } : null;
 }
 
 export async function createDoc(
@@ -368,13 +379,24 @@ export async function createDoc(
       );
     }
   }
-  if (key === "eventparticipants") {
+  if (key === "eventregistrations" || key === "eventparticipants") {
     const eventId = body.eventId ? String(body.eventId).trim() : "";
-    if (!eventId || !(await eventExists(eventId))) {
+    if (!eventId) {
       throw new HttpError(
-        "Participants must be linked to a valid event. Choose the event they participated in.",
+        "Registration must be linked to an event. Select the event you are registering for.",
         400,
       );
+    }
+    const event = await resolveEvent(eventId);
+    if (!event) {
+      throw new HttpError(
+        "Registration must be linked to a valid event.",
+        400,
+      );
+    }
+    doc.eventId = event.id;
+    if (!doc.eventTitle) {
+      doc.eventTitle = event.title;
     }
   }
   const now = new Date().toISOString();

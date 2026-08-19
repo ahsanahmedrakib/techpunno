@@ -6,8 +6,9 @@ import {
   type StudentRegistrationFormValues,
 } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { api } from "@/lib/api";
 import { Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -24,18 +25,30 @@ const inputCls = (err?: string) =>
       : "border-ink/10 focus:border-primary focus:ring-primary/20"
   }`;
 
+interface EventOption {
+  id: string;
+  title: string;
+  location?: string;
+  status?: string;
+}
+
 export default function RegistrationForm({
   title,
   subtitle,
   submitLabel,
   onSubmit,
+  showEventSelect = false,
+  defaultEventId,
 }: {
   title: string;
   subtitle: string;
   submitLabel: string;
   onSubmit: (values: StudentRegistrationFormValues) => Promise<void>;
+  showEventSelect?: boolean;
+  defaultEventId?: string;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const [events, setEvents] = useState<EventOption[]>([]);
   const {
     register,
     handleSubmit,
@@ -44,11 +57,51 @@ export default function RegistrationForm({
   } = useForm<StudentRegistrationFormValues>({
     resolver: yupResolver(studentRegistrationSchema),
     mode: "onTouched",
+    defaultValues: showEventSelect
+      ? { eventId: defaultEventId ?? "" }
+      : undefined,
   });
 
+  useEffect(() => {
+    if (!showEventSelect) return;
+    let cancelled = false;
+    api
+      .list<EventOption>("events")
+      .then((list) => {
+        if (cancelled) return;
+        let filtered = list.filter((e) => e.status !== "done");
+        if (
+          defaultEventId &&
+          !filtered.some((e) => String(e.id) === String(defaultEventId))
+        ) {
+          const def = list.find((e) => String(e.id) === String(defaultEventId));
+          if (def) filtered = [def, ...filtered];
+        }
+        setEvents(filtered);
+      })
+      .catch(() => {
+        if (!cancelled) setEvents([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [showEventSelect, defaultEventId]);
+
   const submit = async (values: StudentRegistrationFormValues) => {
+    if (showEventSelect && !values.eventId) {
+      toast.error("Please select an event");
+      return;
+    }
+    const eventTitle = showEventSelect
+      ? (events.find((e) => String(e.id) === String(values.eventId))?.title ??
+        "")
+      : values.eventTitle;
     try {
-      await onSubmit(values);
+      await onSubmit({
+        ...values,
+        eventId: values.eventId,
+        eventTitle,
+      });
       setSubmitted(true);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Submission failed");
@@ -87,6 +140,31 @@ export default function RegistrationForm({
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {showEventSelect && (
+          <div className="sm:col-span-2">
+            <label className="mb-1.5 block text-sm font-semibold text-ink">
+              Event <span className="text-secondary">*</span>
+            </label>
+            <select
+              {...register("eventId")}
+              className={`${inputCls(fieldError(errors, "eventId"))} appearance-none bg-white pr-10`}
+            >
+              <option value="" disabled>
+                Select an event
+              </option>
+              {events.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.location ? `${e.title} - ${e.location}` : e.title}
+                </option>
+              ))}
+            </select>
+            {fieldError(errors, "eventId") && (
+              <p className="mt-1.5 text-xs font-medium text-secondary">
+                {fieldError(errors, "eventId")}
+              </p>
+            )}
+          </div>
+        )}
         <div>
           <label className="mb-1.5 block text-sm font-semibold text-ink">
             Full Name <span className="text-secondary">*</span>

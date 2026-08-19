@@ -95,6 +95,8 @@ export interface AuditDoc {
 export const api = {
   list: <T>(table: string) =>
     http.get<T[]>(`/api/${table}`).then((r) => r.data),
+  listAdmin: <T>(table: string) =>
+    http.get<T[]>(`/api/${table}`, { admin: true }).then((r) => r.data),
   paged: <T>(
     table: string,
     params: {

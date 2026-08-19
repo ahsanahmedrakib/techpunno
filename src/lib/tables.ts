@@ -29,7 +29,18 @@ export type FieldType =
   | "list"
   | "readonly"
   | "date"
-  | "questions";
+  | "questions"
+  | "relation";
+
+export interface RelationDef {
+  table: TableKey;
+  valueField: string;
+  labelField: string;
+  labelFields?: string[];
+  filterField?: string;
+  filterValue?: string;
+  syncField?: string;
+}
 
 export interface FieldDef {
   name: string;
@@ -41,6 +52,8 @@ export interface FieldDef {
   list?: boolean;
   min?: number;
   showIf?: Record<string, string>;
+  hidden?: boolean;
+  relation?: RelationDef;
 }
 
 export interface TableConfig {
@@ -1115,14 +1128,25 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "eventId",
         label: "Event ID",
         type: "text",
+        hidden: true,
         placeholder: "Event id or slug",
       },
       {
         name: "eventTitle",
-        label: "Event Title",
-        type: "text",
+        label: "Event",
+        type: "relation",
+        required: true,
         list: true,
-        placeholder: "e.g. Cyber Security Awareness Workshop",
+        placeholder: "Select an event",
+        relation: {
+          table: "events",
+          valueField: "id",
+          labelField: "title",
+          labelFields: ["title", "location"],
+          filterField: "status",
+          filterValue: "done",
+          syncField: "eventId",
+        },
       },
       {
         name: "fullName",
@@ -1208,14 +1232,25 @@ export const tables: Record<TableKey, TableConfig> = {
         name: "eventId",
         label: "Event ID",
         type: "text",
+        hidden: true,
         placeholder: "Event id or slug",
       },
       {
         name: "eventTitle",
-        label: "Event Title",
-        type: "text",
+        label: "Event",
+        type: "relation",
+        required: true,
         list: true,
-        placeholder: "e.g. Cyber Security Awareness Workshop",
+        placeholder: "Select an event",
+        relation: {
+          table: "events",
+          valueField: "id",
+          labelField: "title",
+          labelFields: ["title", "location"],
+          filterField: "status",
+          filterValue: "done",
+          syncField: "eventId",
+        },
       },
       {
         name: "fullName",
