@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import { getDbName, getMongoClient } from "@/lib/mongodb";
 import { uniqueIdWithPhoneNumber } from "@/lib/utils";
-import { events } from "@/data/events";
+import { events } from "@/features/events/data/events";
 import {
   tables,
   isTableKey,

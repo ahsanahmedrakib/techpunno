@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import VolunteerBadge from "@/components/volunteer/VolunteerBadge";
+import VolunteerBadge from "@/features/volunteers/components/VolunteerBadge";
 import { getCollection, mapDoc, projectDoc } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

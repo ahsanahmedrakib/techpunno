@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import NewsSingle from "@/components/sections/NewsSingle";
-import { newsItems, type NewsItem } from "@/data/news";
+import NewsSingle from "@/features/news/components/NewsSingle";
+import { newsItems, type NewsItem } from "@/features/news/data/news";
 import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

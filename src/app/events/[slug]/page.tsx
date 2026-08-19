@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import EventSingle from "@/components/sections/EventSingle";
-import { events, type EventItem } from "@/data/events";
+import EventSingle from "@/features/events/components/EventSingle";
+import { events, type EventItem } from "@/features/events/data/events";
 import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

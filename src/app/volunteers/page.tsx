@@ -1,4 +1,4 @@
-import VolunteerPage from "@/components/sections/Volunteer";
+import VolunteerPage from "@/features/volunteers/components/Volunteer";
 
 const page = () => {
   return (

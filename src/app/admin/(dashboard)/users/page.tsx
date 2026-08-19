@@ -1,4 +1,4 @@
-import UsersManager from "@/components/admin/UsersManager";
+import UsersManager from "@/features/admin/components/UsersManager";
 import { requireRole } from "@/lib/auth/guard";
 
 export const dynamic = "force-dynamic";

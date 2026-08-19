@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminSidebar from "@/features/admin/components/AdminSidebar";
 import { requireAdmin } from "@/lib/auth/guard";
 
 export const metadata: Metadata = {

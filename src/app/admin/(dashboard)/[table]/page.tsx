@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { tables, isTableKey, type TableKey } from "@/lib/tables";
-import TableManager from "@/components/admin/TableManager";
+import TableManager from "@/features/admin/components/TableManager";
 import { requireAdmin } from "@/lib/auth/guard";
 
 export const dynamic = "force-dynamic";

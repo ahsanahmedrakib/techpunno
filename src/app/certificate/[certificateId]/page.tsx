@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import Certificate from "@/components/common/Certificate";
-import { getCertificateConfig } from "@/lib/certificate-config";
+import Certificate from "@/features/certificates/components/Certificate";
+import { getCertificateConfig } from "@/features/certificates/lib/certificate-config";
 import { getCollection } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

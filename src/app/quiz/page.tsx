@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Quiz from "@/components/sections/Quiz";
+import Quiz from "@/features/quiz/components/Quiz";
 
 export const metadata: Metadata = {
   title: "Cyber Awareness Quiz — TechPunno",

@@ -3,11 +3,11 @@
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
-import { navItems, site } from "@/data/site";
+import { navItems, site } from "@/features/shared/data/site";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import VolunteerFooter from "../sections/VolunteerFooter";
+import VolunteerFooter from "@/features/volunteers/components/VolunteerFooter";
 import { MessengerIcon, WhatsappIcon, YoutubeIcon } from "./SocialIcons";
 
 export default function Footer() {

@@ -1,13 +1,13 @@
-import AdvisorTeam from "@/components/sections/AdvisorTeam";
-import Blogs from "@/components/sections/Blogs";
-import Contact from "@/components/sections/Contact";
-import CoreTeam from "@/components/sections/CoreTeam";
-import Courses from "@/components/sections/Courses";
-import Events from "@/components/sections/Events";
-import Hero from "@/components/sections/Hero";
-import News from "@/components/sections/News";
-import Testimonials from "@/components/sections/Testimonials";
-import VideoSection from "@/components/sections/VideoSection";
+import AdvisorTeam from "@/features/team/components/AdvisorTeam";
+import Blogs from "@/features/blogs/components/Blogs";
+import Contact from "@/features/contact/components/Contact";
+import CoreTeam from "@/features/team/components/CoreTeam";
+import Courses from "@/features/courses/components/Courses";
+import Events from "@/features/events/components/Events";
+import Hero from "@/features/home/components/Hero";
+import News from "@/features/news/components/News";
+import Testimonials from "@/features/home/components/Testimonials";
+import VideoSection from "@/features/home/components/VideoSection";
 
 export default function Home() {
   return (

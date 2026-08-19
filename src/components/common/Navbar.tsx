@@ -2,7 +2,7 @@
 
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
-import { navItems, site } from "@/data/site";
+import { navItems, site } from "@/features/shared/data/site";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import BlogSingle from "@/components/sections/BlogSingle";
-import { blogPosts, type BlogPost } from "@/data/blogs";
+import BlogSingle from "@/features/blogs/components/BlogSingle";
+import { blogPosts, type BlogPost } from "@/features/blogs/data/blogs";
 import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

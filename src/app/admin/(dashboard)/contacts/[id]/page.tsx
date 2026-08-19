@@ -1,6 +1,6 @@
 "use client";
 
-import ContactDetail from "@/components/admin/ContactDetail";
+import ContactDetail from "@/features/admin/components/ContactDetail";
 import Loading from "@/components/common/Loading";
 import { api } from "@/lib/api";
 import { tables } from "@/lib/tables";

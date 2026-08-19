@@ -1,7 +1,7 @@
 "use client";
 
 import Reveal from "@/components/common/Reveal";
-import { site } from "@/data/site";
+import { site } from "@/features/shared/data/site";
 import Image from "next/image";
 import Link from "next/link";
 

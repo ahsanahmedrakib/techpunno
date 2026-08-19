@@ -1,6 +1,6 @@
 "use client";
 
-import CertificateDetail from "@/components/admin/CertificateDetail";
+import CertificateDetail from "@/features/admin/components/CertificateDetail";
 import Loading from "@/components/common/Loading";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";

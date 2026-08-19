@@ -1,21 +1,21 @@
-import { blogPosts } from "@/data/blogs";
-import { defaultCertificateConfig } from "@/data/certificate";
-import { courses } from "@/data/courses";
-import { courseRegistrations } from "@/data/courseRegistrations";
-import { events } from "@/data/events";
-import { eventParticipants } from "@/data/eventParticipants";
-import { eventRegistrations } from "@/data/eventRegistrations";
-import { heroSlides } from "@/data/hero";
-import { newsItems } from "@/data/news";
-import { quizSets } from "@/data/quiz";
-import { studentClassOptions } from "@/data/classes";
-import { advisors, coreTeam } from "@/data/team";
-import { testimonials } from "@/data/testimonials";
-import { videos } from "@/data/videos";
+import { blogPosts } from "@/features/blogs/data/blogs";
+import { defaultCertificateConfig } from "@/features/certificates/data/certificate";
+import { courses } from "@/features/courses/data/courses";
+import { courseRegistrations } from "@/features/courses/data/courseRegistrations";
+import { events } from "@/features/events/data/events";
+import { eventParticipants } from "@/features/events/data/eventParticipants";
+import { eventRegistrations } from "@/features/events/data/eventRegistrations";
+import { heroSlides } from "@/features/home/data/hero";
+import { newsItems } from "@/features/news/data/news";
+import { quizSets } from "@/features/quiz/data/quiz";
+import { studentClassOptions } from "@/features/shared/data/classes";
+import { advisors, coreTeam } from "@/features/team/data/team";
+import { testimonials } from "@/features/home/data/testimonials";
+import { videos } from "@/features/home/data/videos";
 import {
   defaultVolunteerConfig,
   volunteerInterestOptions,
-} from "@/data/volunteers";
+} from "@/features/volunteers/data/volunteers";
 
 export type FieldType =
   | "text"

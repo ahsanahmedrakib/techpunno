@@ -1,4 +1,4 @@
-import DeletedDataPage from "@/components/admin/DeletedDataPage";
+import DeletedDataPage from "@/features/admin/components/DeletedDataPage";
 import { requireRole } from "@/lib/auth/guard";
 
 export const dynamic = "force-dynamic";

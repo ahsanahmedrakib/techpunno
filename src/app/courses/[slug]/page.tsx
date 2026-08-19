@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import CourseDetail from "@/components/sections/CourseDetail";
-import { courses, type CourseItem } from "@/data/courses";
+import CourseDetail from "@/features/courses/components/CourseDetail";
+import { courses, type CourseItem } from "@/features/courses/data/courses";
 import { getDoc, getDocBySlug } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

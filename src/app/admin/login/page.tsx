@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2, Lock, ShieldCheck, User } from "lucide-react";
-import { site } from "@/data/site";
+import { site } from "@/features/shared/data/site";
 
 function pemToArrayBuffer(pem: string, label: string): ArrayBuffer {
   const body = pem

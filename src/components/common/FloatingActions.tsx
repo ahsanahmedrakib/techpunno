@@ -1,6 +1,6 @@
 "use client";
 
-import { site } from "@/data/site";
+import { site } from "@/features/shared/data/site";
 import Hoverable from "@/components/common/Hoverable";
 import { useEffect, useState } from "react";
 import { MessengerIcon, WhatsappIcon } from "./SocialIcons";

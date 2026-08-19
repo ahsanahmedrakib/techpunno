@@ -1,4 +1,4 @@
-import AuditLog from "@/components/admin/AuditLog";
+import AuditLog from "@/features/admin/components/AuditLog";
 import { requireRole } from "@/lib/auth/guard";
 
 export const dynamic = "force-dynamic";
