@@ -51,6 +51,8 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 ::selection {
