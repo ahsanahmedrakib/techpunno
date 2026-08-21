@@ -399,6 +399,21 @@ export async function createDoc(
       doc.eventTitle = event.title;
     }
   }
+  if (key === "servicerequests") {
+    const serviceName = String(body.service || "").trim();
+    const threeLetter = serviceName
+      .replace(/[^a-zA-Z ]/g, "")
+      .split(/\s+/)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 3)
+      .padEnd(3, "X");
+    const now_date = new Date().toISOString().slice(0, 10);
+    const count = await coll.countDocuments({ deletedAt: null });
+    const seq = String(count + 1).padStart(3, "0");
+    doc.requestId = `TP-SR-${threeLetter}-${now_date}-${seq}`;
+  }
   const now = new Date().toISOString();
   doc.createdAt = now;
   doc.updatedAt = now;

@@ -174,3 +174,34 @@ export const testimonialSchema = yup.object({
 
 export type TestimonialFormValues = yup.InferType<typeof testimonialSchema>;
 
+export const serviceRequestSchema = yup.object({
+  name: yup
+    .string()
+    .trim()
+    .required("Name is required")
+    .min(2, "Name must be at least 2 characters"),
+  phone: yup
+    .string()
+    .trim()
+    .required("Mobile number is required")
+    .matches(
+      /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/,
+      "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)",
+    ),
+  email: yup
+    .string()
+    .trim()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  service: yup.string().required("Service is required"),
+  description: yup
+    .string()
+    .trim()
+    .required("Problem description is required")
+    .min(10, "Description must be at least 10 characters"),
+  links: yup.string().trim(),
+  contactMethod: yup.string().required("Please select a preferred contact method"),
+});
+
+export type ServiceRequestFormValues = yup.InferType<typeof serviceRequestSchema>;
+

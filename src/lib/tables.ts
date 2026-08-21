@@ -9,6 +9,7 @@ import { heroSlides } from "@/features/home/data/hero";
 import { newsItems } from "@/features/news/data/news";
 import { quizSets } from "@/features/quiz/data/quiz";
 import { studentClassOptions } from "@/features/shared/data/classes";
+import { services } from "@/features/services/data/services";
 import { advisors, coreTeam } from "@/features/team/data/team";
 import { testimonials } from "@/features/home/data/testimonials";
 import { videos } from "@/features/home/data/videos";
@@ -96,7 +97,9 @@ export type TableKey =
   | "eventparticipants"
   | "testimonials"
   | "courses"
-  | "courseregistrations";
+  | "courseregistrations"
+  | "services"
+  | "servicerequests";
 
 export const tables: Record<TableKey, TableConfig> = {
   advisors: {
@@ -1566,6 +1569,157 @@ export const tables: Record<TableKey, TableConfig> = {
     ],
     seed: courseRegistrations,
     publicCreate: true,
+  },
+  services: {
+    key: "services",
+    label: "Services",
+    singular: "Service",
+    listColumns: ["title", "icon", "charge", "slug", "createdAt", "updatedAt"],
+    fields: [
+      {
+        name: "title",
+        label: "Title",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. Social Media Account Recovery",
+      },
+      {
+        name: "icon",
+        label: "Icon (emoji)",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. 🔐",
+      },
+      {
+        name: "description",
+        label: "Description",
+        type: "textarea",
+        required: true,
+        placeholder: "Describe the service",
+      },
+      {
+        name: "charge",
+        label: "Service Charge",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. আলোচনা সাপেক্ষে",
+      },
+      { name: "slug", label: "Slug", type: "readonly", list: true },
+    ],
+    seed: services as unknown as Record<string, unknown>[],
+    publicFields: ["title", "icon", "description", "charge", "slug"],
+  },
+  servicerequests: {
+    key: "servicerequests",
+    label: "Service Requests",
+    singular: "Service Request",
+    readOnly: true,
+    defaultStatus: "Pending",
+    statusField: "status",
+    statusOptions: [
+      "Pending",
+      "Reviewing",
+      "Contacted",
+      "In Progress",
+      "Completed",
+      "Cancelled",
+    ],
+    listColumns: [
+      "requestId",
+      "service",
+      "name",
+      "phone",
+      "email",
+      "status",
+      "createdAt",
+      "updatedAt",
+    ],
+    fields: [
+      {
+        name: "requestId",
+        label: "Request ID",
+        type: "readonly",
+        list: true,
+      },
+      {
+        name: "service",
+        label: "Service",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "Service name",
+      },
+      {
+        name: "name",
+        label: "Name",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. Rahim Uddin",
+      },
+      {
+        name: "phone",
+        label: "Mobile Number",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. 01XXXXXXXXX",
+      },
+      {
+        name: "email",
+        label: "Email",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. rahim@example.com",
+      },
+      {
+        name: "description",
+        label: "Problem Description",
+        type: "textarea",
+        required: true,
+        placeholder: "Describe the problem or request",
+      },
+      {
+        name: "links",
+        label: "Links / Additional Info",
+        type: "text",
+        placeholder: "https://... or any relevant info",
+      },
+      {
+        name: "contactMethod",
+        label: "Preferred Contact Method",
+        type: "select",
+        options: ["Phone Call", "WhatsApp", "Email", "Facebook Messenger"],
+        required: true,
+        list: true,
+        placeholder: "Select preferred method",
+      },
+      {
+        name: "status",
+        label: "Status",
+        type: "select",
+        options: [
+          "Pending",
+          "Reviewing",
+          "Contacted",
+          "In Progress",
+          "Completed",
+          "Cancelled",
+        ],
+        required: true,
+        list: true,
+        placeholder: "Select status",
+      },
+      { name: "createdAt", label: "Submitted", type: "readonly", list: true },
+      { name: "updatedAt", label: "Updated", type: "readonly", list: true },
+    ],
+    seed: [],
+    publicCreate: true,
+    publicFields: ["requestId", "service", "status"],
   },
 };
 

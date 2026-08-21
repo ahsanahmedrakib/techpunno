@@ -5,6 +5,7 @@ import { tableKeys, tables, type TableKey } from "@/lib/tables";
 import {
   ArrowLeft,
   BadgeCheck,
+  Briefcase,
   Calendar,
   Clapperboard,
   ClipboardList,
@@ -52,6 +53,8 @@ const tableIcons: Record<TableKey, LucideIcon> = {
   testimonials: Star,
   courses: GraduationCap,
   courseregistrations: ClipboardList,
+  services: Briefcase,
+  servicerequests: ClipboardList,
 };
 
 export default function AdminSidebar({

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
+  Briefcase,
   Calendar,
   Clapperboard,
   ClipboardList,
@@ -45,6 +46,8 @@ const icons: Record<TableKey, LucideIcon> = {
   testimonials: Star,
   courses: GraduationCap,
   courseregistrations: ClipboardList,
+  services: Briefcase,
+  servicerequests: ClipboardList,
 };
 
 export default function AdminDashboard() {
