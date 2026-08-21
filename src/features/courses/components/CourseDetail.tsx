@@ -90,7 +90,7 @@ export default function CourseDetail({ item }: { item: CourseItem }) {
       </Reveal>
 
       <Reveal delay={240} className="min-w-0 mt-10">
-        <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+        <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 p-6 shadow-sm sm:p-8">
           <div
             className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
             dangerouslySetInnerHTML={{ __html: item.description }}
@@ -100,7 +100,7 @@ export default function CourseDetail({ item }: { item: CourseItem }) {
 
       {isOpen && (
         <Reveal delay={320}>
-          <div className="mt-12 overflow-hidden rounded-3xl border-2 border-primary/40 bg-white p-8 text-center shadow-2xl shadow-primary/10 sm:p-12">
+          <div className="mt-12 overflow-hidden rounded-3xl border-2 border-primary/40 p-8 text-center shadow-2xl shadow-primary/10 sm:p-12">
             <p className="text-xs font-bold uppercase tracking-widest text-primary">
               Enrollment is open
             </p>

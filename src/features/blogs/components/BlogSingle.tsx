@@ -82,7 +82,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
         )}
 
         <Reveal delay={240}>
-          <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8 my-6">
+          <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 p-6 shadow-sm sm:p-8 my-6">
             <div
               className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
               dangerouslySetInnerHTML={{ __html: excerpt }}
@@ -93,7 +93,7 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
         {iframeSrc && (
           <Reveal delay={240}>
             <h2 className="mt-4 text-center">Blog on Main Site</h2>
-            <div className="my-6 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
+            <div className="my-6 overflow-hidden rounded-3xl border border-ink/10 shadow-2xl shadow-ink/20">
               <iframe
                 src={iframeSrc}
                 title={title}
@@ -128,8 +128,8 @@ export default function BlogSingle({ item }: { item: BlogPost }) {
                     href={`/blogs/${p.slug || p.id}`}
                     className="block h-full"
                   >
-                    <div className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
-                      <span className="rounded-full bg-primary-lighter px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
+                    <div className="group h-full rounded-2xl border border-ink/5 p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
+                      <span className="rounded-full bg-gradient-admin-icon px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white">
                         {p.category}
                       </span>
                       <h3 className="mt-3 text-sm font-bold leading-snug text-ink transition-colors group-hover:text-primary">

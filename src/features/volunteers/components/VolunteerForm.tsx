@@ -197,8 +197,8 @@ export default function VolunteerForm() {
 
   if (submitted) {
     return (
-      <div className="mx-auto max-w-xl rounded-3xl border-2 border-primary/40 bg-white p-10 text-center shadow-2xl shadow-primary/10">
-        <div className="animate-pop-in mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full bg-primary-lighter text-primary">
+      <div className="mx-auto max-w-xl rounded-3xl border-2 border-primary/40 p-10 text-center shadow-2xl shadow-primary/10">
+        <div className="animate-pop-in mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full bg-gradient-admin-icon text-white">
           <Check className="h-10 w-10" />
         </div>
         <h2 className="text-2xl font-bold text-ink">Registration Submitted!</h2>
@@ -230,7 +230,7 @@ export default function VolunteerForm() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl rounded-3xl border-2 border-primary/40 bg-cream p-6 shadow-2xl shadow-primary/10 sm:p-10">
+    <div className="mx-auto max-w-6xl rounded-3xl border-2 border-primary/40 p-6 shadow-2xl shadow-primary/10 sm:p-10">
       {/* Step indicator */}
       <ol className="mb-10 grid grid-cols-3 gap-2">
         {steps.map((s, i) => (
@@ -279,7 +279,7 @@ export default function VolunteerForm() {
           {step === 0 && (
             <div className="space-y-5">
               <h3 className="flex items-center gap-2 text-sm font-bold text-ink">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-lighter text-primary">
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-admin-icon text-white">
                   ১
                 </span>
                 ব্যক্তিগত তথ্য (Personal Information)
@@ -559,7 +559,7 @@ export default function VolunteerForm() {
           {step === 1 && (
             <div className="space-y-5">
               <h3 className="flex items-center gap-2 text-sm font-bold text-ink">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-lighter text-primary">
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-admin-icon text-white">
                   ২
                 </span>
                 শিক্ষা, পেশা ও আগ্রহ (Education, Profession & Interest)
@@ -771,13 +771,13 @@ export default function VolunteerForm() {
           {step === 2 && (
             <div className="space-y-5">
               <h3 className="flex items-center gap-2 text-sm font-bold text-ink">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-lighter text-primary">
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-admin-icon text-white">
                   ৩
                 </span>
                 সদস্যপদ পেমেন্ট (Membership Payment)
               </h3>
 
-              <div className="rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border-2 border-primary/30 p-6 shadow-sm">
                 <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-2">
                   <div className="flex items-center gap-4">
                     <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-secondary-light text-secondary">
@@ -793,7 +793,7 @@ export default function VolunteerForm() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-secondary/30 bg-white p-4 text-center">
+                  <div className="rounded-2xl border-2 border-secondary/30 p-4 text-center">
                     <p className="text-xs font-bold uppercase tracking-wider text-secondary">
                       Pay via bKash (বিকাশ)
                     </p>
@@ -891,7 +891,7 @@ export default function VolunteerForm() {
                 </ul>
               </div>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border-2 border-primary/30 bg-white p-5 transition-all hover:border-primary/60">
+              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border-2 border-primary/30 p-5 transition-all hover:border-primary/60">
                 <span
                   className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg border-2 transition-all ${
                     watchDeclaration
@@ -941,7 +941,7 @@ export default function VolunteerForm() {
               <button
                 type="button"
                 onClick={goNext}
-                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark sm:w-auto"
+                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-admin px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all sm:w-auto"
               >
                 Continue <ChevronRight className="h-4 w-4" />
               </button>
@@ -951,7 +951,7 @@ export default function VolunteerForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-admin px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 {isSubmitting ? (
                   <>

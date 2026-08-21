@@ -244,7 +244,7 @@ export default function Quiz() {
                         onClick={() => selectQuizSet(set)}
                         className="group relative w-full rounded-3xl bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40 p-px text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
                       >
-                        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-white p-6">
+                        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] p-6">
                           <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:bg-secondary/20" />
                           <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-secondary to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                           <h3 className="text-lg font-bold text-ink transition-colors group-hover:text-primary">
@@ -297,7 +297,7 @@ export default function Quiz() {
 
               <form
                 onSubmit={startQuiz}
-                className="mt-8 space-y-5 rounded-3xl border border-ink/5 bg-white p-6 shadow-sm sm:p-8"
+                className="mt-8 space-y-5 rounded-3xl border border-ink/5 p-6 shadow-sm sm:p-8"
               >
                 <div>
                   <label
@@ -412,7 +412,7 @@ export default function Quiz() {
                   return (
                     <div
                       key={qIndex}
-                      className="rounded-3xl border border-ink/5 bg-white p-6 shadow-sm sm:p-8"
+                      className="rounded-3xl border border-ink/5 p-6 shadow-sm sm:p-8"
                     >
                       <p className="text-base font-bold leading-snug text-ink sm:text-lg">
                         <span className="text-primary">{qIndex + 1}.</span>{" "}
@@ -477,7 +477,7 @@ export default function Quiz() {
 
           {step === "result" && (
             <div className="w-full">
-              <div className="rounded-3xl border border-ink/5 bg-white p-8 text-center shadow-xl sm:p-10">
+              <div className="rounded-3xl border border-ink/5 p-8 text-center shadow-xl sm:p-10">
                 <span className="inline-flex rounded-full bg-primary-lighter px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary">
                   Quiz Result
                 </span>

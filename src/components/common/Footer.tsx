@@ -13,7 +13,7 @@ import { MessengerIcon, WhatsappIcon, YoutubeIcon } from "./SocialIcons";
 export default function Footer() {
   const path = usePathname();
   return (
-    <footer className="bg-ink text-white">
+    <footer className="bg-gradient-admin-v text-white">
       {path !== "/volunteers" && <VolunteerFooter />}
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <Reveal variant="fade-left" className="sm:col-span-2 lg:col-span-1">

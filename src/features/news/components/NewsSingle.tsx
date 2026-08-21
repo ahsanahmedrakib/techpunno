@@ -64,7 +64,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
 
       {content.trim() && (
         <Reveal delay={240}>
-          <div className="min-w-0 overflow-hidden rounded-2xl border-2 my-4 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+          <div className="min-w-0 overflow-hidden rounded-2xl border-2 my-4 border-primary/30 p-6 shadow-sm sm:p-8">
             <div
               className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
               dangerouslySetInnerHTML={{ __html: content }}
@@ -76,7 +76,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
       {iframeSrc && (
         <Reveal delay={240}>
           <h2 className="mt-4 text-center">News on Main Site</h2>
-          <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 shadow-2xl shadow-ink/20">
             <iframe
               src={iframeSrc}
               title={title}
@@ -90,7 +90,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
       )}
 
       <Reveal delay={320}>
-        <div className="mt-10 rounded-2xl bg-primary-lighter p-6 text-center sm:p-8">
+        <div className="mt-10 rounded-2xl bg-gradient-admin p-6 text-center sm:p-8">
           <p className="text-lg font-bold text-ink">
             Tech Punno এর সাথে থাকুন, নিরাপদ থাকুন।
           </p>
@@ -131,7 +131,7 @@ export default function NewsSingle({ item }: { item: NewsItem }) {
                   href={`/news/${n.slug || n.id}`}
                   className="block h-full"
                 >
-                  <Hoverable className="group h-full rounded-2xl border border-ink/5 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
+                  <Hoverable className="group h-full rounded-2xl border border-ink/5 p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
                     <div className="flex items-center gap-2">
                       <span
                         className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${badgeStyles[n.badge]}`}

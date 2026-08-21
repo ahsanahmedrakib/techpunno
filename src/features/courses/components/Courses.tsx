@@ -23,7 +23,7 @@ export default function Courses() {
   const [items] = useTable<CourseItem>("courses", courses);
 
   return (
-    <section id="courses" className="section-anchor bg-cream py-20 lg:py-28">
+    <section id="courses" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Courses"

@@ -52,7 +52,7 @@ export default function ServiceRequestForm({
   if (requestId) {
     return (
       <div className="flex flex-col items-center gap-4 py-8 text-center">
-        <span className="grid h-16 w-16 place-items-center rounded-full bg-primary-lighter text-3xl">
+        <span className="grid h-16 w-16 place-items-center rounded-full bg-gradient-admin-icon text-3xl text-white">
           ✅
         </span>
         <h3 className="text-2xl font-bold text-ink">
@@ -61,7 +61,7 @@ export default function ServiceRequestForm({
         <p className="max-w-sm text-sm text-ink-soft">
           Your Request ID is:
         </p>
-        <span className="rounded-xl border-2 border-primary/30 bg-primary-lighter px-6 py-3 text-lg font-bold tracking-wider text-primary">
+        <span className="rounded-xl border-2 border-primary/30 bg-gradient-admin-icon px-6 py-3 text-lg font-bold tracking-wider text-white">
           {requestId}
         </span>
         <p className="text-xs text-ink-soft">
@@ -266,7 +266,7 @@ export default function ServiceRequestForm({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-admin px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {isSubmitting ? "Submitting..." : "Submit Request"}
             {!isSubmitting && <span aria-hidden>&rarr;</span>}

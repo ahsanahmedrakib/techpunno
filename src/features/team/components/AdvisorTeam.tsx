@@ -13,7 +13,7 @@ export default function AdvisorTeam() {
     advisors,
   );
   return (
-    <section id="advisors" className="section-anchor bg-cream py-20 lg:py-28">
+    <section id="advisors" className="section-anchor py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Advisory Board"

@@ -20,7 +20,7 @@ export default function VideoSection() {
     return (
       <section
         id="video"
-        className="section-anchor bg-primary-lighter py-20 lg:py-28"
+        className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
       >
         <Container>
           <SectionHeading
@@ -47,7 +47,7 @@ export default function VideoSection() {
   return (
     <section
       id="video"
-      className="section-anchor bg-primary-lighter py-20 lg:py-28"
+      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
     >
       <Container>
         <SectionHeading

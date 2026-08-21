@@ -73,7 +73,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="section-anchor bg-white py-20 lg:py-28">
+    <section id="testimonials" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Testimonials"
@@ -92,7 +92,7 @@ export default function Testimonials() {
                 className="h-full"
               >
                 <div className="group relative h-full rounded-3xl bg-linear-to-br from-primary/40 via-primary/10 to-secondary/40 p-px shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/20">
-                  <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-cream p-6">
+                  <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-white p-6">
                     <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:bg-secondary/20" />
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-secondary to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <span className="absolute top-5 right-5 text-primary/15">
@@ -124,8 +124,8 @@ export default function Testimonials() {
 
         <div className="mt-12 max-w-2xl mx-auto">
           {submitted ? (
-            <div className="rounded-3xl border-2 border-primary/40 bg-cream p-10 text-center">
-              <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-primary-lighter text-primary">
+            <div className="rounded-3xl border-2 border-primary/40 p-10 text-center">
+              <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-gradient-admin-icon text-white">
                 <Check className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold text-ink">Review Submitted!</h3>
@@ -148,7 +148,7 @@ export default function Testimonials() {
             <form
               onSubmit={handleSubmit(submit, () => undefined)}
               noValidate
-              className="rounded-3xl border-2 border-primary/40 bg-cream p-6 sm:p-8"
+              className="rounded-3xl border-2 border-primary/40 p-6 sm:p-8"
             >
               <h3 className="flex items-center gap-2 text-lg font-bold text-ink">
                 <PenLine className="h-5 w-5 text-primary" />
@@ -242,7 +242,7 @@ export default function Testimonials() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="cursor-pointer inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className="cursor-pointer inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-admin px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting ? (
                     <>
@@ -268,7 +268,7 @@ export default function Testimonials() {
             <div className="text-center">
               <button
                 onClick={() => setShowForm(true)}
-                className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-transform hover:-translate-y-0.5"
+                className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-gradient-admin px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-primary/25 transition-transform hover:-translate-y-0.5"
               >
                 <PenLine className="h-4 w-4" />
                 Write a Review

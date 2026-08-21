@@ -110,7 +110,7 @@ export default function RegistrationForm({
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border-2 border-primary/40 bg-white p-8 text-center">
+      <div className="rounded-2xl border-2 border-primary/40 p-8 text-center">
         <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-primary-lighter text-primary">
           <Check className="h-8 w-8" />
         </div>

@@ -48,7 +48,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
       </Reveal>
 
       <Reveal delay={80}>
-        <header className="relative mt-6 overflow-hidden rounded-3xl border-2 border-primary/30 bg-white shadow-xl shadow-ink/10">
+        <header className="relative mt-6 overflow-hidden rounded-3xl border-2 border-primary/30 shadow-xl shadow-ink/10">
           <div className="absolute inset-0 bg-linear-to-br from-[#1a3a68] via-primary to-primary-dark" />
           <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-32 -left-16 h-72 w-72 rounded-full bg-secondary/20 blur-2xl" />
@@ -132,7 +132,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
       )}
 
       <Reveal delay={240} className="min-w-0 mt-10">
-        <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+        <div className="min-w-0 overflow-hidden rounded-2xl border-2 border-primary/30 p-6 shadow-sm sm:p-8">
           <div
             className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink prose-a:text-primary prose-strong:text-ink prose-img:rounded-2xl prose-video:rounded-2xl wrap-anywhere [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:wrap-break-word [&_table]:max-w-full"
             dangerouslySetInnerHTML={{ __html: description }}
@@ -143,7 +143,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
       {iframeSrc && (
         <Reveal delay={240}>
           <h2 className="mt-4 text-center">Event on Main Site</h2>
-          <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-2xl shadow-ink/20">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-ink/10 shadow-2xl shadow-ink/20">
             <iframe
               src={iframeSrc}
               title={title}
@@ -159,7 +159,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
       <Reveal delay={320}>
         <div
           id="register-participate"
-          className="mt-12 scroll-mt-28 overflow-hidden rounded-3xl border-2 border-primary/40 bg-white p-8 text-center shadow-2xl shadow-primary/10 sm:p-12"
+          className="mt-12 scroll-mt-28 overflow-hidden rounded-3xl border-2 border-primary/40 p-8 text-center shadow-2xl shadow-primary/10 sm:p-12"
         >
           <p className="text-xs font-bold uppercase tracking-widest text-primary">
             {isUpcoming
@@ -196,7 +196,7 @@ export default function EventSingle({ item }: { item: EventItem }) {
                   href={`/events/${e.slug || e.id}`}
                   className="group block h-full"
                 >
-                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
                     <div className="relative h-36 shrink-0 overflow-hidden bg-mist">
                       {firstImage(e) ? (
                         <Image

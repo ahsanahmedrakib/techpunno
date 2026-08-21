@@ -26,7 +26,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
 
       <Reveal delay={80}>
         <div className="mt-8 flex items-center gap-4">
-          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-primary-lighter text-4xl">
+          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-gradient-admin-icon text-4xl text-white">
             {service.icon}
           </span>
           <div>
@@ -41,7 +41,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
       </Reveal>
 
       <Reveal delay={160}>
-        <div className="mt-8 overflow-hidden rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+        <div className="mt-8 overflow-hidden rounded-2xl border-2 border-primary/30 p-6 shadow-sm sm:p-8">
           <div className="prose prose-lg max-w-none text-ink-soft prose-headings:text-ink">
             {service.fullDescription.split("\n\n").map((para, i) => (
               <p key={i}>{para}</p>
@@ -58,7 +58,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
               {service.features.map((feature, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-ink/5 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                  className="rounded-2xl border border-ink/5 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
                 >
                   <div className="flex items-start gap-3">
                     <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
@@ -82,7 +82,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
               {service.process.map((step) => (
                 <div
                   key={step.step}
-                  className="flex items-start gap-4 rounded-2xl border border-ink/5 bg-white p-5 shadow-sm"
+                  className="flex items-start gap-4 rounded-2xl border border-ink/5 p-5 shadow-sm"
                 >
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary text-sm font-bold text-white">
                     {step.step}
@@ -101,7 +101,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
       </div>
 
       <Reveal delay={300}>
-        <div className="mt-12 rounded-2xl border-2 border-primary/30 bg-white p-6 shadow-sm sm:p-8">
+        <div className="mt-12 rounded-2xl border-2 border-primary/30 p-6 shadow-sm sm:p-8">
           <h2 className="text-2xl font-bold text-ink">Who Is This For?</h2>
           <ul className="mt-4 space-y-3">
             {service.whoItsFor.map((item, i) => (
@@ -125,7 +125,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
             {service.faqs.map((faq, i) => (
               <div
                 key={i}
-                className="overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-sm"
+                className="overflow-hidden rounded-2xl border border-ink/5 shadow-sm"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -156,7 +156,7 @@ export default function ServiceSingle({ service }: { service: Service }) {
           <Hoverable>
             <button
               onClick={() => setShowRequestForm(true)}
-              className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+              className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-gradient-admin px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5"
             >
               Request This Service
               <span aria-hidden>&rarr;</span>

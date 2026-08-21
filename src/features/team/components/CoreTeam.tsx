@@ -15,7 +15,7 @@ export default function CoreTeam() {
   return (
     <section
       id="team"
-      className="section-anchor bg-primary-lighter py-20 lg:py-28"
+      className="section-anchor py-20 lg:py-28"
     >
       <Container>
         <SectionHeading

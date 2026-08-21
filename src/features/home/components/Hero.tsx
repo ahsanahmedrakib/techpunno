@@ -75,7 +75,7 @@ export default function Hero() {
                       <Hoverable>
                         <a
                           href={slide.ctaHref}
-                          className="inline-flex rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-primary/40"
+                          className="inline-flex rounded-full bg-gradient-admin px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-primary/40"
                         >
                           {slide.ctaLabel}
                         </a>

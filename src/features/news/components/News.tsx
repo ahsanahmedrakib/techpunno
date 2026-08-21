@@ -46,7 +46,7 @@ export default function News() {
 
   if (loading) {
     return (
-      <section id="news" className="section-anchor bg-mist py-20 lg:py-28">
+      <section id="news" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
         <Container>
           <SectionHeading
             eyebrow="News & Updates"
@@ -64,7 +64,7 @@ export default function News() {
   }
 
   return (
-    <section id="news" className="section-anchor bg-mist py-20 lg:py-28">
+    <section id="news" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="News & Updates"

@@ -63,7 +63,7 @@ export default function EventRosterTable({ eventId }: { eventId: string }) {
       )}
 
       {rows === null ? (
-        <div className="mt-6 overflow-hidden rounded-2xl border-2 border-primary/20 bg-white shadow-sm">
+        <div className="mt-6 overflow-hidden rounded-2xl border-2 border-primary/20 shadow-sm">
           <div className="grid grid-cols-5 gap-4 bg-linear-to-r from-[#1a3a68] to-primary px-5 py-3.5 text-[11px] font-bold tracking-wider text-white/85 uppercase">
             {["Full Name", "Class", "Institution", "Registered", "Participated"].map(
               (h) => (
@@ -85,11 +85,11 @@ export default function EventRosterTable({ eventId }: { eventId: string }) {
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <p className="mt-6 rounded-2xl border-2 border-dashed border-primary/30 bg-white p-10 text-center text-sm text-ink-soft">
+        <p className="mt-6 rounded-2xl border-2 border-dashed border-primary/30 p-10 text-center text-sm text-ink-soft">
           No registrations yet. Be the first to register for this event.
         </p>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-2xl border-2 border-primary/20 bg-white shadow-sm">
+        <div className="mt-6 overflow-hidden rounded-2xl border-2 border-primary/20 shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>

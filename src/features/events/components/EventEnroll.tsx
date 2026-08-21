@@ -187,7 +187,7 @@ export default function EventEnroll({
                     onSubmit={handleRegister}
                   />
                 ) : phoneSubmitted ? (
-                  <div className="rounded-2xl border-2 border-primary/40 bg-white p-10 text-center">
+                  <div className="rounded-2xl border-2 border-primary/40 p-10 text-center">
                     <div className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full bg-primary-lighter text-primary">
                       <Check className="h-10 w-10" />
                     </div>
@@ -208,7 +208,7 @@ export default function EventEnroll({
                 ) : (
                   <div className="mx-auto max-w-xl">
                     <form onSubmit={handleParticipate} noValidate className="space-y-5">
-                      <div className="flex items-start gap-4 rounded-2xl border-2 border-primary/40 bg-white p-5">
+                      <div className="flex items-start gap-4 rounded-2xl border-2 border-primary/40 p-5">
                         <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary-lighter text-primary">
                           <PhoneCall className="h-6 w-6" />
                         </span>

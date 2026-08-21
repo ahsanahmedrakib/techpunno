@@ -114,7 +114,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section-anchor bg-white py-20 lg:py-28">
+    <section id="contact" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Contact"
@@ -125,7 +125,7 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
           <Reveal variant="fade-left" className="space-y-4 lg:col-span-2">
-            <div className="rounded-3xl bg-linear-to-br from-primary to-primary-dark p-8 text-white shadow-2xl shadow-primary/25 sm:p-10">
+            <div className="rounded-3xl bg-gradient-admin p-8 text-white shadow-2xl shadow-primary/25 sm:p-10">
               <h3 className="text-2xl font-bold">Get in touch</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/85">
                 Our team usually replies within 24–48 hours. Prefer social? DM
@@ -155,7 +155,7 @@ export default function Contact() {
               {contactInfo.map((info) => {
                 const inner = (
                   <>
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary-lighter text-primary">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-admin-icon text-white">
                       {info.icon}
                     </span>
                     <span className="min-w-0">
@@ -195,11 +195,11 @@ export default function Contact() {
           <Reveal
             variant="fade-right"
             delay={150}
-            className="rounded-3xl border-2 border-primary/60 bg-white p-6 shadow-xl shadow-ink/5 sm:p-8 lg:col-span-3"
+            className="rounded-3xl border-2 border-primary/60 p-6 shadow-xl shadow-ink/5 sm:p-8 lg:col-span-3"
           >
             {isSubmitSuccessful ? (
               <div className="flex h-full flex-col items-center justify-center gap-4 py-16 text-center">
-                <span className="grid h-16 w-16 place-items-center rounded-full bg-primary-lighter text-3xl">
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-gradient-admin-icon text-3xl text-white">
                   ✅
                 </span>
                 <h3 className="text-2xl font-bold text-ink">Message sent!</h3>
@@ -358,7 +358,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-admin px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                       {isSubmitting ? "Sending..." : "Send Message"}
                       {!isSubmitting && <span aria-hidden>→</span>}

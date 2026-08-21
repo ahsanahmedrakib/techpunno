@@ -17,7 +17,7 @@ export default function Blogs() {
   return (
     <section
       id="blogs"
-      className="section-anchor bg-primary-lighter py-20 lg:py-28"
+      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
     >
       <Container>
         <SectionHeading

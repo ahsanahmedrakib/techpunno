@@ -35,7 +35,7 @@ export default function Events() {
   };
 
   return (
-    <section id="events" className="section-anchor bg-cream py-20 lg:py-28">
+    <section id="events" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Events"

@@ -23,7 +23,7 @@ export default function FloatingActions() {
         <button
           onClick={scrollToTop}
           aria-label="Scroll to top"
-          className="animate-float-in grid h-8 w-8 mr-2 place-items-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark"
+          className="animate-float-in grid h-8 w-8 mr-2 place-items-center rounded-full bg-gradient-admin text-white transition-transform hover:-translate-y-0.5"
         >
           <svg
             width="20"

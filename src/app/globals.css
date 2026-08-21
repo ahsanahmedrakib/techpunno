@@ -72,6 +72,22 @@ body {
     color: transparent;
   }
 
+  .bg-gradient-admin {
+    background: linear-gradient(to right, #1a3a68, var(--color-primary), var(--color-primary-dark));
+  }
+
+  .bg-gradient-admin-v {
+    background: linear-gradient(to bottom, #1a3a68, var(--color-primary), var(--color-primary-dark));
+  }
+
+  .bg-gradient-admin-subtle {
+    background: linear-gradient(135deg, rgba(26, 58, 104, 0.04) 0%, rgba(12, 155, 93, 0.06) 50%, rgba(8, 122, 73, 0.04) 100%);
+  }
+
+  .bg-gradient-admin-icon {
+    background: linear-gradient(135deg, #1a3a68, var(--color-primary));
+  }
+
   .section-anchor {
     scroll-margin-top: 5.5rem;
   }

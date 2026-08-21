@@ -27,7 +27,7 @@ export default function SectionHeading({
       className={`mb-12 max-w-2xl ${centered ? "mx-auto text-center" : ""}`}
     >
       <span
-        className={`inline-flex items-center gap-2 rounded-full bg-primary-lighter px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary`}
+        className={`inline-flex items-center gap-2 rounded-full bg-gradient-admin px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white`}
       >
         {eyebrow}
       </span>
