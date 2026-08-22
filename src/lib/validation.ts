@@ -11,7 +11,13 @@ export const contactSchema = yup.object({
     .trim()
     .email("Please enter a valid email address")
     .required("Email is required"),
-  phone: yup.string().trim(),
+  phone: yup
+    .string()
+    .trim()
+    .matches(
+      /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/,
+      "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)",
+    ),
   subject: yup.string().required("Please select a subject"),
   message: yup
     .string()
@@ -64,7 +70,11 @@ export const volunteerSchema = yup.object({
   guardianMobile: yup
     .string()
     .trim()
-    .required("Guardian mobile number is required"),
+    .required("Guardian mobile number is required")
+    .matches(
+      /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/,
+      "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)",
+    ),
   educationalInstitute: yup
     .string()
     .trim()

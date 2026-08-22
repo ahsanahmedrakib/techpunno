@@ -330,6 +330,20 @@ export async function createDoc(
 ): Promise<unknown> {
   const coll = await getCollection(key);
   const doc = pickFields(key, body);
+
+  const bdMobilePattern = /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
+  const phoneFields = ["mobile", "phone", "guardianMobile"];
+  for (const field of phoneFields) {
+    const val = body[field];
+    if (typeof val === "string" && val.trim()) {
+      if (!bdMobilePattern.test(val.trim())) {
+        throw new HttpError(
+          `Enter a valid Bangladeshi mobile number for ${field} (e.g. 017XXXXXXXX)`,
+          400,
+        );
+      }
+    }
+  }
   if (key === "volunteers" && typeof body.mobile === "string" && body.mobile.trim()) {
     const mobile = body.mobile.trim();
     const exists = await coll.findOne({ mobile }, { projection: { _id: 1 } });
@@ -440,6 +454,21 @@ export async function updateDoc(
 ): Promise<unknown | null> {
   const coll = await getCollection(key);
   const doc = pickFields(key, body);
+
+  const bdMobilePattern = /^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/;
+  const phoneFields = ["mobile", "phone", "guardianMobile"];
+  for (const field of phoneFields) {
+    const val = body[field];
+    if (typeof val === "string" && val.trim()) {
+      if (!bdMobilePattern.test(val.trim())) {
+        throw new HttpError(
+          `Enter a valid Bangladeshi mobile number for ${field} (e.g. 017XXXXXXXX)`,
+          400,
+        );
+      }
+    }
+  }
+
   doc.updatedAt = new Date().toISOString();
   if (hasSlugField(key) && (doc.title || doc.name)) {
     const title = String(doc.title || doc.name || "");

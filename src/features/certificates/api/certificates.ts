@@ -79,6 +79,12 @@ export async function POST(req: NextRequest) {
     if (!phone) {
       return NextResponse.json({ error: "Phone is required" }, { status: 400 });
     }
+    if (!/^(01[3-9]\d{8}|\+8801[3-9]\d{8})$/.test(phone)) {
+      return NextResponse.json(
+        { error: "Enter a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)" },
+        { status: 400 },
+      );
+    }
     if (
       !Number.isFinite(percentage) ||
       percentage < MIN_PASS_PERCENTAGE ||
