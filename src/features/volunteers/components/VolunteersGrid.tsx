@@ -189,11 +189,11 @@ export default function VolunteersGrid() {
                   href={`/volunteers/${member.volunteerId || member.id}`}
                   className="block h-full"
                 >
-                  <Hoverable className="h-full">
+                  <Hoverable className="h-full transition-transform duration-300 ease-out hover:-translate-y-1.5">
                   <Reveal
                     variant={i % 2 === 0 ? "fade-up" : "zoom"}
                     delay={(i % 3) * 100}
-                    className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
+                    className="group relative overflow-hidden rounded-3xl border-2 border-primary/20 bg-white p-6 text-center shadow-sm hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10"
                   >
                     <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-primary-lighter/70 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
                     {member.membershipType === "Ambassador" && (

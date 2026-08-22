@@ -63,9 +63,10 @@ body {
 @layer utilities {
   .text-gradient {
     background: linear-gradient(
-      90deg,
-      var(--color-primary) 0%,
-      var(--color-secondary) 100%
+      to right,
+      #1a3a68,
+      var(--color-primary),
+      var(--color-primary-dark)
     );
     -webkit-background-clip: text;
     background-clip: text;
