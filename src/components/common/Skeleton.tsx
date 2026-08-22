@@ -48,12 +48,13 @@ export function SkeletonHero() {
 
 export function SkeletonTeamCard() {
   return (
-    <div className="rounded-2xl border border-ink/5 bg-white p-5 shadow-sm">
-      <div className="flex items-center gap-4">
-        <Skeleton className="h-14 w-14 rounded-full" />
-        <div className="flex-1">
-          <Skeleton className="mb-2 h-5 w-2/3" />
-          <Skeleton className="h-4 w-1/2" />
+    <div className="h-full rounded-3xl p-0.5 shadow-sm bg-gradient-admin">
+      <div className="flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-white">
+        <Skeleton className="aspect-4/3 w-full rounded-none" />
+        <div className="flex flex-1 flex-col items-center px-6 py-6">
+          <Skeleton className="mb-3 h-5 w-2/3" />
+          <Skeleton className="mb-3 h-6 w-1/2 rounded-full" />
+          <Skeleton className="h-4 w-full" />
         </div>
       </div>
     </div>
