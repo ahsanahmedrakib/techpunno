@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 interface Props {
   open: boolean;
   title: string;
@@ -7,6 +9,7 @@ interface Props {
   onConfirm: () => void;
   onCancel: () => void;
   confirmLabel?: string;
+  loading?: boolean;
   variant?: "danger" | "primary";
 }
 
@@ -17,8 +20,22 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
   confirmLabel = "Delete",
+  loading = false,
   variant = "danger",
 }: Props) {
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !loading) {
+        e.preventDefault();
+        onConfirm();
+      }
+      if (e.key === "Escape" && !loading) onCancel();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open, onConfirm, onCancel, loading]);
+
   if (!open) return null;
 
   return (
@@ -60,13 +77,14 @@ export default function ConfirmDialog({
           </button>
           <button
             onClick={onConfirm}
-            className={`cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all ${
+            disabled={loading}
+            className={`cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
               variant === "danger"
                 ? "bg-secondary shadow-secondary/20 hover:bg-secondary-dark"
                 : "bg-primary shadow-primary/20 hover:bg-primary-dark"
             }`}
           >
-            {confirmLabel}
+            {loading ? "Deleting..." : confirmLabel}
           </button>
         </div>
       </div>

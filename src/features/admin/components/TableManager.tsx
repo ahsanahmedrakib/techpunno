@@ -48,8 +48,10 @@ export default function TableManager({ tableKey, config, role }: Props) {
   const [view, setView] = useState<"list" | "create" | "edit">("list");
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [resigningRow, setResigningRow] =
-    useState<Record<string, unknown> | null>(null);
+  const [resigningRow, setResigningRow] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const [resignDate, setResignDate] = useState("");
 
   const canDelete = role !== "editor";
@@ -199,9 +201,7 @@ export default function TableManager({ tableKey, config, role }: Props) {
 
   const getField = (name: string) => config.fields.find((f) => f.name === name);
 
-  const handleFeaturedToggle = async (
-    row: Record<string, unknown>,
-  ) => {
+  const handleFeaturedToggle = async (row: Record<string, unknown>) => {
     const id = String(row.id);
     const isFeatured = String(row.featured) === "true";
     try {
@@ -217,9 +217,7 @@ export default function TableManager({ tableKey, config, role }: Props) {
         throw new Error(data.error || "Failed to update featured status");
       }
       toast.success(
-        isFeatured
-          ? "Removed from featured"
-          : "Marked as featured",
+        isFeatured ? "Removed from featured" : "Marked as featured",
       );
       void refetch();
     } catch (err) {
@@ -265,12 +263,10 @@ export default function TableManager({ tableKey, config, role }: Props) {
       return "bg-blue-50 text-blue-700 border-2 border-blue-300";
     if (val === "Job Holder")
       return "bg-purple-50 text-purple-700 border-2 border-purple-300";
-    if (val === "Other")
-      return "bg-mist text-ink-soft border border-ink/15";
+    if (val === "Other") return "bg-mist text-ink-soft border border-ink/15";
     if (val === "true")
       return "bg-amber-100 text-amber-800 border-2 border-amber-400";
-    if (val === "false")
-      return "bg-mist text-ink-soft border border-ink/15";
+    if (val === "false") return "bg-mist text-ink-soft border border-ink/15";
     return "bg-mist text-ink-soft border border-ink/15";
   };
 
@@ -436,7 +432,7 @@ export default function TableManager({ tableKey, config, role }: Props) {
                             : (getField(col)?.label ?? col)}
                         </th>
                       ))}
-                      <th className="sticky right-0 z-10 bg-[#087a49] px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.4)]">
+                      <th className="sticky right-0 z-10 bg-primary-dark px-4 py-3.5 text-right text-[11px] font-bold tracking-wider whitespace-nowrap text-white/85 uppercase shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.4)]">
                         Actions
                       </th>
                     </tr>
@@ -581,7 +577,10 @@ export default function TableManager({ tableKey, config, role }: Props) {
                                             row[statusField] ?? "",
                                           );
                                           if (opt === "resigned") return true;
-                                          if (current === "resigned" && opt === "approved") {
+                                          if (
+                                            current === "resigned" &&
+                                            opt === "approved"
+                                          ) {
                                             return false;
                                           }
                                           return current !== opt;
@@ -728,6 +727,7 @@ export default function TableManager({ tableKey, config, role }: Props) {
         message="The row will be moved to Deleted Data and hidden from the website. You can restore or permanently delete it later."
         onConfirm={() => deletingId && handleDelete(deletingId)}
         onCancel={() => setDeletingId(null)}
+        loading={deleteMutation.isPending}
       />
 
       {resigningRow && (
@@ -754,8 +754,8 @@ export default function TableManager({ tableKey, config, role }: Props) {
               <span className="font-semibold text-ink">
                 {String(resigningRow.fullName ?? "this volunteer")}
               </span>
-              . They will stay visible on the website with a &quot;Resigned&quot;
-              badge.
+              . They will stay visible on the website with a
+              &quot;Resigned&quot; badge.
             </p>
             <input
               type="date"
