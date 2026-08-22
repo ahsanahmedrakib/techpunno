@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import NewsSingle from "@/features/news/components/NewsSingle";
 import { newsItems, type NewsItem } from "@/features/news/data/news";
 import { getDoc, getDocBySlug } from "@/lib/db";
+import { site } from "@/features/shared/data/site";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +34,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const item = await findNews(slug);
   if (!item) return { title: "News — TechPunno" };
   return {
-    title: `${item.title} — TechPunno`,
+    title: item.title,
     description: item.summary,
+    openGraph: {
+      title: `${item.title} | ${site.name}`,
+      description: item.summary,
+      url: `${site.url}/news/${slug}`,
+      images: [{ url: site.ogImage, width: 1200, height: 630 }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} | ${site.name}`,
+      description: item.summary,
+      images: [site.ogImage],
+    },
+    alternates: {
+      canonical: `${site.url}/news/${slug}`,
+    },
   };
 }
 

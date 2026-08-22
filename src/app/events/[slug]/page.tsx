@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import EventSingle from "@/features/events/components/EventSingle";
 import { events, type EventItem } from "@/features/events/data/events";
 import { getDoc, getDocBySlug } from "@/lib/db";
+import { site } from "@/features/shared/data/site";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +34,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const item = await findEvent(slug);
   if (!item) return { title: "Event — TechPunno" };
   return {
-    title: `${item.title} — TechPunno`,
+    title: item.title,
     description: item.summary,
+    openGraph: {
+      title: `${item.title} | ${site.name}`,
+      description: item.summary,
+      url: `${site.url}/events/${slug}`,
+      images: [{ url: site.ogImage, width: 1200, height: 630 }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} | ${site.name}`,
+      description: item.summary,
+      images: [site.ogImage],
+    },
+    alternates: {
+      canonical: `${site.url}/events/${slug}`,
+    },
   };
 }
 

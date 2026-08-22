@@ -514,53 +514,6 @@ export default function About() {
           </div>
         </Container>
       </section>
-
-      {/* CTA */}
-      <section className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
-        <Container>
-          <Reveal variant="zoom" scale={0.95}>
-            <div className="mx-auto max-w-2xl rounded-3xl border-2 border-primary/20 bg-white p-10 text-center shadow-xl sm:p-14">
-              <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-admin text-3xl font-extrabold text-white shadow-lg">
-                TP
-              </div>
-              <h2 className="text-2xl font-bold uppercase text-ink sm:text-3xl">
-                গোপালগঞ্জ থেকে পূণরায়? মশক্ষার্থীদের জন্য
-              </h2>
-              <p className="mt-3 text-sm text-ink-soft">
-                শিক্ষার্থীদের জন্য প্রশিক্ষণ প্রদানের জন্য
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Hoverable>
-                  <a
-                    href={site.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex rounded-full bg-gradient-admin px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-primary/40"
-                  >
-                    {site.facebook.replace("https://www.", "")}
-                  </a>
-                </Hoverable>
-                <Hoverable>
-                  <a
-                    href={`mailto:${site.email}`}
-                    className="inline-flex rounded-full border-2 border-ink/10 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
-                  >
-                    {site.email}
-                  </a>
-                </Hoverable>
-                <Hoverable>
-                  <a
-                    href={`tel:${site.phone}`}
-                    className="inline-flex rounded-full border-2 border-ink/10 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
-                  >
-                    {site.phone}
-                  </a>
-                </Hoverable>
-              </div>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
     </>
   );
 }

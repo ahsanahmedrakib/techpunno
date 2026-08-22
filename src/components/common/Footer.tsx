@@ -4,10 +4,10 @@ import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
 import { navItems, site } from "@/features/shared/data/site";
+import VolunteerFooter from "@/features/volunteers/components/VolunteerFooter";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import VolunteerFooter from "@/features/volunteers/components/VolunteerFooter";
 import { MessengerIcon, WhatsappIcon, YoutubeIcon } from "./SocialIcons";
 
 export default function Footer() {
@@ -18,7 +18,7 @@ export default function Footer() {
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <Reveal variant="fade-left" className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
-            <span className="relative h-13 w-13 overflow-hidden rounded-lg ring">
+            <span className="relative h-13 w-13 overflow-hidden rounded-lg ring bg-white/85">
               <Image
                 src={site.logo}
                 alt={`${site.name} logo`}

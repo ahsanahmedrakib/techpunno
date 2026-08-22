@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import VolunteerBadge from "@/features/volunteers/components/VolunteerBadge";
 import { getCollection, mapDoc, projectDoc } from "@/lib/db";
+import { site } from "@/features/shared/data/site";
 
 export const dynamic = "force-dynamic";
 
@@ -40,11 +41,27 @@ export async function generateMetadata({
   const { id } = await params;
   const doc = await findVolunteer(id);
   if (!doc) return { title: "Volunteer Not Found — TechPunno" };
+  const volName = String(doc.fullName ?? "Volunteer");
+  const volType = String(doc.membershipType ?? "Volunteer");
   return {
-    title: `${String(doc.fullName ?? "Volunteer")} — TechPunno`,
-    description: `Verified ${String(
-      doc.membershipType ?? "Volunteer",
-    )} profile for ${String(doc.fullName ?? "")} at TechPunno.`,
+    title: volName,
+    description: `Verified ${volType} profile for ${volName} at TechPunno.`,
+    openGraph: {
+      title: `${volName} | ${site.name}`,
+      description: `Verified ${volType} profile for ${volName} at TechPunno.`,
+      url: `${site.url}/volunteers/${id}`,
+      images: [{ url: site.ogImage, width: 1200, height: 630 }],
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${volName} | ${site.name}`,
+      description: `Verified ${volType} profile for ${volName} at TechPunno.`,
+      images: [site.ogImage],
+    },
+    alternates: {
+      canonical: `${site.url}/volunteers/${id}`,
+    },
   };
 }
 

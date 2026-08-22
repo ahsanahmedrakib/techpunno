@@ -1,5 +1,6 @@
 export const site = {
   name: "TechPunno",
+  url: "https://techpunno.com",
   tagline: "Building a Safe Digital Society",
   shortTagline: "Cyber awareness for a safer Bangladesh",
   description:
@@ -13,6 +14,8 @@ export const site = {
   phone: "+8801619878054",
   address: "Gopalganj, Bangladesh",
   logo: "/logo.png",
+  ogImage: "/og-image.png",
+  twitterHandle: "@techpunno",
 };
 
 export type NavItem = { label: string; href: string };

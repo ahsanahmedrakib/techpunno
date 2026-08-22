@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import BlogSingle from "@/features/blogs/components/BlogSingle";
 import { blogPosts, type BlogPost } from "@/features/blogs/data/blogs";
 import { getDoc, getDocBySlug } from "@/lib/db";
+import { site } from "@/features/shared/data/site";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +34,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const item = await findPost(slug);
   if (!item) return { title: "Blog — TechPunno" };
   return {
-    title: `${item.title} — TechPunno`,
+    title: item.title,
     description: item.excerpt,
+    openGraph: {
+      title: `${item.title} | ${site.name}`,
+      description: item.excerpt,
+      url: `${site.url}/blogs/${slug}`,
+      images: [{ url: site.ogImage, width: 1200, height: 630 }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} | ${site.name}`,
+      description: item.excerpt,
+      images: [site.ogImage],
+    },
+    alternates: {
+      canonical: `${site.url}/blogs/${slug}`,
+    },
   };
 }
 
