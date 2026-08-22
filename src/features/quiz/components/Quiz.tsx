@@ -83,6 +83,10 @@ export default function Quiz() {
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
 
     if (percentage >= 80) {
+      let certWindow: Window | null = null;
+      if (typeof window !== "undefined") {
+        certWindow = window.open("about:blank", "_blank");
+      }
       try {
         const cert = await api.create<{ certificateId: string }>(
           "certificates",
@@ -101,18 +105,14 @@ export default function Quiz() {
           },
         );
         setIssuedCertificateId(cert.certificateId);
-        if (typeof window !== "undefined") {
-          window.open(
-            `/certificate/${cert.certificateId}`,
-            "_blank",
-            "noopener,noreferrer",
-          );
+        if (certWindow) {
+          certWindow.location.href = `/certificate/${cert.certificateId}`;
         }
         setSubmitting(false);
         transitionTo("result");
         return;
       } catch (err) {
-        // Saving failed — show the in-page result instead.
+        if (certWindow) certWindow.close();
         toast.error(
           err instanceof Error
             ? err.message
@@ -523,6 +523,11 @@ export default function Quiz() {
                     percentage={percentage}
                     phone={phone}
                     certificateId={issuedCertificateId || undefined}
+                    certificateUrl={
+                      issuedCertificateId
+                        ? `${typeof window !== "undefined" ? window.location.origin : ""}/certificate/${issuedCertificateId}`
+                        : undefined
+                    }
                     quizTitle={selectedSet?.title ?? ""}
                   />
                 </div>
