@@ -33,14 +33,41 @@ export function SkeletonCard() {
 
 export function SkeletonHero() {
   return (
-    <div className="relative flex min-h-[80vh] items-center bg-cream px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl">
-        <Skeleton className="mb-4 h-6 w-32 rounded-full" />
-        <Skeleton className="mb-3 h-12 w-full" />
-        <Skeleton className="mb-3 h-12 w-4/5" />
-        <Skeleton className="mb-6 h-5 w-full" />
-        <Skeleton className="mb-6 h-5 w-3/4" />
-        <Skeleton className="h-12 w-40 rounded-full" />
+    <div className="relative overflow-hidden pt-18">
+      <div className="relative flex min-h-[calc(100svh-4.5rem)] items-center bg-linear-to-br from-primary-tint via-cream to-primary-lighter px-4 py-20 sm:px-6 lg:px-8">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-secondary/10 blur-3xl" />
+
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+          <div className="max-w-xl">
+            <Skeleton className="mb-5 h-7 w-28 rounded-full" />
+            <Skeleton className="mb-3 h-12 w-full" />
+            <Skeleton className="mb-3 h-12 w-4/5" />
+            <Skeleton className="mb-3 h-5 w-full" />
+            <Skeleton className="mb-8 h-5 w-3/4" />
+            <div className="flex gap-4">
+              <Skeleton className="h-12 w-40 rounded-full" />
+              <Skeleton className="h-12 w-48 rounded-full" />
+            </div>
+          </div>
+
+          <div className="relative mx-auto hidden h-85 w-85 sm:h-105 sm:w-105 lg:block">
+            <Skeleton className="h-full w-full rounded-full" />
+            <div className="absolute left-0 top-8 h-12 w-36 rounded-2xl" />
+            <div className="absolute right-0 bottom-16 h-12 w-36 rounded-2xl" />
+          </div>
+        </div>
+      </div>
+
+      <div className="relative border-t border-ink/5 bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 py-6 sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-center gap-3 px-4">
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
