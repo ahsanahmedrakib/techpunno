@@ -8,7 +8,7 @@ import VolunteerFooter from "@/features/volunteers/components/VolunteerFooter";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessengerIcon, WhatsappIcon, YoutubeIcon } from "./SocialIcons";
+import { MessengerIcon, WhatsappIcon } from "./SocialIcons";
 
 export default function Footer() {
   const path = usePathname();
@@ -32,35 +32,32 @@ export default function Footer() {
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
             {site.description}
           </p>
-          <Hoverable className="mt-5">
-            <Link
-              href={site.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+          <div className="mt-5 flex items-center gap-4">
+            <Hoverable>
+              <Link
+                href={site.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
               >
-                <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
-              </svg>
-              Follow us on Facebook
-            </Link>
-          </Hoverable>
-          <Hoverable className="mt-3">
-            <Link
-              href={site.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
-            >
-              <YoutubeIcon size={16} />
-              Subscribe on YouTube
-            </Link>
-          </Hoverable>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                  <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z" />
+                </svg>
+              </Link>
+            </Hoverable>
+            <Hoverable>
+              <Link
+                href={site.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+              >
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.546 12 3.546 12 3.546s-7.505 0-9.377.504A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.504 9.376.504 9.376.504s7.505 0 9.377-.504a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+              </Link>
+            </Hoverable>
+          </div>
         </Reveal>
 
         <Reveal variant="fade-up" delay={120}>

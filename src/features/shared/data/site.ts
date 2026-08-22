@@ -8,7 +8,7 @@ export const site = {
   foundedYear: 2023,
   facebook: "https://www.facebook.com/techpunno",
   messenger: "https://m.me/techpunno",
-  whatsapp: "https://wa.me/8801XXXXXXXXXX",
+  whatsapp: "https://wa.me/8801631112475",
   youtube: "https://www.youtube.com/@TechPunno",
   email: "techpunno@gmail.com",
   phone: "+8801619878054",
