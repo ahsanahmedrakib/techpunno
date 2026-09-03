@@ -7,8 +7,12 @@ import Hero from "@/features/home/components/Hero";
 import Testimonials from "@/features/home/components/Testimonials";
 import VideoSection from "@/features/home/components/VideoSection";
 import News from "@/features/news/components/News";
+import DigitalLibrary from "@/features/books/components/DigitalLibrary";
+import DonorsAndDonation from "@/features/donations/components/Donors";
 import AdvisorTeam from "@/features/team/components/AdvisorTeam";
 import CoreTeam from "@/features/team/components/CoreTeam";
+import ITTeam from "@/features/team/components/ITTeam";
+import QuizWinners from "@/features/quiz/components/QuizWinners";
 import { site } from "@/features/shared/data/site";
 
 export const metadata: Metadata = {
@@ -43,9 +47,13 @@ export default function Home() {
       <Events />
       <Blogs />
       <News />
+      <QuizWinners />
       <Testimonials />
+      <DigitalLibrary />
+      <DonorsAndDonation />
       <AdvisorTeam />
       <CoreTeam />
+      <ITTeam />
       <Contact />
     </main>
   );

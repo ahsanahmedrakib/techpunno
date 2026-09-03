@@ -174,6 +174,14 @@ export async function POST(
   }
   try {
     const body = await req.json();
+    if (!admin) {
+      delete body.status;
+      delete body.createdAt;
+      delete body.updatedAt;
+      delete body.deletedAt;
+      delete body.approvedAt;
+      delete body.donationId;
+    }
     const doc = await createDoc(table, body);
     if (admin) {
       const a = actorOf(admin);

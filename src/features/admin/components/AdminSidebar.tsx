@@ -5,6 +5,8 @@ import { tableKeys, tables, type TableKey } from "@/lib/tables";
 import {
   ArrowLeft,
   BadgeCheck,
+  BookMarked,
+  BookOpen,
   Briefcase,
   Calendar,
   Clapperboard,
@@ -13,15 +15,20 @@ import {
   GraduationCap,
   HeartHandshake,
   Home,
+  KeyRound,
+  Layers,
   LayoutDashboard,
   Mail,
   Medal,
   Menu,
+  Monitor,
   Newspaper,
   ScrollText,
   ShieldCheck,
   Star,
+  Target,
   Trash2,
+  Trophy,
   Users,
   Wallet,
   type LucideIcon,
@@ -55,6 +62,15 @@ const tableIcons: Record<TableKey, LucideIcon> = {
   courseregistrations: ClipboardList,
   services: Briefcase,
   servicerequests: ClipboardList,
+  books: BookOpen,
+  bookpayments: Wallet,
+  quizgroups: Layers,
+  quizwinners: Trophy,
+  donationevents: Target,
+  donations: HeartHandshake,
+  itteam: Monitor,
+  bookaccess: KeyRound,
+  readingprogress: BookMarked,
 };
 
 export default function AdminSidebar({
@@ -202,6 +218,44 @@ export default function AdminSidebar({
               );
             })}
 
+          <div className="pt-4 pb-1 px-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/25">
+              Library &amp; Users
+            </p>
+          </div>
+
+          <Link
+            href="/admin/bookpdfs"
+            onClick={() => setSidebarOpen(false)}
+            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+              pathname.startsWith("/admin/bookpdfs")
+                ? "bg-primary text-white shadow-md shadow-primary/30"
+                : "text-white/60 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5">
+              <BookOpen className="h-4 w-4" />
+            </span>
+            Book PDFs
+          </Link>
+
+          {canManageUsers && (
+            <Link
+              href="/admin/public-users"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                pathname.startsWith("/admin/public-users")
+                  ? "bg-primary text-white shadow-md shadow-primary/30"
+                  : "text-white/60 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5">
+                <Users className="h-4 w-4" />
+              </span>
+              Public Users
+            </Link>
+          )}
+
           {canManageDeleted && (
             <Link
               href="/admin/deleted"
@@ -253,6 +307,8 @@ export default function AdminSidebar({
                 if (key === "deleted") return "Deleted Data";
                 if (key === "users") return "Users";
                 if (key === "audit") return "Audit Log";
+                if (key === "bookpdfs") return "Book PDF Manager";
+                if (key === "public-users") return "Public Users";
                 if (isTableKey(key)) return tables[key].label;
               }
               return "Admin";

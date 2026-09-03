@@ -129,6 +129,15 @@ export function scrollToField(fieldName: string): void {
   if (focusable) focusable.focus({ preventScroll: true });
 }
 
+export function scrollToHashSection(hash: string): void {
+  if (typeof document === "undefined") return;
+  const id = hash.replace(/^#/, "");
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function scrollToFirstError(errors: Record<string, unknown>): void {
   const keys = Object.keys(errors);
   if (keys.length === 0) return;

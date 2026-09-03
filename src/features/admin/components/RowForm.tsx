@@ -5,7 +5,7 @@ import { isAllowedImageType } from "@/lib/imageTypes";
 import { safeImage } from "@/lib/imageUrl";
 import { tables, type FieldDef, type TableKey } from "@/lib/tables";
 import axios from "axios";
-import { Camera, X } from "lucide-react";
+import { Camera, FileText, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -21,7 +21,9 @@ let pendingFileKey = 0;
 interface RowFormProps {
   fields: FieldDef[];
   initial?: Record<string, unknown>;
-  onSubmit: (data: Record<string, unknown>) => Promise<void>;
+  onSubmit: (data: Record<string, unknown>) => Promise<
+    Record<string, unknown> | void
+  >;
   onCancel: () => void;
   submitLabel?: string;
   uploadDir?: string;
@@ -33,7 +35,7 @@ function toFormValues(
 ): Record<string, string> {
   const values: Record<string, string> = {};
   for (const field of fields) {
-    if (field.type === "readonly") continue;
+    if (field.type === "readonly" || field.type === "pdf") continue;
     const val = initial?.[field.name];
     if (field.type === "list" || field.type === "multiselect") {
       if (Array.isArray(val)) values[field.name] = val.join("\n");
@@ -55,7 +57,7 @@ function toPayload(
 ): Record<string, unknown> {
   const payload: Record<string, unknown> = {};
   for (const field of fields) {
-    if (field.type === "readonly") continue;
+    if (field.type === "readonly" || field.type === "pdf") continue;
     const raw = values[field.name] ?? "";
     if (field.type === "number")
       payload[field.name] = raw === "" ? null : Number(raw);
@@ -352,6 +354,91 @@ async function uploadPending(
   return results;
 }
 
+async function uploadBookPdf(bookId: string, file: File) {
+  const fd = new FormData();
+  fd.append("bookId", bookId);
+  fd.append("file", file);
+  await axios.post("/api/book-pdf", fd, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+function PdfUpload({
+  fileName,
+  onChange,
+  hasExisting,
+}: {
+  fileName: string | null;
+  onChange: (file: File | null) => void;
+  hasExisting: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (file: File | undefined) => {
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast.error("Please select a valid PDF file");
+      return;
+    }
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("PDF must be under 100MB");
+      return;
+    }
+    onChange(file);
+  };
+
+  return (
+    <div className="rounded-xl border-2 border-dashed border-primary/30 bg-cream/60 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-ink">
+              {fileName ?? (hasExisting ? "PDF attached" : "No PDF attached")}
+            </p>
+            <p className="text-[11px] text-ink-soft">
+              {fileName
+                ? "Attached after you save the book."
+                : hasExisting
+                  ? "Upload a file to replace the current PDF."
+                  : "The book content as a downloadable PDF."}
+            </p>
+          </div>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-primary-dark"
+          >
+            <Upload className="h-4 w-4" />
+            {fileName ? "Replace" : "Upload PDF"}
+          </button>
+          {fileName && (
+            <button
+              type="button"
+              onClick={() => onChange(null)}
+              className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-secondary/40 px-2.5 py-2 text-xs font-semibold text-secondary transition-all hover:bg-secondary/10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Remove
+            </button>
+          )}
+        </div>
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/pdf,.pdf"
+        className="hidden"
+        onChange={(e) => handleFile(e.target.files?.[0])}
+      />
+    </div>
+  );
+}
+
 export default function RowForm({
   fields,
   initial,
@@ -366,6 +453,29 @@ export default function RowForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const fileRegistry = useRef<Map<string, File>>(new Map());
+  const pendingPdfRef = useRef<File | null>(null);
+  const [pdfFileName, setPdfFileName] = useState<string | null>(null);
+  const hasPdfField = fields.some((f) => f.type === "pdf");
+  const bookIdForPdf = initial?.id ? String(initial.id) : "";
+  const [bookHasPdf, setBookHasPdf] = useState(false);
+
+  useEffect(() => {
+    if (!hasPdfField || !bookIdForPdf) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const info = await fetch(`/api/book-pdf/${bookIdForPdf}?meta=1`, {
+          headers: { "x-admin-key": "1" },
+        }).then((r) => (r.ok ? r.json() : null));
+        if (!cancelled && info) setBookHasPdf(Boolean(info.exists));
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [hasPdfField, bookIdForPdf]);
 
   const [relationOptions, setRelationOptions] = useState<
     Record<string, { value: string; label: string; store?: string }[]>
@@ -550,7 +660,14 @@ export default function RowForm({
       if (questionsField) {
         payload.questions = questionsData;
       }
-      await onSubmit(payload);
+      const created = (await onSubmit(payload)) as
+        | Record<string, unknown>
+        | undefined;
+      if (pendingPdfRef.current && created?.id) {
+        await uploadBookPdf(String(created.id), pendingPdfRef.current);
+        pendingPdfRef.current = null;
+        setPdfFileName("");
+      }
     } catch (err) {
       setSubmitting(false);
       const message =
@@ -577,6 +694,7 @@ export default function RowForm({
                 field.type === "multiselect" ||
                 field.type === "image" ||
                 field.type === "images" ||
+                field.type === "pdf" ||
                 field.type === "questions"
                   ? "sm:col-span-2"
                   : ""
@@ -794,6 +912,15 @@ export default function RowForm({
                   value={values[field.name] ?? ""}
                   onChange={(v) => setValue(field.name, v)}
                   error={errors[field.name]}
+                />
+              ) : field.type === "pdf" ? (
+                <PdfUpload
+                  fileName={pdfFileName}
+                  onChange={(file) => {
+                    pendingPdfRef.current = file;
+                    setPdfFileName(file ? file.name : null);
+                  }}
+                  hasExisting={bookHasPdf}
                 />
               ) : field.type === "images" ? (
                 <ImageUploadMulti

@@ -221,7 +221,113 @@ export const api = {
         },
       })
       .then((r) => r.data),
+  adminStats: () =>
+    http
+      .get<{
+        totalBooks: number;
+        freeBooks: number;
+        paidBooks: number;
+        totalRevenue: number;
+        totalPurchases: number;
+        pendingPayments: number;
+        totalDonations: number;
+        approvedDonations: number;
+        totalPublicUsers: number;
+        paidBooksWithPdf: number;
+      }>("/api/admin/stats", { admin: true })
+      .then((r) => r.data),
+  publicUserList: () =>
+    http
+      .get<
+        {
+          id: string;
+          name: string;
+          email: string;
+          mobile: string;
+          createdAt: string;
+        }[]
+      >("/api/public-users", { admin: true })
+      .then((r) => r.data),
 };
+
+export interface PublicAuthUser {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+}
+
+const publicHttp = axios.create({
+  headers: { "Content-Type": "application/json" },
+});
+
+let publicRefreshPromise: Promise<boolean> | null = null;
+function publicRefreshOnce(): Promise<boolean> {
+  if (!publicRefreshPromise) {
+    publicRefreshPromise = fetch("/api/public-auth/refresh", {
+      method: "POST",
+    })
+      .then((r) => r.ok)
+      .catch(() => false)
+      .finally(() => {
+        publicRefreshPromise = null;
+      });
+  }
+  return publicRefreshPromise;
+}
+
+publicHttp.interceptors.response.use(
+  async (res) => res,
+  async (err) => {
+    const cfg = err.config;
+    if (cfg && !cfg._retried && err.response?.status === 401) {
+      cfg._retried = true;
+      if (await publicRefreshOnce()) return publicHttp.request(cfg);
+    }
+    const message =
+      err.response?.data?.error || err.message || "Request failed";
+    return Promise.reject(new Error(message));
+  },
+);
+
+export const publicApi = {
+  register: (data: { name: string; email?: string; mobile: string; password: string }) =>
+    publicHttp
+      .post<{ ok: boolean; user: { id: string; name: string } }>(
+        "/api/public-auth/register",
+        data,
+      )
+      .then((r) => r.data),
+  login: (data: { identifier: string; password: string }) =>
+    publicHttp
+      .post<{ ok: boolean; user: PublicAuthUser }>(
+        "/api/public-auth/login",
+        data,
+      )
+      .then((r) => r.data),
+  logout: () => publicHttp.post("/api/public-auth/logout").then((r) => r.data),
+  me: () =>
+    publicHttp
+      .get<{ user: PublicAuthUser | null }>("/api/public-auth/me")
+      .then((r) => r.data),
+  purchaseBook: (data: Record<string, unknown>) =>
+    publicHttp
+      .post<{ ok: boolean; message: string }>("/api/books/purchase", data)
+      .then((r) => r.data),
+  donate: (data: Record<string, unknown>) =>
+    publicHttp.post<{ ok: boolean }>("/api/donations", data).then((r) => r.data),
+  saveReadingProgress: (data: Record<string, unknown>) =>
+    publicHttp
+      .post<{ ok: boolean }>("/api/reading-progress", data)
+      .then((r) => r.data),
+};
+
+export function usePublicUser() {
+  return useQuery({
+    queryKey: ["public-user"],
+    queryFn: () => publicApi.me(),
+  });
+}
 
 export function useTable<T>(
   table: string,

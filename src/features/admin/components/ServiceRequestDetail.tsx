@@ -40,7 +40,6 @@ export default function ServiceRequestDetail({
         queryKey: ["table", "servicerequests"],
       });
       toast.success(`Status updated to "${newStatus}"`);
-      row.status = newStatus as never;
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to update status",

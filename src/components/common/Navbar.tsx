@@ -2,15 +2,32 @@
 
 import Container from "@/components/common/Container";
 import Hoverable from "@/components/common/Hoverable";
+import AuthModal from "@/features/auth/components/AuthModal";
 import { navItems, site } from "@/features/shared/data/site";
+import { usePublicUser, publicApi } from "@/lib/api";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
+import { scrollToHashSection } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { LogIn, LogOut, User } from "lucide-react";
 
 export default function Navbar() {
   const { hidden, scrolled } = useHideOnScroll();
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const { data: meData } = usePublicUser();
+  const user = meData?.user ?? null;
+
+  const handleNavClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      setAccountOpen(false);
+      setOpen(false);
+      scrollToHashSection(href.slice(1));
+    }
+  };
 
   return (
     <header
@@ -53,6 +70,7 @@ export default function Navbar() {
               <Hoverable key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={handleNavClick(item.href)}
                   className="nav-link block rounded-full px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
                   style={{ animationDelay: `${200 + i * 60}ms` }}
                 >
@@ -60,6 +78,49 @@ export default function Navbar() {
                 </Link>
               </Hoverable>
             ))}
+
+            <div className="relative ml-2">
+              {user ? (
+                <>
+                  <button
+                    onClick={() => setAccountOpen((v) => !v)}
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark"
+                  >
+                    <User className="h-4 w-4" />
+                    {user.name.split(" ")[0]}
+                  </button>
+                  {accountOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-2xl">
+                      <Link
+                        href="/my-library"
+                        onClick={() => setAccountOpen(false)}
+                        className="block px-4 py-3 text-sm text-ink transition-colors hover:bg-mist"
+                      >
+                        📚 My Library
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setAccountOpen(false);
+                          publicApi.logout().finally(() => window.location.reload());
+                        }}
+                        className="flex w-full cursor-pointer items-center gap-2 px-4 py-3 text-sm text-secondary transition-colors hover:bg-secondary-light"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign out
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={() => setAuthOpen(true)}
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </button>
+              )}
+            </div>
           </div>
 
           <button
@@ -97,7 +158,10 @@ export default function Navbar() {
               <Hoverable key={item.href}>
                 <Link
                   href={item.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => {
+                    setOpen(false);
+                    handleNavClick(item.href)(e);
+                  }}
                   className="animate-slide-link block rounded-xl px-4 py-3 text-sm font-medium text-ink-soft transition-colors hover:bg-primary-lighter hover:text-primary"
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
@@ -105,9 +169,45 @@ export default function Navbar() {
                 </Link>
               </Hoverable>
             ))}
+            <div className="mt-2 border-t border-ink/10 pt-2">
+              {user ? (
+                <>
+                  <Link
+                    href="/my-library"
+                    onClick={() => setOpen(false)}
+                    className="block rounded-xl px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary-lighter"
+                  >
+                    📚 My Library
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      publicApi.logout().finally(() => window.location.reload());
+                    }}
+                    className="flex w-full cursor-pointer items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-secondary transition-colors hover:bg-secondary-light"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    setAuthOpen(true);
+                  }}
+                  className="flex w-full cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }

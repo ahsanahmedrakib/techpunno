@@ -124,9 +124,10 @@ export default function TableManager({ tableKey, config, role }: Props) {
 
   const handleCreate = async (data: Record<string, unknown>) => {
     try {
-      await createMutation.mutateAsync(data);
+      const doc = await createMutation.mutateAsync(data);
       toast.success(`${config.singular} created`);
       setView("list");
+      return doc as Record<string, unknown>;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Create failed");
     }
@@ -135,10 +136,11 @@ export default function TableManager({ tableKey, config, role }: Props) {
   const handleUpdate = async (data: Record<string, unknown>) => {
     if (!editing) return;
     try {
-      await updateMutation.mutateAsync({ id: String(editing.id), data });
+      const doc = await updateMutation.mutateAsync({ id: String(editing.id), data });
       toast.success(`${config.singular} updated`);
       setView("list");
       setEditing(null);
+      return doc as Record<string, unknown>;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Update failed");
     }
@@ -291,11 +293,13 @@ export default function TableManager({ tableKey, config, role }: Props) {
     const handleSingleSubmit = async (data: Record<string, unknown>) => {
       try {
         if (rowId) {
-          await updateMutation.mutateAsync({ id: rowId, data });
+          const doc = await updateMutation.mutateAsync({ id: rowId, data });
           toast.success(`${config.singular} updated`);
+          return doc as Record<string, unknown>;
         } else {
-          await createMutation.mutateAsync(data);
+          const doc = await createMutation.mutateAsync(data);
           toast.success(`${config.singular} created`);
+          return doc as Record<string, unknown>;
         }
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Save failed");

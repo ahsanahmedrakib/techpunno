@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
+  BookMarked,
+  BookOpen,
   Briefcase,
   Calendar,
   Clapperboard,
@@ -14,12 +16,17 @@ import {
   GraduationCap,
   HeartHandshake,
   Home,
+  KeyRound,
+  Layers,
   Mail,
   Medal,
+  Monitor,
   Newspaper,
   ScrollText,
   Star,
+  Target,
   Trash2,
+  Trophy,
   Users,
   Wallet,
   type LucideIcon,
@@ -48,6 +55,15 @@ const icons: Record<TableKey, LucideIcon> = {
   courseregistrations: ClipboardList,
   services: Briefcase,
   servicerequests: ClipboardList,
+  books: BookOpen,
+  bookpayments: Wallet,
+  quizgroups: Layers,
+  quizwinners: Trophy,
+  donationevents: Target,
+  donations: HeartHandshake,
+  itteam: Monitor,
+  bookaccess: KeyRound,
+  readingprogress: BookMarked,
 };
 
 export default function AdminDashboard() {
@@ -66,6 +82,11 @@ export default function AdminDashboard() {
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: () => api.listUsers(),
+  });
+
+  const statsQuery = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: () => api.adminStats(),
   });
 
   const meQuery = useAuthMe();
@@ -143,6 +164,71 @@ export default function AdminDashboard() {
               </>
             )}
       </div>
+
+      {statsQuery.data && (
+        <div className="rounded-2xl border-2 border-primary/20 bg-white p-6 shadow-sm">
+          <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-ink-soft/60">
+            Library & Donation Highlights
+          </h3>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="rounded-xl bg-mist p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
+                Total Books
+              </p>
+              <div className="mt-1 text-2xl font-bold text-ink">
+                {statsQuery.data.totalBooks}
+              </div>
+              <p className="mt-1 text-[11px] text-ink-soft">
+                {statsQuery.data.freeBooks} free · {statsQuery.data.paidBooks} paid
+              </p>
+            </div>
+            <div className="rounded-xl bg-primary-lighter p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                Revenue
+              </p>
+              <div className="mt-1 text-2xl font-bold text-primary">
+                ৳{statsQuery.data.totalRevenue.toLocaleString()}
+              </div>
+              <p className="mt-1 text-[11px] text-primary/70">
+                {statsQuery.data.totalPurchases} purchases
+              </p>
+            </div>
+            <div className="rounded-xl bg-amber-50 p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                Pending Payments
+              </p>
+              <div className="mt-1 text-2xl font-bold text-amber-600">
+                {statsQuery.data.pendingPayments}
+              </div>
+              <p className="mt-1 text-[11px] text-amber-600/70">
+                awaiting verification
+              </p>
+            </div>
+            <div className="rounded-xl bg-secondary-light p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-secondary">
+                Donations
+              </p>
+              <div className="mt-1 text-2xl font-bold text-secondary">
+                {statsQuery.data.totalDonations}
+              </div>
+              <p className="mt-1 text-[11px] text-secondary/70">
+                {statsQuery.data.approvedDonations} approved
+              </p>
+            </div>
+            <div className="rounded-xl bg-white ring-1 ring-ink/10 p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft/60">
+                Public Users
+              </p>
+              <div className="mt-1 text-2xl font-bold text-ink">
+                {statsQuery.data.totalPublicUsers}
+              </div>
+              <p className="mt-1 text-[11px] text-ink-soft">
+                book PDFs: {statsQuery.data.paidBooksWithPdf}/{statsQuery.data.paidBooks}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div>
         <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-ink-soft/60">

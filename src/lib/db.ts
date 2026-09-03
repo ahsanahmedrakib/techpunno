@@ -428,6 +428,12 @@ export async function createDoc(
     const seq = String(count + 1).padStart(3, "0");
     doc.requestId = `TP-SR-${threeLetter}-${now_date}-${seq}`;
   }
+  if (key === "donations") {
+    const now_date = new Date().toISOString().slice(0, 10);
+    const count = await coll.countDocuments({ deletedAt: null });
+    const seq = String(count + 1).padStart(4, "0");
+    doc.donationId = `TP-DN-${now_date}-${seq}`;
+  }
   const now = new Date().toISOString();
   doc.createdAt = now;
   doc.updatedAt = now;
@@ -491,6 +497,28 @@ export async function updateDoc(
   );
   if (!result) return null;
   const mapped = result as Record<string, unknown>;
+
+  if (key === "bookpayments") {
+    const userId = String(mapped.userId ?? "");
+    const bookId = String(mapped.bookId ?? "");
+    const bookTitle = String(mapped.bookTitle ?? "");
+    const statusValue = String(mapped.status ?? "");
+    const { grantBookAccess, revokeBookAccess } = await import("@/lib/books");
+    if (userId && (bookId || bookTitle)) {
+      if (statusValue === "approved") {
+        await grantBookAccess({
+          userId,
+          bookId,
+          bookTitle,
+          fullName: String(mapped.fullName ?? ""),
+          mobile: String(mapped.mobile ?? ""),
+        });
+      } else if (userId && bookId) {
+        await revokeBookAccess(userId, bookId);
+      }
+    }
+  }
+
   return mapDoc(mapped);
 }
 
