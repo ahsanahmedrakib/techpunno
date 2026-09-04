@@ -52,7 +52,7 @@ export default function NotFound() {
         <Reveal once delay={400}>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/#home"
+              href="/"
               className="inline-flex w-full items-center justify-center rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary-dark sm:w-auto"
             >
               Back to Home

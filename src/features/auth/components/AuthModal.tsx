@@ -2,6 +2,7 @@
 
 import { AlertCircle, Loader2, X } from "lucide-react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { publicApi } from "@/lib/api";
@@ -94,7 +95,7 @@ export default function AuthModal({
   const inputCls =
     "w-full rounded-xl border-2 border-ink/10 bg-cream px-4 py-2.5 text-sm text-ink outline-none transition-all placeholder:text-ink-soft/40 focus:border-primary focus:ring-4 focus:ring-primary/10";
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       onClick={close}
@@ -243,6 +244,7 @@ export default function AuthModal({
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

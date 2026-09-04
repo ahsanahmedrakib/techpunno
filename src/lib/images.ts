@@ -18,6 +18,8 @@ const ALLOWED_FOLDERS = [
   "volunteers",
   "certificateconfig",
   "volunteerconfig",
+  "books",
+  "itteam",
 ];
 
 function validateFolderName(folderName: string): void {

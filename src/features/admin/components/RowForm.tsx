@@ -856,6 +856,49 @@ export default function RowForm({
                     </p>
                   )}
                 </div>
+              ) : field.type === "relation" && field.relation?.customInput ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={values[field.name] ?? ""}
+                    onChange={(e) => {
+                      setValue(field.name, e.target.value);
+                      setRelationValues((prev) => ({ ...prev, [field.name]: "" }));
+                    }}
+                    placeholder={field.placeholder ?? "Type or select a value"}
+                    className={cls(errors[field.name])}
+                  />
+                  <select
+                    value={relationValues[field.name] ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const opt = relationOptions[field.name]?.find(
+                        (o) => o.value === value,
+                      );
+                      setRelationValues((prev) => ({
+                        ...prev,
+                        [field.name]: value,
+                      }));
+                      setValue(
+                        field.name,
+                        opt ? (opt.store ?? opt.label) : "",
+                      );
+                    }}
+                    className={`${cls(errors[field.name])} appearance-none bg-[url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%226%22%20viewBox%3D%220%200%2010%206%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1%201L5%205L9%201%22%20stroke%3D%22%230c9b5d%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E")] bg-size-[10px] bg-position-[right_12px_center] bg-no-repeat pr-10`}
+                  >
+                    <option value="">Select a quiz to fill the field above</option>
+                    {relationOptions[field.name]?.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors[field.name] && (
+                    <p className="mt-1 text-xs font-medium text-secondary">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
               ) : field.type === "relation" ? (
                 <div>
                   <select

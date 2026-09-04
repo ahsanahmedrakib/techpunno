@@ -44,6 +44,8 @@ export interface RelationDef {
   syncField?: string;
   /** Field of the related doc whose value is stored on this field (instead of the label). */
   storeField?: string;
+  /** Show a text input alongside the dropdown so admins can type a custom value. */
+  customInput?: boolean;
 }
 
 export interface FieldDef {
@@ -1997,6 +1999,7 @@ export const tables: Record<TableKey, TableConfig> = {
           storeField: "title",
           labelField: "title",
           labelFields: ["title", "date"],
+          customInput: true,
         },
       },
       {
@@ -2006,11 +2009,12 @@ export const tables: Record<TableKey, TableConfig> = {
         placeholder: "Select quiz group (optional)",
         list: true,
         relation: {
-          table: "quizgroups",
+          table: "quizsets",
           valueField: "title",
           storeField: "title",
           labelField: "title",
-          labelFields: ["title"],
+          labelFields: ["title", "date"],
+          customInput: true,
         },
       },
       {
