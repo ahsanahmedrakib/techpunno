@@ -13,7 +13,7 @@ import { useState } from "react";
 import { LogIn, LogOut, User } from "lucide-react";
 
 export default function Navbar() {
-  const { hidden, scrolled } = useHideOnScroll();
+  const { hidden } = useHideOnScroll();
   const [open, setOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -31,12 +31,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`animate-nav-in fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+      className={`animate-nav-in fixed inset-x-0 top-0 z-50 border-b border-ink/5 bg-white shadow-sm transition-all duration-300 ${
         hidden ? "-translate-y-full" : "translate-y-0"
-      } ${
-        scrolled
-          ? "border-ink/5 bg-white/40 shadow-sm backdrop-blur-md"
-          : "border-transparent bg-white/20 backdrop-blur-sm"
       }`}
     >
       <nav>

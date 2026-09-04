@@ -148,6 +148,11 @@ export default function About() {
     <>
       {/* Hero Banner */}
       <section className="relative overflow-hidden bg-linear-to-br from-ink via-[#0a3322] to-primary-dark pt-24 pb-20 lg:pt-32 lg:pb-28">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[url('/images/about-hero.svg')] bg-cover bg-center"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-ink/80 via-[#0a3322]/70 to-primary-dark/80" />
         <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
         <Container>
