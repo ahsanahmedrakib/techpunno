@@ -20,6 +20,7 @@ const ALLOWED_FOLDERS = [
   "volunteerconfig",
   "books",
   "itteam",
+  "quizwinners",
 ];
 
 function validateFolderName(folderName: string): void {
@@ -126,4 +127,5 @@ export async function deleteImageFiles(
     }
   }
 }
+
 

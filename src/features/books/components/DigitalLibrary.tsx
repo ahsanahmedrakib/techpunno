@@ -3,6 +3,7 @@
 import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
+import { SkeletonBookCard } from "@/components/common/Skeleton";
 import { books, type BookItem } from "@/features/books/data/books";
 import { useMergedStaticTable } from "@/lib/api";
 import { safeImage } from "@/lib/imageUrl";
@@ -13,7 +14,7 @@ import { useState } from "react";
 import BookPurchaseModal from "./BookPurchaseModal";
 
 export default function DigitalLibrary() {
-  const [items] = useMergedStaticTable<BookItem>("books", books);
+  const [items, loading] = useMergedStaticTable<BookItem>("books", books);
   const [purchaseBook, setPurchaseBook] = useState<BookItem | null>(null);
 
   const published = items.filter(
@@ -37,7 +38,20 @@ export default function DigitalLibrary() {
           description="Free and premium books written to build digital literacy and cyber awareness. Read online anytime, anywhere."
         />
 
-        {published.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Reveal
+                key={i}
+                variant="fade-up"
+                delay={i * 120}
+                className="h-full"
+              >
+                <SkeletonBookCard />
+              </Reveal>
+            ))}
+          </div>
+        ) : published.length === 0 ? (
           <div className="rounded-3xl border-2 border-dashed border-ink/15 bg-white p-16 text-center">
             <FileText className="mx-auto mb-4 h-12 w-12 text-ink-soft/30" />
             <p className="text-sm font-medium text-ink-soft">

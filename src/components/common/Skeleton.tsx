@@ -160,6 +160,70 @@ export function SkeletonVideoItem() {
   );
 }
 
+export function SkeletonBookCard() {
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-ink/10">
+      <div className="relative aspect-3/4 w-full overflow-hidden rounded-none bg-ink/10">
+        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/50 to-transparent" />
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <Skeleton className="mb-2 h-5 w-3/4" />
+        <Skeleton className="mb-3 h-4 w-1/2" />
+        <Skeleton className="mb-2 h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+        <div className="mt-4 flex-1" />
+        <Skeleton className="mb-4 h-6 w-24 rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonReader() {
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col overflow-hidden rounded-3xl border-2 border-ink/10 bg-ink shadow-2xl">
+      <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-ink px-3 py-2">
+        <div className="flex items-center gap-2">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div
+              key={i}
+              className="relative h-8 w-8 overflow-hidden rounded-lg bg-white/10"
+            >
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/20 to-transparent" />
+            </div>
+          ))}
+          <div className="relative h-4 w-24 overflow-hidden rounded bg-white/10">
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/20 to-transparent" />
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="relative h-8 w-8 overflow-hidden rounded-lg bg-white/10"
+            >
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/20 to-transparent" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="max-h-[75vh] flex-1 overflow-hidden bg-[#525659] p-4">
+        <div className="relative mx-auto mt-10 aspect-[3/4] w-[78%] max-w-xl overflow-hidden rounded-lg bg-white">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-ink/10 to-transparent" />
+        </div>
+      </div>
+      <div className="flex items-center justify-between border-t border-white/10 bg-ink px-4 py-2.5">
+        <div className="relative h-3.5 w-36 overflow-hidden rounded bg-white/10">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+        <div className="relative h-3.5 w-32 overflow-hidden rounded bg-white/10">
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function SkeletonCourseCard() {
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-white shadow-sm">

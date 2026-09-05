@@ -6,14 +6,13 @@ import {
   BookMarked,
   ChevronLeft,
   ChevronRight,
-  Loader2,
   Maximize,
   Minimize,
   Minus,
   PersonStanding,
   Plus,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface PageProxy {
   getViewport(opts: { scale: number }): { width: number; height: number };
@@ -44,24 +43,33 @@ interface BookReaderProps {
 
 let pdfjsWorkerReady = false;
 
+const GAP = 16;
+const PADDING = 16;
+
 export default function BookReader({
   bookId,
   bookTitle,
   isFree,
   user,
 }: BookReaderProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [pdfInstance, setPdfInstance] = useState<PdfDoc | null>(null);
+  const [units, setUnits] = useState<{ width: number; height: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [scale, setScale] = useState(1.2);
+  const [scale, setScale] = useState(1);
   const [zoomIn, setZoomIn] = useState(false);
   const [showBookmark, setShowBookmark] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fitScale, setFitScale] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const currentScale = zoomIn ? scale * 1.6 : scale;
+  const canvasesRef = useRef<Map<number, HTMLCanvasElement>>(new Map());
+  const renderedRef = useRef<Set<number>>(new Set());
+
+  const totalPages = units.length;
+  const currentScale = fitScale * scale * (zoomIn ? 1.6 : 1);
 
   const { data: meData } = useQuery({
     queryKey: ["public-user"],
@@ -133,8 +141,17 @@ export default function BookReader({
           .getDocument({ data: await blob.arrayBuffer() })
           .promise;
         if (cancelled) return;
+        const pageUnits = await Promise.all(
+          Array.from({ length: doc.numPages }, (_, i) =>
+            doc.getPage(i + 1).then((p) => {
+              const v = p.getViewport({ scale: 1 });
+              return { width: v.width, height: v.height };
+            }),
+          ),
+        );
+        if (cancelled) return;
         setPdfInstance(doc);
-        setTotalPages(doc.numPages);
+        setUnits(pageUnits);
         setCurrentPage(1);
       } catch (err) {
         if (cancelled) return;
@@ -149,16 +166,45 @@ export default function BookReader({
     };
   }, [bookId]);
 
+  const sizes = useMemo(
+    () => units.map((u) => ({ w: u.width * currentScale, h: u.height * currentScale })),
+    [units, currentScale],
+  );
+
+  const recalcFit = useCallback(() => {
+    const scroll = scrollRef.current;
+    const first = units[0];
+    if (!scroll || !first) return;
+    const avail = Math.max(120, scroll.clientWidth - 40);
+    const f = avail / first.width;
+    setFitScale(Math.min(3, Math.max(0.5, f)));
+  }, [units]);
+
   useEffect(() => {
-    if (!pdfInstance) return;
-    const doc = pdfInstance;
-    let cancelled = false;
-    async function render() {
+    recalcFit();
+  }, [recalcFit]);
+
+  useEffect(() => {
+    const onResize = () => recalcFit();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [recalcFit]);
+
+  useEffect(() => {
+    recalcFit();
+  }, [isFullscreen, recalcFit]);
+
+  const renderPage = useCallback(
+    async (num: number) => {
+      if (!pdfInstance) return;
+      if (renderedRef.current.has(num)) return;
+      renderedRef.current.add(num);
+      const canvas = canvasesRef.current.get(num);
+      if (!canvas) return;
+      canvas.width = 0;
       try {
-        const page = await doc.getPage(currentPage);
+        const page = await pdfInstance.getPage(num);
         const viewport = page.getViewport({ scale: currentScale });
-        const canvas = canvasRef.current;
-        if (!canvas) return;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = viewport.width * dpr;
         canvas.height = viewport.height * dpr;
@@ -168,19 +214,84 @@ export default function BookReader({
         if (!ctx) return;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         await page.render({ canvasContext: ctx, viewport }).promise;
-        if (cancelled) return;
         if (!isFree && displayUser?.name) {
           drawWatermark(ctx, viewport.width, viewport.height, displayUser.name);
         }
       } catch {
-        /* ignore render errors */
+        renderedRef.current.delete(num);
+      }
+    },
+    [pdfInstance, currentScale, isFree, displayUser, drawWatermark],
+  );
+
+  const computeTops = useCallback((list: { w: number; h: number }[]) => {
+    const tops: number[] = new Array(list.length);
+    let acc = PADDING;
+    for (let i = 0; i < list.length; i++) {
+      tops[i] = acc;
+      acc += list[i].h + GAP;
+    }
+    return tops;
+  }, []);
+
+  const processVisible = useCallback(() => {
+    const scroll = scrollRef.current;
+    if (!scroll || sizes.length === 0) return;
+    const tops = computeTops(sizes);
+    const scrollTop = scroll.scrollTop;
+    const vh = scroll.clientHeight;
+    const n = sizes.length;
+
+    const focus = scrollTop + vh / 3;
+    let cur = 1;
+    for (let i = 0; i < n; i++) {
+      if (tops[i] <= focus) cur = i + 1;
+      else break;
+    }
+    setCurrentPage((prev) => (prev === cur ? prev : cur));
+
+    let lo = 0;
+    for (let i = 0; i < n; i++) {
+      if (tops[i] + sizes[i].h > scrollTop) {
+        lo = i;
+        break;
       }
     }
-    render();
+    let hi = n - 1;
+    for (let i = 0; i < n; i++) {
+      if (tops[i] > scrollTop + vh) {
+        hi = i - 1;
+        break;
+      }
+    }
+    const start = Math.max(0, lo - 1);
+    const end = Math.min(n - 1, hi + 1);
+    for (let i = start; i <= end; i++) {
+      renderPage(i + 1);
+    }
+  }, [sizes, computeTops, renderPage]);
+
+  useEffect(() => {
+    renderedRef.current.clear();
+    canvasesRef.current.forEach((cv) => {
+      cv.width = 0;
+    });
+    const raf = requestAnimationFrame(() => processVisible());
+    return () => cancelAnimationFrame(raf);
+  }, [sizes, units, processVisible]);
+
+  useEffect(() => {
+    const scroll = scrollRef.current;
+    if (!scroll) return;
+    const onScroll = () => processVisible();
+    scroll.addEventListener("scroll", onScroll, { passive: true });
+    const ro = new ResizeObserver(() => processVisible());
+    ro.observe(scroll);
     return () => {
-      cancelled = true;
+      scroll.removeEventListener("scroll", onScroll);
+      ro.disconnect();
     };
-  }, [pdfInstance, currentPage, currentScale, isFree, displayUser, drawWatermark]);
+  }, [processVisible]);
 
   useEffect(() => {
     if (!pdfInstance) return;
@@ -194,8 +305,24 @@ export default function BookReader({
     return () => clearTimeout(timer);
   }, [currentPage, bookId, pdfInstance]);
 
-  const next = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
-  const prev = () => setCurrentPage((p) => Math.max(1, p - 1));
+  useEffect(() => {
+    const onFullscreen = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFullscreen);
+    return () => document.removeEventListener("fullscreenchange", onFullscreen);
+  }, []);
+
+  const scrollToPage = useCallback(
+    (num: number) => {
+      const scroll = scrollRef.current;
+      if (!scroll || sizes.length === 0) return;
+      const tops = computeTops(sizes);
+      scroll.scrollTo({ top: Math.max(0, tops[num - 1] ?? 0), behavior: "smooth" });
+    },
+    [sizes, computeTops],
+  );
+
+  const next = () => scrollToPage(Math.min(totalPages, currentPage + 1));
+  const prev = () => scrollToPage(Math.max(1, currentPage - 1));
 
   const goFullscreen = () => {
     const el = containerRef.current;
@@ -285,11 +412,17 @@ export default function BookReader({
         </div>
       </div>
 
-      <div className="relative overflow-auto bg-[#525659] p-4" style={{ maxHeight: "75vh" }}>
+      <div
+        ref={scrollRef}
+        className={`flex-1 overflow-auto bg-[#525659] ${
+          isFullscreen ? "" : "max-h-[75vh]"
+        }`}
+      >
         {loading && (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-white/70">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm">Loading book…</p>
+          <div className="p-4">
+            <div className="relative mx-auto mt-10 aspect-[3/4] w-[78%] max-w-xl overflow-hidden rounded-lg bg-white">
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-ink/10 to-transparent" />
+            </div>
           </div>
         )}
         {error && (
@@ -297,9 +430,25 @@ export default function BookReader({
             <p className="text-sm font-semibold text-red-300">{error}</p>
           </div>
         )}
-        <div className="relative mx-auto w-fit">
-          <canvas ref={canvasRef} className="block bg-white shadow-2xl" />
-        </div>
+        {!loading && !error && (
+          <div className="mx-auto flex w-fit flex-col items-center gap-4 p-4">
+            {sizes.map((s, i) => (
+              <div
+                key={i}
+                className="relative"
+                style={{ width: `${s.w}px`, height: `${s.h}px` }}
+              >
+                <canvas
+                  ref={(el) => {
+                    if (el) canvasesRef.current.set(i + 1, el);
+                    else canvasesRef.current.delete(i + 1);
+                  }}
+                  className="block h-full w-full bg-white shadow-2xl"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center justify-between border-t border-white/10 bg-ink px-4 py-2.5 text-xs text-white/70">

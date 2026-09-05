@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/common/Container";
+import Skeleton, { SkeletonReader } from "@/components/common/Skeleton";
 import AuthModal from "@/features/auth/components/AuthModal";
 import BookPurchaseModal from "@/features/books/components/BookPurchaseModal";
 import BookReader from "@/features/books/components/BookReader";
@@ -63,8 +64,13 @@ export default function ReadPage({ bookId }: { bookId: string }) {
 
   if (!book) {
     return (
-      <Container className="py-24 text-center text-sm text-ink-soft">
-        Loading…
+      <Container className="py-12">
+        <Skeleton className="mb-6 h-4 w-28" />
+        <div className="mb-12 text-center">
+          <Skeleton className="mx-auto mb-3 h-8 w-2/3 lg:w-1/2" />
+          <Skeleton className="mx-auto h-4 w-1/3 lg:w-1/4" />
+        </div>
+        <SkeletonReader />
       </Container>
     );
   }
