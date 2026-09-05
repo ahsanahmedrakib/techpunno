@@ -1,4 +1,5 @@
 import { blogPosts } from "@/features/blogs/data/blogs";
+import { schools } from "@/features/schools/data/schools";
 import { defaultCertificateConfig } from "@/features/certificates/data/certificate";
 import { courses } from "@/features/courses/data/courses";
 import { courseRegistrations } from "@/features/courses/data/courseRegistrations";
@@ -103,6 +104,7 @@ export type TableKey =
   | "courseregistrations"
   | "services"
   | "servicerequests"
+  | "schools"
   | "books"
   | "bookpayments"
   | "quizgroups"
@@ -1732,6 +1734,243 @@ export const tables: Record<TableKey, TableConfig> = {
     seed: [],
     publicCreate: true,
     publicFields: ["requestId", "service", "status"],
+  },
+  schools: {
+    key: "schools",
+    label: "Schools (Network)",
+    singular: "School",
+    defaultStatus: "unpublished",
+    statusField: "status",
+    statusOptions: ["published", "unpublished"],
+    listColumns: [
+      "name",
+      "district",
+      "seminarDate",
+      "participants",
+      "consentStatus",
+      "badge",
+      "status",
+      "createdAt",
+      "updatedAt",
+    ],
+    fields: [
+      {
+        name: "name",
+        label: "School Name",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. Gopalganj Model High School",
+      },
+      {
+        name: "logo",
+        label: "Logo / Photo",
+        type: "image",
+        placeholder: "Upload the school logo or photo",
+      },
+      {
+        name: "district",
+        label: "District",
+        type: "text",
+        required: true,
+        list: true,
+        placeholder: "e.g. Gopalganj",
+      },
+      {
+        name: "upazila",
+        label: "Upazila",
+        type: "text",
+        placeholder: "e.g. Gopalganj Sadar",
+      },
+      {
+        name: "seminarDate",
+        label: "Seminar Date",
+        type: "date",
+        required: true,
+        list: true,
+        placeholder: "e.g. 2026-08-18",
+      },
+      {
+        name: "participants",
+        label: "Number of Participants",
+        type: "number",
+        required: true,
+        list: true,
+        placeholder: "e.g. 240",
+      },
+      {
+        name: "grades",
+        label: "Participating Classes",
+        type: "list",
+        placeholder: "e.g. Class 8, Class 9, Class 10 (one per line)",
+      },
+      {
+        name: "images",
+        label: "Seminar Photos",
+        type: "images",
+        placeholder: "Upload one or more seminar photos",
+      },
+      {
+        name: "ictTeacherName",
+        label: "ICT Teacher Name",
+        type: "text",
+        placeholder: "e.g. Mahmudul Hasan",
+      },
+      {
+        name: "ictTeacherRole",
+        label: "ICT Teacher Designation",
+        type: "text",
+        placeholder: "e.g. Assistant Teacher (ICT)",
+      },
+      {
+        name: "ictTeacherImage",
+        label: "ICT Teacher Photo",
+        type: "image",
+        placeholder: "Upload the ICT teacher's photo",
+      },
+      {
+        name: "badge",
+        label: "Badge",
+        type: "select",
+        options: ["Seminar Completed", "Cyber Awareness Partner"],
+        required: true,
+        list: true,
+        placeholder: "Select badge type",
+      },
+
+      {
+        name: "advisorName",
+        label: "ICT Advisor Name",
+        type: "text",
+        placeholder: "e.g. Mahmudul Hasan",
+      },
+      {
+        name: "advisorDesignation",
+        label: "ICT Advisor Designation",
+        type: "text",
+        placeholder: "e.g. ICT Teacher",
+      },
+      {
+        name: "advisorImage",
+        label: "ICT Advisor Photo",
+        type: "image",
+        placeholder: "Upload the ICT advisor's photo",
+      },
+      {
+        name: "advisorJoinedDate",
+        label: "ICT Advisor Joined Date",
+        type: "date",
+        placeholder: "e.g. 2026-08-22",
+      },
+      {
+        name: "advisorApproved",
+        label: "ICT Advisor Approved",
+        type: "select",
+        options: ["false", "true"],
+        required: true,
+        placeholder: "Has the ICT teacher & school authority consented?",
+      },
+
+      {
+        name: "headName",
+        label: "Head Teacher Name",
+        type: "text",
+        placeholder: "e.g. Md. Anowar Hossain",
+      },
+      {
+        name: "headDesignation",
+        label: "Head Teacher Designation",
+        type: "text",
+        placeholder: "e.g. Headmaster",
+      },
+      {
+        name: "headImage",
+        label: "Head Teacher Photo",
+        type: "image",
+        placeholder: "Upload the head teacher's photo",
+      },
+      {
+        name: "headTestimonial",
+        label: "Head Teacher Testimonial",
+        type: "textarea",
+        placeholder:
+          "2–5 line testimonial from the school head. Publish only with their consent.",
+      },
+      {
+        name: "headTestimonialPhoto",
+        label: "Handwritten Testimonial Photo",
+        type: "image",
+        placeholder: "Upload the handwritten testimonial photo (optional)",
+      },
+      {
+        name: "testimonialApproved",
+        label: "Testimonial Approved",
+        type: "select",
+        options: ["false", "true"],
+        required: true,
+        placeholder: "Has the head teacher consented to publishing?",
+      },
+
+      {
+        name: "timeline",
+        label: "Activity Timeline",
+        type: "list",
+        placeholder:
+          'One activity per line, format: Month Year | Activity  e.g. August 2026 | Cyber Awareness Seminar',
+      },
+
+      {
+        name: "consentStatus",
+        label: "Consent Status",
+        type: "select",
+        options: ["pending", "granted", "denied"],
+        required: true,
+        list: true,
+        placeholder: "Select consent status",
+      },
+      {
+        name: "status",
+        label: "Publish Status",
+        type: "select",
+        options: ["published", "unpublished"],
+        required: true,
+        list: true,
+        placeholder: "Select publish status",
+      },
+      { name: "slug", label: "Slug", type: "readonly", list: true },
+      { name: "createdAt", label: "Created", type: "readonly", list: true },
+      { name: "updatedAt", label: "Updated", type: "readonly", list: true },
+    ],
+    seed: schools as unknown as Record<string, unknown>[],
+    publicFields: [
+      "name",
+      "logo",
+      "district",
+      "upazila",
+      "seminarDate",
+      "participants",
+      "grades",
+      "images",
+      "ictTeacherName",
+      "ictTeacherRole",
+      "ictTeacherImage",
+      "badge",
+      "advisorName",
+      "advisorDesignation",
+      "advisorImage",
+      "advisorJoinedDate",
+      "advisorApproved",
+      "headName",
+      "headDesignation",
+      "headImage",
+      "headTestimonial",
+      "headTestimonialPhoto",
+      "testimonialApproved",
+      "timeline",
+      "consentStatus",
+      "status",
+      "slug",
+    ],
   },
   books: {
     key: "books",

@@ -1,27 +1,14 @@
 import fs from "fs";
 import path from "path";
+import { tables } from "./tables";
 import { deleteImageFromDB, saveImageToDB } from "./imageStore";
 import { EXTENSION_MAP } from "./imageTypes";
 
-const ALLOWED_FOLDERS = [
-  "services",
-  "projects",
-  "blogs",
-  "team",
-  "hero",
-  "settings",
-  "events",
-  "news",
-  "uploads",
-  "advisors",
-  "coreteam",
-  "volunteers",
-  "certificateconfig",
-  "volunteerconfig",
-  "books",
-  "itteam",
-  "quizwinners",
-];
+const LEGACY_FOLDERS = ["uploads", "settings", "projects", "team"];
+
+const ALLOWED_FOLDERS = Array.from(
+  new Set([...Object.keys(tables), ...LEGACY_FOLDERS]),
+);
 
 function validateFolderName(folderName: string): void {
   if (!ALLOWED_FOLDERS.includes(folderName)) {

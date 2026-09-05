@@ -52,6 +52,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: `${site.url}/schools`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
 
   const serviceSlugs = await getTableSlugs("services", "slug");
@@ -59,6 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogSlugs = await getTableSlugs("blogs", "slug");
   const newsSlugs = await getTableSlugs("news", "slug");
   const eventSlugs = await getTableSlugs("events", "slug");
+  const schoolSlugs = await getTableSlugs("schools", "slug");
 
   const dynamicPages: MetadataRoute.Sitemap = [
     ...serviceSlugs.map((slug) => ({
@@ -90,6 +97,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.6,
+    })),
+    ...schoolSlugs.map((slug) => ({
+      url: `${site.url}/schools/${slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
   ];
 

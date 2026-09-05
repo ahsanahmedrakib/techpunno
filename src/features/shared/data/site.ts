@@ -32,6 +32,7 @@ export const navItems: NavItem[] = [
   // { label: "Core Team", href: "/#team" },
   { label: "Volunteers", href: "/volunteers" },
   { label: "Quiz", href: "/quiz" },
+  { label: "Schools", href: "/schools" },
   { label: "Library", href: "/library" },
   { label: "Donate", href: "/#donors" },
   // { label: "Testimonials", href: "/#testimonials" },

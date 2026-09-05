@@ -257,6 +257,18 @@ export default function TableManager({ tableKey, config, role }: Props) {
       return "bg-secondary-light text-secondary border-2 border-secondary/40";
     if (val === "resigned")
       return "bg-slate-100 text-slate-600 border-2 border-slate-300";
+    if (val === "published")
+      return "bg-primary-lighter text-primary border-2 border-primary/40";
+    if (val === "unpublished")
+      return "bg-slate-100 text-slate-600 border-2 border-slate-300";
+    if (val === "granted")
+      return "bg-primary-lighter text-primary border-2 border-primary/40";
+    if (val === "denied")
+      return "bg-secondary-light text-secondary border-2 border-secondary/40";
+    if (val === "Seminar Completed")
+      return "bg-primary-lighter text-primary border-2 border-primary/40";
+    if (val === "Cyber Awareness Partner")
+      return "bg-amber-100 text-amber-800 border-2 border-amber-400";
     if (val === "Ambassador")
       return "bg-amber-100 text-amber-800 border-2 border-amber-400";
     if (val === "Volunteer")

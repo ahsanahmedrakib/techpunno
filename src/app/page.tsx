@@ -13,6 +13,7 @@ import AdvisorTeam from "@/features/team/components/AdvisorTeam";
 import CoreTeam from "@/features/team/components/CoreTeam";
 import ITTeam from "@/features/team/components/ITTeam";
 import QuizWinners from "@/features/quiz/components/QuizWinners";
+import SchoolHeadTestimonials from "@/features/schools/components/SchoolHeadTestimonials";
 import { site } from "@/features/shared/data/site";
 
 export const metadata: Metadata = {
@@ -49,6 +50,7 @@ export default function Home() {
       <News />
       <QuizWinners />
       <Testimonials />
+      <SchoolHeadTestimonials />
       <DigitalLibrary />
       <DonorsAndDonation />
       <AdvisorTeam />
