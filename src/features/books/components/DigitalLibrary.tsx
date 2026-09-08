@@ -7,7 +7,13 @@ import { SkeletonBookCard } from "@/components/common/Skeleton";
 import { books, type BookItem } from "@/features/books/data/books";
 import { useMergedStaticTable } from "@/lib/api";
 import { safeImage } from "@/lib/imageUrl";
-import { BookmarkCheck, Download, FileText, Lock, ShoppingCart } from "lucide-react";
+import {
+  BookmarkCheck,
+  Download,
+  FileText,
+  Lock,
+  ShoppingCart,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,9 +23,7 @@ export default function DigitalLibrary() {
   const [items, loading] = useMergedStaticTable<BookItem>("books", books);
   const [purchaseBook, setPurchaseBook] = useState<BookItem | null>(null);
 
-  const published = items.filter(
-    (b) => !b.status || b.status === "published",
-  );
+  const published = items.filter((b) => !b.status || b.status === "published");
 
   const downloadFree = (book: BookItem) => {
     const a = document.createElement("a");
@@ -29,7 +33,7 @@ export default function DigitalLibrary() {
   };
 
   return (
-    <section id="books" className="section-anchor bg-mist py-20 lg:py-28">
+    <section id="books" className="section-anchor bg-white py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Digital Library"
@@ -69,7 +73,10 @@ export default function DigitalLibrary() {
                   delay={(i % 3) * 120}
                   className="h-full"
                 >
-                  <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-ink/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15">
+                  <div
+                    className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-ink/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/15"
+                    title={book.description || book.title}
+                  >
                     <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1 bg-gradient-admin opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="relative aspect-3/4 w-full overflow-hidden bg-mist">
                       {safeImage(book.cover) ? (
@@ -110,7 +117,9 @@ export default function DigitalLibrary() {
                         by {book.author}
                       </p>
                       <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-soft">
-                        {book.description}
+                        {book.description?.length > 400
+                          ? `${book.description?.substring(0, 400)}...`
+                          : book.description}
                       </p>
                       <div className="mt-3 flex items-center gap-2 text-xs text-ink-soft">
                         {book.pageCount ? (
@@ -176,3 +185,4 @@ export default function DigitalLibrary() {
     </section>
   );
 }
+

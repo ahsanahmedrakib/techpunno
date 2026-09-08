@@ -20,7 +20,10 @@ export default function SchoolNetwork() {
   ) as SchoolItem[];
 
   return (
-    <section id="school-network" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
+    <section
+      id="school-network"
+      className="section-anchor bg-white py-20 lg:py-28"
+    >
       <Container>
         <SectionHeading
           eyebrow="School Network"
@@ -108,7 +111,7 @@ export default function SchoolNetwork() {
                 </Reveal>
               );
             })}
-            {(published.length === 0) && (
+            {published.length === 0 && (
               <div className="col-span-full rounded-3xl border-2 border-primary/20 bg-white p-16 text-center">
                 <Users className="mx-auto mb-3 h-10 w-10 text-primary/40" />
                 <p className="text-sm font-medium text-ink-soft">

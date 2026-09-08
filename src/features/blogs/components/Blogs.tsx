@@ -15,10 +15,7 @@ import Link from "next/link";
 export default function Blogs() {
   const [posts, loading] = useTable<BlogPost>("blogs", blogPosts);
   return (
-    <section
-      id="blogs"
-      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
-    >
+    <section id="blogs" className="section-anchor bg-white py-10">
       <Container>
         <SectionHeading
           eyebrow="Blogs"
@@ -45,6 +42,7 @@ export default function Blogs() {
                 <Link
                   href={`/blogs/${post.slug || post.id}`}
                   className="block h-full"
+                  title={post.summary || post.title}
                 >
                   <Hoverable className="group relative h-full rounded-3xl bg-linear-to-br from-primary/60 via-primary/10 to-secondary/50 p-px shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/20">
                     <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-white">
@@ -70,11 +68,15 @@ export default function Blogs() {
                           {post.title}
                         </h3>
                         <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
-                          {post.summary}
+                          {post.summary?.length > 120
+                            ? `${post.summary?.substring(0, 120)}...`
+                            : post.summary}
                         </p>
                         <div className="mt-5 flex items-center justify-between border-t border-ink/10 pt-4 text-xs text-ink-soft">
                           <span className="inline-flex items-center gap-2 font-medium">
-                            <span className={`grid h-7 w-7 place-items-center rounded-full text-[10px] font-bold text-white ${avatarColor(post.author)}`}>
+                            <span
+                              className={`grid h-7 w-7 place-items-center rounded-full text-[10px] font-bold text-white ${avatarColor(post.author)}`}
+                            >
                               {post.author.charAt(0)}
                             </span>
                             {post.author}

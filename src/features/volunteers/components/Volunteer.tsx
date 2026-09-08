@@ -15,7 +15,7 @@ export default function VolunteerPage() {
       <main>
         <VolunteersGrid />
 
-        <section className="bg-white py-10" id="registration">
+        <section className="bg-gradient-admin-subtle py-10" id="registration">
           <Container>
             <Reveal
               variant="zoom"

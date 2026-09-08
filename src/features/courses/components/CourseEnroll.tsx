@@ -1,7 +1,7 @@
 "use client";
 
-import RegistrationForm from "@/features/shared/components/RegistrationForm";
 import type { CourseItem } from "@/features/courses/data/courses";
+import RegistrationForm from "@/features/shared/components/RegistrationForm";
 import { api } from "@/lib/api";
 import type { StudentRegistrationFormValues } from "@/lib/validation";
 import { GraduationCap, X } from "lucide-react";
@@ -11,9 +11,11 @@ import { createPortal } from "react-dom";
 export default function CourseEnroll({
   course,
   compact,
+  disabled = false,
 }: {
   course: CourseItem;
   compact?: boolean;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -57,9 +59,11 @@ export default function CourseEnroll({
     });
   };
 
-  const btnCls = compact
-    ? "cursor-pointer inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-primary-dark"
-    : "cursor-pointer inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark";
+  const btnCls = disabled
+    ? "cursor-not-allowed inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-ink/20 px-3 py-2 text-xs font-semibold text-ink/50"
+    : compact
+      ? "cursor-pointer inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-primary-dark"
+      : "cursor-pointer inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark";
 
   return (
     <>
@@ -70,6 +74,7 @@ export default function CourseEnroll({
           setOpen(true);
         }}
         className={btnCls}
+        disabled={disabled}
       >
         <GraduationCap className="h-4 w-4" />
         Enroll Now

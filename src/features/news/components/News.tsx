@@ -46,7 +46,10 @@ export default function News() {
 
   if (loading) {
     return (
-      <section id="news" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
+      <section
+        id="news"
+        className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
+      >
         <Container>
           <SectionHeading
             eyebrow="News & Updates"
@@ -64,7 +67,10 @@ export default function News() {
   }
 
   return (
-    <section id="news" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
+    <section
+      id="news"
+      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
+    >
       <Container>
         <SectionHeading
           eyebrow="News & Updates"
@@ -87,6 +93,7 @@ export default function News() {
                 <Link
                   href={`/news/${item.slug || item.id}`}
                   className="block h-full"
+                  title={item.summary || item.title}
                 >
                   <Hoverable className="group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-primary/40 bg-linear-to-br from-ink via-[#0f3a28] to-primary-dark text-white shadow-2xl shadow-ink/30 transition-all hover:border-primary">
                     {firstImage(item) && (
@@ -110,7 +117,9 @@ export default function News() {
                         {item.title}
                       </h3>
                       <p className="mt-4 text-left text-sm leading-relaxed text-white/80 sm:text-base">
-                        {item.summary}
+                        {item.summary?.length > 300
+                          ? `${item.summary?.substring(0, 300)}...`
+                          : item.summary}
                       </p>
                       <div className="mt-auto flex items-center justify-between pt-8">
                         <span className="text-sm font-medium text-white/70">
@@ -139,6 +148,7 @@ export default function News() {
                 <Link
                   href={`/news/${item.slug || item.id}`}
                   className="block h-full"
+                  title={item.summary || item.title}
                 >
                   <Hoverable className="group relative h-full rounded-3xl bg-linear-to-br from-primary/50 via-primary/10 to-secondary/50 p-px shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/20">
                     <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1px)] bg-white">
@@ -178,7 +188,9 @@ export default function News() {
                           {item.title}
                         </h3>
                         <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-soft">
-                          {item.summary}
+                          {item.summary?.length > 120
+                            ? `${item.summary?.substring(0, 120)}...`
+                            : item.summary}
                         </p>
                         <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
                           Learn more

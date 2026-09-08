@@ -3,9 +3,9 @@
 import Container from "@/components/common/Container";
 import Reveal from "@/components/common/Reveal";
 import SectionHeading from "@/components/common/SectionHeading";
+import DonationFormModal from "@/features/donations/components/DonationFormModal";
 import { useMergedStaticTable } from "@/lib/api";
 import { safeImage } from "@/lib/imageUrl";
-import DonationFormModal from "@/features/donations/components/DonationFormModal";
 import { HandCoins, Heart, MapPin, Target, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -31,7 +31,10 @@ export interface DonorItem {
 }
 
 export default function DonorsAndDonation() {
-  const [events] = useMergedStaticTable<DonationEventItem>("donationevents", []);
+  const [events] = useMergedStaticTable<DonationEventItem>(
+    "donationevents",
+    [],
+  );
   const [donations] = useMergedStaticTable<DonorItem>("donations", []);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState("");
@@ -51,7 +54,10 @@ export default function DonorsAndDonation() {
   };
 
   return (
-    <section id="donors" className="section-anchor bg-white py-20 lg:py-28">
+    <section
+      id="donors"
+      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
+    >
       <Container>
         <SectionHeading
           eyebrow="Donors & Supporters"
@@ -65,7 +71,10 @@ export default function DonorsAndDonation() {
             {events.map((evt, i) => {
               const target = Number(evt.target) || 0;
               const collected = Number(evt.collected) || 0;
-              const pct = target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
+              const pct =
+                target > 0
+                  ? Math.min(100, Math.round((collected / target) * 100))
+                  : 0;
               return (
                 <Reveal
                   key={evt.id}
@@ -73,7 +82,7 @@ export default function DonorsAndDonation() {
                   delay={(i % 3) * 120}
                   className="h-full"
                 >
-                  <div className="flex h-full flex-col rounded-3xl bg-gradient-to-br from-primary/10 to-secondary/10 p-6 ring-1 ring-ink/5">
+                  <div className="flex h-full flex-col rounded-3xl bg-linear-to-br from-primary/10 to-secondary/10 p-6 ring-1 ring-ink/5">
                     <div className="flex items-start justify-between">
                       <span className="inline-flex items-center gap-2 rounded-full bg-primary-lighter px-3 py-1 text-xs font-bold text-primary">
                         <Target className="h-3.5 w-3.5" />
@@ -82,7 +91,9 @@ export default function DonorsAndDonation() {
                       <TrendingUp className="h-5 w-5 text-primary" />
                     </div>
                     {evt.description && (
-                      <p className="mt-3 text-sm text-ink-soft">{evt.description}</p>
+                      <p className="mt-3 text-sm text-ink-soft">
+                        {evt.description}
+                      </p>
                     )}
                     <div className="mt-4 flex items-center justify-between text-sm">
                       <span className="font-semibold text-ink">
@@ -94,7 +105,7 @@ export default function DonorsAndDonation() {
                     </div>
                     <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-white">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all"
+                        className="h-full rounded-full bg-linear-to-r from-primary to-secondary transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -194,3 +205,4 @@ export default function DonorsAndDonation() {
     </section>
   );
 }
+

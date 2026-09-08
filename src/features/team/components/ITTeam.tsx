@@ -26,7 +26,7 @@ export default function ITTeam() {
   if (members.length === 0) return null;
 
   return (
-    <section id="it-team" className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28">
+    <section id="it-team" className="section-anchor bg-white py-20 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Meet Our IT Team"
@@ -71,7 +71,9 @@ export default function ITTeam() {
                       )}
                     </div>
                     <div className="flex flex-1 flex-col items-center px-6 py-6 text-center">
-                      <h3 className="text-lg font-bold text-ink">{member.name}</h3>
+                      <h3 className="text-lg font-bold text-ink">
+                        {member.name}
+                      </h3>
                       <span className="mt-1 text-sm font-semibold text-primary">
                         {member.post || member.role}
                       </span>
@@ -105,3 +107,4 @@ export default function ITTeam() {
     </section>
   );
 }
+

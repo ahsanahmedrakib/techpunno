@@ -2,8 +2,8 @@
 
 import Container from "@/components/common/Container";
 import SectionHeading from "@/components/common/SectionHeading";
-import TeamCard from "@/features/team/components/TeamCard";
 import { SkeletonTeamCard } from "@/components/common/Skeleton";
+import TeamCard from "@/features/team/components/TeamCard";
 import { coreTeam, type TeamMember } from "@/features/team/data/team";
 import { useMergedStaticTable } from "@/lib/api";
 
@@ -15,7 +15,7 @@ export default function CoreTeam() {
   return (
     <section
       id="team"
-      className="section-anchor py-20 lg:py-28"
+      className="section-anchor bg-gradient-admin-subtle py-20 lg:py-28"
     >
       <Container>
         <SectionHeading
