@@ -12,6 +12,8 @@ import {
   CheckCircle2,
   MapPin,
   Monitor,
+  Ticket,
+  Wallet,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,11 +27,16 @@ export default function EventSingle({ item }: { item: EventItem }) {
     mode,
     category,
     status,
+    eventType,
+    regFee,
+    paymentNumber,
+    paymentInstruction,
     externalUrl,
   } = item;
   const { day, month, year } = getDateParts(date);
   const iframeSrc = safeUrl(externalUrl);
   const isUpcoming = status === "upcoming";
+  const isPaid = eventType === "paid";
   const isStatic = events.some((e) => e.id === item.id);
   const related = isStatic
     ? events.filter((e) => e.slug !== item.slug).slice(0, 3)
@@ -66,6 +73,18 @@ export default function EventSingle({ item }: { item: EventItem }) {
                 >
                   <Monitor className="h-3.5 w-3.5" />
                   {mode}
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm ${
+                    isPaid ? "bg-amber-500/80" : "bg-white/15"
+                  }`}
+                >
+                  {isPaid ? (
+                    <Wallet className="h-3.5 w-3.5" />
+                  ) : (
+                    <Ticket className="h-3.5 w-3.5" />
+                  )}
+                  {isPaid ? "Paid Event" : "Free Event"}
                 </span>
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm ${
@@ -176,6 +195,34 @@ export default function EventSingle({ item }: { item: EventItem }) {
               ? "Already registered? Confirm your participation with your mobile number to be added as an official participant."
               : "Thank you for your interest in this event. Registration and participation for this event have now closed."}
           </p>
+          {isUpcoming && isPaid && (
+            <div className="mx-auto mt-5 max-w-lg rounded-2xl border-2 border-primary/40 bg-primary-lighter/60 p-4 text-left">
+              <p className="flex items-center gap-2 text-sm font-bold text-ink">
+                <Wallet className="h-4 w-4 text-primary" />
+                Paid Registration
+              </p>
+              <p className="mt-1.5 text-sm text-ink">
+                {regFee
+                  ? `Registration fee: ৳${regFee}`
+                  : "This event requires a registration fee."}
+                {paymentNumber && (
+                  <>
+                    {" "}
+                    Pay via{" "}
+                    <span className="font-bold text-primary">
+                      {paymentNumber}
+                    </span>
+                    .
+                  </>
+                )}
+              </p>
+              {paymentInstruction && (
+                <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+                  {paymentInstruction}
+                </p>
+              )}
+            </div>
+          )}
           {isUpcoming && (
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <EventEnroll event={item} />

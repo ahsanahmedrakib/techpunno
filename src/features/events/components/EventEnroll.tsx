@@ -9,6 +9,7 @@ import {
   Check,
   Loader2,
   PhoneCall,
+  Ticket,
   UserPlus,
   X,
 } from "lucide-react";
@@ -28,6 +29,16 @@ export default function EventEnroll({
   const [mode, setMode] = useState<Mode>(null);
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+
+  const paymentConfig =
+    event.eventType === "paid"
+      ? {
+          active: true,
+          fee: event.regFee,
+          paymentNumber: event.paymentNumber,
+          instruction: event.paymentInstruction,
+        }
+      : undefined;
 
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -121,6 +132,13 @@ export default function EventEnroll({
           <UserPlus className="h-4 w-4" />
           I&apos;m Participating
         </button>
+        <a
+          href={`/events/collect-token?event=${encodeURIComponent(event.id)}`}
+          className={`${baseBtn} cursor-pointer border-2 border-primary/40 bg-white text-ink transition-all hover:-translate-y-0.5 hover:bg-primary-lighter hover:text-primary`}
+        >
+          <Ticket className="h-4 w-4" />
+          Collect Token
+        </a>
       </div>
 
       {mode &&
@@ -185,6 +203,7 @@ export default function EventEnroll({
                     showEventSelect
                     defaultEventId={String(event.id)}
                     onSubmit={handleRegister}
+                    payment={paymentConfig}
                   />
                 ) : phoneSubmitted ? (
                   <div className="rounded-2xl border-2 border-primary/40 p-10 text-center">

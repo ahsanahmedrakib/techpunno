@@ -8,6 +8,10 @@ export type EventItem = {
   mode: "Offline" | "Online";
   category: string;
   status: "upcoming" | "done";
+  eventType?: "paid" | "free";
+  regFee?: string;
+  paymentNumber?: string;
+  paymentInstruction?: string;
   slug?: string;
   cardImage?: string;
   images?: string[];
@@ -27,6 +31,11 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Workshop",
     status: "upcoming",
+    eventType: "paid",
+    regFee: "50",
+    paymentNumber: "017XXXXXXXX",
+    paymentInstruction:
+      "Send the registration fee to the bKash/Nagad number above and enter your Transaction ID (optional) on the registration form.",
     slug: "cyber-security-awareness-workshop",
   },
   {
@@ -79,6 +88,11 @@ export const events: EventItem[] = [
     mode: "Offline",
     category: "Campaign",
     status: "upcoming",
+    eventType: "paid",
+    regFee: "30",
+    paymentNumber: "017XXXXXXXX",
+    paymentInstruction:
+      "Send the registration fee to the bKash/Nagad number above and enter your Transaction ID (optional) on the registration form.",
     slug: "national-cyber-safety-campaign",
   },
   {

@@ -154,6 +154,14 @@ export const studentRegistrationSchema = yup.object({
     .trim()
     .required("School/College/University name is required")
     .min(2, "Institution name must be at least 2 characters"),
+  paymentNumber: yup
+    .string()
+    .trim(),
+  paymentAmount: yup
+    .string()
+    .trim(),
+  paymentMethod: yup.string().trim(),
+  transactionId: yup.string().trim(),
 });
 
 export type StudentRegistrationFormValues = yup.InferType<

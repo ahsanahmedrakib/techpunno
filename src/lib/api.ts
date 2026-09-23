@@ -93,6 +93,20 @@ export interface AuditDoc {
   createdAt: string;
 }
 
+export interface EventTokenInfo {
+  status: "pending" | "approved" | "rejected";
+  tokenId?: string;
+  fullName: string;
+  className?: string;
+  institution?: string;
+  eventId?: string;
+  eventTitle: string;
+  mobile: string;
+  approvedAt?: string;
+  amount?: string;
+  paymentMethod?: string;
+}
+
 export const api = {
   list: <T>(table: string) =>
     http.get<T[]>(`/api/${table}`).then((r) => r.data),
@@ -109,6 +123,10 @@ export const api = {
           participated: boolean;
         }[]
       >("/api/event-roster", { params: { eventId } })
+      .then((r) => r.data),
+  eventToken: (params: { eventId?: string; mobile?: string; token?: string }) =>
+    http
+      .get<EventTokenInfo>("/api/event-token", { params })
       .then((r) => r.data),
   paged: <T>(
     table: string,

@@ -87,6 +87,38 @@ async function generateUniqueSlug(
   }
 }
 
+async function eventTokenSequence(
+  coll: Collection<Record<string, unknown>>,
+): Promise<string> {
+  const counters = coll.db.collection<{ _id: string; seq: number }>("counters");
+  const key = "eventTokenIndex";
+  const existing = await counters.findOne({ _id: key });
+  if (!existing) {
+    const count = await coll.countDocuments();
+    await counters.insertOne({ _id: key, seq: count });
+  }
+  const updated = await counters.findOneAndUpdate(
+    { _id: key },
+    { $inc: { seq: 1 } },
+    { returnDocument: "after" },
+  );
+  return String(updated?.seq ?? 1).padStart(4, "0");
+}
+
+async function generateEventTokenId(
+  coll: Collection<Record<string, unknown>>,
+  mobile: string,
+): Promise<string> {
+  const year = new Date().getFullYear().toString().slice(-2);
+  const encoded = uniqueIdWithPhoneNumber(mobile).split("-")[1] ?? "";
+  let tokenId = "";
+  do {
+    const seq = await eventTokenSequence(coll);
+    tokenId = `TP-EV-${year}-${seq}-${encoded}`;
+  } while (await coll.findOne({ tokenId }, { projection: { _id: 1 } }));
+  return tokenId;
+}
+
 export function mapDoc<T>(doc: Record<string, unknown>): T {
   const mongoId = String(doc._id);
   const { ...rest } = doc;
@@ -441,6 +473,17 @@ export async function createDoc(
   if (tables[key].defaultStatus && doc[statusField] === undefined) {
     doc[statusField] = tables[key].defaultStatus;
   }
+  if (
+    key === "eventregistrations" &&
+    doc.status === "approved" &&
+    !doc.tokenId
+  ) {
+    const mobile = String(doc.mobile ?? "").trim();
+    if (mobile) {
+      doc.tokenId = await generateEventTokenId(coll, mobile);
+      doc.approvedAt = now;
+    }
+  }
   if (hasSlugField(key)) {
     const title = String(doc.title || doc.name || "");
     const slug = await generateSlugIfNeeded(key, title);
@@ -490,6 +533,21 @@ export async function updateDoc(
     }
   }
   const filter = await resolveIdFilter(key, rawId);
+  if (key === "eventregistrations" && doc.status === "approved") {
+    const existingForToken = (await coll.findOne(filter)) as Record<
+      string,
+      unknown
+    > | null;
+    if (!existingForToken?.tokenId) {
+      const mobile = String(
+        doc.mobile ?? existingForToken?.mobile ?? "",
+      ).trim();
+      if (mobile) {
+        doc.tokenId = await generateEventTokenId(coll, mobile);
+        doc.approvedAt = new Date().toISOString();
+      }
+    }
+  }
   const result = await coll.findOneAndUpdate(
     filter,
     { $set: doc },

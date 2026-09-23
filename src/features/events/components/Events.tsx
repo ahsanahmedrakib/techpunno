@@ -9,7 +9,7 @@ import { type EventItem } from "@/features/events/data/events";
 import { useTable } from "@/lib/api";
 import { firstImage } from "@/lib/imageUrl";
 import { getDateParts } from "@/lib/utils";
-import { CalendarCheck, UserPlus } from "lucide-react";
+import { CalendarCheck, Ticket, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -195,6 +195,16 @@ export default function Events() {
                               </button>
                             </div>
                           )}
+                          <Link
+                            href={`/events/collect-token?event=${encodeURIComponent(event.id)}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-primary/40 bg-white px-2.5 py-2.5 text-xs font-semibold text-ink transition-all hover:bg-primary-lighter hover:text-primary"
+                          >
+                            <Ticket className="h-4 w-4" />
+                            Collect Token
+                          </Link>
                         </div>
                       </div>
                     </Hoverable>

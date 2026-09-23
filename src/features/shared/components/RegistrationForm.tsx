@@ -7,7 +7,7 @@ import {
 } from "@/lib/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "@/lib/api";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -32,6 +32,13 @@ interface EventOption {
   status?: string;
 }
 
+export interface RegistrationPaymentConfig {
+  active?: boolean;
+  fee?: string;
+  paymentNumber?: string;
+  instruction?: string;
+}
+
 export default function RegistrationForm({
   title,
   subtitle,
@@ -39,6 +46,7 @@ export default function RegistrationForm({
   onSubmit,
   showEventSelect = false,
   defaultEventId,
+  payment,
 }: {
   title: string;
   subtitle: string;
@@ -46,6 +54,7 @@ export default function RegistrationForm({
   onSubmit: (values: StudentRegistrationFormValues) => Promise<void>;
   showEventSelect?: boolean;
   defaultEventId?: string;
+  payment?: RegistrationPaymentConfig;
 }) {
   const [submitted, setSubmitted] = useState(false);
   const [events, setEvents] = useState<EventOption[]>([]);
@@ -92,6 +101,10 @@ export default function RegistrationForm({
       toast.error("Please select an event");
       return;
     }
+    if (payment?.active && !values.paymentMethod) {
+      toast.error("Please select a payment method");
+      return;
+    }
     const eventTitle = showEventSelect
       ? (events.find((e) => String(e.id) === String(values.eventId))?.title ??
         "")
@@ -101,6 +114,10 @@ export default function RegistrationForm({
         ...values,
         eventId: values.eventId,
         eventTitle,
+        paymentNumber: values.paymentNumber || "",
+        paymentAmount: values.paymentAmount || "",
+        paymentMethod: values.paymentMethod || "",
+        transactionId: values.transactionId || "",
       });
       setSubmitted(true);
     } catch (err) {
@@ -271,6 +288,123 @@ export default function RegistrationForm({
           )}
         </div>
       </div>
+
+      {payment?.active && (
+        <div className="rounded-2xl border-2 border-primary/30 bg-primary-lighter/50 p-5">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-white">
+              <Wallet className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-ink">
+                Paid Event Registration
+              </p>
+              <p className="text-xs text-ink-soft">
+                {payment.fee
+                  ? `Registration fee: ৳${payment.fee}`
+                  : "This event requires a registration fee."}
+              </p>
+            </div>
+          </div>
+          {payment.paymentNumber && (
+            <p className="mt-3 text-sm text-ink">
+              Send the fee to{" "}
+              <span className="font-bold text-primary">
+                {payment.paymentNumber}
+              </span>{" "}
+              (bKash/Nagad). You can note the payment number and Transaction ID
+              below (optional).
+            </p>
+          )}
+          {payment.instruction && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              {payment.instruction}
+            </p>
+          )}
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">
+                Payment Method <span className="text-secondary">*</span>
+              </label>
+              <select
+                {...register("paymentMethod")}
+                defaultValue=""
+                className={`${inputCls(fieldError(errors, "paymentMethod"))} appearance-none bg-white pr-10`}
+              >
+                <option value="" disabled>
+                  Select payment method
+                </option>
+                <option value="bKash">bKash</option>
+                <option value="Nagad">Nagad</option>
+                <option value="Cash">Cash (on event day)</option>
+              </select>
+              {fieldError(errors, "paymentMethod") && (
+                <p className="mt-1.5 text-xs font-medium text-secondary">
+                  {fieldError(errors, "paymentMethod")}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">
+                Payment Number
+                <span className="ml-1 text-xs font-normal text-ink-soft">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 017XXXXXXXX"
+                {...register("paymentNumber")}
+                className={inputCls(fieldError(errors, "paymentNumber"))}
+              />
+              {fieldError(errors, "paymentNumber") && (
+                <p className="mt-1.5 text-xs font-medium text-secondary">
+                  {fieldError(errors, "paymentNumber")}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">
+                Amount Paid (৳)
+                <span className="ml-1 text-xs font-normal text-ink-soft">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 100"
+                {...register("paymentAmount")}
+                className={inputCls(fieldError(errors, "paymentAmount"))}
+              />
+              {fieldError(errors, "paymentAmount") && (
+                <p className="mt-1.5 text-xs font-medium text-secondary">
+                  {fieldError(errors, "paymentAmount")}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">
+                Transaction ID
+                <span className="ml-1 text-xs font-normal text-ink-soft">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 8P7Q2R3A"
+                {...register("transactionId")}
+                className={inputCls(fieldError(errors, "transactionId"))}
+              />
+              {fieldError(errors, "transactionId") && (
+                <p className="mt-1.5 text-xs font-medium text-secondary">
+                  {fieldError(errors, "transactionId")}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <button
         type="submit"
