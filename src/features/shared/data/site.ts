@@ -11,7 +11,7 @@ export const site = {
   whatsapp: "https://wa.me/8801631112475",
   youtube: "https://www.youtube.com/@TechPunno",
   email: "techpunno@gmail.com",
-  phone: "+8801619878054",
+  phone: "+8801578209625",
   address: "Gopalganj, Bangladesh",
   logo: "/logo.png",
   ogImage: "/og-image.png",
