@@ -22,11 +22,42 @@ export default function TeamCard({
   index?: number;
 }) {
   const socialLinks = [
-    { key: "facebook", label: "Facebook", url: member.facebook, Icon: FacebookIcon },
-    { key: "twitter", label: "Twitter", url: member.twitter, Icon: TwitterIcon },
-    { key: "instagram", label: "Instagram", url: member.instagram, Icon: InstagramIcon },
-    { key: "linkedin", label: "LinkedIn", url: member.linkedin, Icon: LinkedinIcon },
-    { key: "portfolio", label: "Portfolio", url: member.portfolio, Icon: PortfolioIcon },
+    {
+      key: "facebook",
+      label: "Facebook",
+      url: member.facebook,
+      Icon: FacebookIcon,
+      className: "bg-[#1877F2]",
+    },
+    {
+      key: "twitter",
+      label: "Twitter",
+      url: member.twitter,
+      Icon: TwitterIcon,
+      className: "bg-[#111111]",
+    },
+    {
+      key: "instagram",
+      label: "Instagram",
+      url: member.instagram,
+      Icon: InstagramIcon,
+      className:
+        "bg-linear-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5]",
+    },
+    {
+      key: "linkedin",
+      label: "LinkedIn",
+      url: member.linkedin,
+      Icon: LinkedinIcon,
+      className: "bg-[#0A66C2]",
+    },
+    {
+      key: "portfolio",
+      label: "Portfolio",
+      url: member.portfolio,
+      Icon: PortfolioIcon,
+      className: "bg-primary",
+    },
   ]
     .map((link) => ({ ...link, url: safeUrl(link.url) }))
     .filter((link) => link.url);
@@ -65,8 +96,8 @@ export default function TeamCard({
               {member.bio}
             </p>
             {socialLinks.length > 0 && (
-              <div className="mt-auto flex w-full flex-wrap items-center justify-center gap-2 border-t border-ink/5 pt-4">
-                {socialLinks.map(({ key, label, url, Icon }) => (
+              <div className="mt-auto flex w-full flex-wrap items-center justify-center gap-1.5 border-t border-ink/5 pt-3">
+                {socialLinks.map(({ key, label, url, Icon, className }) => (
                   <a
                     key={key}
                     href={url}
@@ -74,9 +105,9 @@ export default function TeamCard({
                     rel="noopener noreferrer"
                     aria-label={label}
                     title={label}
-                    className="grid h-9 w-9 place-items-center rounded-full bg-mist text-ink-soft transition-all hover:bg-primary hover:text-white"
+                    className={`grid h-7 w-7 place-items-center rounded-full text-white shadow-sm transition-transform hover:scale-110 ${className}`}
                   >
-                    <Icon size={16} />
+                    <Icon size={18} />
                   </a>
                 ))}
               </div>

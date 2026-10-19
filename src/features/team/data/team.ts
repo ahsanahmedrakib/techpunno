@@ -44,6 +44,8 @@ export const advisors: TeamMember[] = [
     bio: "Software Engineer at US Bangla Group.",
     initials: "AR",
     image: "/images/advisors/ahsan-ahmed-rakib.jpg",
+    portfolio: "https://ahsanahmedrakib.vercel.app/",
+    facebook: "https://www.facebook.com/rakibahsanahmed/",
   },
 ];
 
@@ -57,4 +59,5 @@ export const coreTeam: TeamMember[] = [
     image: "/images/core-team/mehedi-hasan.jpeg",
   },
 ];
+
 
