@@ -9,11 +9,13 @@ import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 import { scrollToHashSection } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { LogIn, LogOut, User } from "lucide-react";
 
 export default function Navbar() {
   const { hidden } = useHideOnScroll();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -22,10 +24,12 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith("/#")) {
-      e.preventDefault();
       setAccountOpen(false);
       setOpen(false);
-      scrollToHashSection(href.slice(1));
+      if (pathname === "/") {
+        e.preventDefault();
+        scrollToHashSection(href.slice(1));
+      }
     }
   };
 

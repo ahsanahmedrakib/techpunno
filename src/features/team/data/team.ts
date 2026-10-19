@@ -5,6 +5,11 @@ export type TeamMember = {
   bio: string;
   initials: string;
   image?: string;
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedin?: string;
+  portfolio?: string;
 };
 
 export const advisors: TeamMember[] = [

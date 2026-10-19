@@ -2,8 +2,16 @@
 
 import Hoverable from "@/components/common/Hoverable";
 import Reveal from "@/components/common/Reveal";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedinIcon,
+  PortfolioIcon,
+  TwitterIcon,
+} from "@/components/common/SocialIcons";
 import type { TeamMember } from "@/features/team/data/team";
 import { safeImage } from "@/lib/imageUrl";
+import { safeUrl } from "@/lib/utils";
 import Image from "next/image";
 
 export default function TeamCard({
@@ -13,6 +21,16 @@ export default function TeamCard({
   member: TeamMember;
   index?: number;
 }) {
+  const socialLinks = [
+    { key: "facebook", label: "Facebook", url: member.facebook, Icon: FacebookIcon },
+    { key: "twitter", label: "Twitter", url: member.twitter, Icon: TwitterIcon },
+    { key: "instagram", label: "Instagram", url: member.instagram, Icon: InstagramIcon },
+    { key: "linkedin", label: "LinkedIn", url: member.linkedin, Icon: LinkedinIcon },
+    { key: "portfolio", label: "Portfolio", url: member.portfolio, Icon: PortfolioIcon },
+  ]
+    .map((link) => ({ ...link, url: safeUrl(link.url) }))
+    .filter((link) => link.url);
+
   return (
     <Reveal
       variant="zoom"
@@ -46,6 +64,23 @@ export default function TeamCard({
             <p className="mt-3 text-sm leading-relaxed text-ink-soft">
               {member.bio}
             </p>
+            {socialLinks.length > 0 && (
+              <div className="mt-auto flex w-full flex-wrap items-center justify-center gap-2 border-t border-ink/5 pt-4">
+                {socialLinks.map(({ key, label, url, Icon }) => (
+                  <a
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="grid h-9 w-9 place-items-center rounded-full bg-mist text-ink-soft transition-all hover:bg-primary hover:text-white"
+                  >
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </Hoverable>
